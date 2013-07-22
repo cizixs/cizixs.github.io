@@ -5,30 +5,23 @@ tagline: Supporting tagline
 ---
 {% include JB/setup %}
 
-Read [Jekyll Quick Start](http://jekyllbootstrap.com/usage/jekyll-quick-start.html)
+## Who am I?
 
-Complete usage and documentation available at: [Jekyll Bootstrap](http://jekyllbootstrap.com)
+My name is Jack Wu, a programmer now working at Ctrip.
+I majored in Computer Science at NJU which is a proud in my life.
 
-## Update Author Attributes
-
-In `_config.yml` remember to specify your own data:
+You can find me at:
+    @Weibo:2W_continued
+    @facebook:JackWu
+    @Github:JackWuCode
     
-    title : My Blog =)
-    
-    author :
-      name : Name Lastname
-      email : blah@email.test
-      github : username
+## Blogs
 
-    
-## Sample Posts
+I write blogs on github pages, which is a delight for guys like me who can't care less about building a website.
 
-This blog contains sample posts which help stage pages and blog data.
-When you don't need the samples anymore just delete the `_posts/core-samples` folder.
+Topics in the posts includes computer knowledge, essays, and reviews. Recording my learning process is main  motivation for updating the blog, share knowledge is another one.
 
-    $ rm -rf _posts/core-samples
-
-Here's a sample "posts list".
+Enjoy your trip here.
 
 <ul class="posts">
   {% for post in site.posts %}
