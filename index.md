@@ -12,9 +12,9 @@ I majored in Computer Science at NJU which is a proud in my life.
 
 You can find me at:
 
-    + Weibo:2W_continued
-    + facebook:JackWu
-    + Github:JackWuCode
+    Weibo:[2W_continued](http://weibo.com/1921727853/profile)
+    facebook:[JackWu](http://www.facebook.com/wei.wu.353250)
+    Github:[JackWuCode](https://github.com/JackWuCode)
     
 ## Blogs
 
