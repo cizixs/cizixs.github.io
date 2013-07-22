@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Hello World!
-tagline: Supporting tagline
+tagline: Never stop trying... 
 ---
 {% include JB/setup %}
 
@@ -11,15 +11,16 @@ My name is Jack Wu, a programmer now working at Ctrip.
 I majored in Computer Science at NJU which is a proud in my life.
 
 You can find me at:
-    +@Weibo:2W_continued
-    +@facebook:JackWu
-    +@Github:JackWuCode
+
+    + Weibo:2W_continued
+    + facebook:JackWu
+    + Github:JackWuCode
     
 ## Blogs
 
 I write blogs on github pages, which is a delight for guys like me who can't care less about building a website.
 
-Topics in the posts includes computer knowledge, essays, and reviews. Recording my learning process is main  motivation for updating the blog, sharign knowledge is another one.
+Topics in the posts includes computer knowledge, essays, and reviews. Recording my learning process is main  motivation for updating the blog, sharing knowledge is another one.
 
 Enjoy your trip here.
 
