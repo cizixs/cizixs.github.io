@@ -7,7 +7,7 @@ tagline: Never stop trying...
 
 ## Who am I?
 
-My name is Jack Wu, a programmer now working at [Ctrip](www.ctrip.com).
+My name is Jack Wu, a programmer now working at [Ctrip](http://www.ctrip.com).
 I majored in Computer Science at NJU which is a proud in my life.
 
 You can find me at:
