@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Basi Regular Expression"
+title: "Basic Regular Expression"
 description: ""
 category: 
 tags: [regex, tutorial]
@@ -32,7 +32,7 @@ A match is denotated by Re.m(str, regex).
 ### 3.	Basic Matching
 Regex only does one thing: match a given string, return matched position if matched successufully or nil otherwise.
 
-Re.m("Hello, world", /he/)	#=> true  
+Re.m("Hello, world", /he/)	&nbsp; #=> true  
 
   
 	| symbol	| matches                          |
@@ -60,7 +60,7 @@ Code above concerns two concepts: **position** and **repetition**.
 	
 
 ### 5. Interesting tricks
-* __one-line regex__
+* __one-line regex__  
 	- [/ -~/](http://www.catonmat.net/blog/my-favorite-regex/)  matches all ASCII characters from the space to the tilde which are all printable characters!
 	
 	- [/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/](http://www.regular-expressions.info/email.html) matched valid email address
