@@ -7,18 +7,26 @@ tagline: Never stop trying...
 
 ## Who am I?
 
-My name is Jack Wu, a programmer now working at Ctrip.
-I majored in Computer Science at NJU which is a proud in my life.
+My name is Jack Wu, a programmer now working at [Ctrip](www.ctrip.com).
+I majored in Computer Science at NJU which is a pride in my life.
 
-You can find me at:
+**You can find me at:**
 
-+ @[Weibo](http://weibo.com/1921727853/profile)
 
-+ @[Facebook](http://www.facebook.com/wei.wu.353250)
++ [<img src="./images/weibo.png" alt="Weibo" style="width: 40px;"/>](http://weibo.com/1921727853/profile) Weibo
 
-+ @[Github](https://github.com/JackWuCode)
++ [<img src="./images/facebook.png" alt="Facebook" style="width: 40px;"/>](http://www.facebook.com/wei.wu.353250) Facebook
 
-+ @[Douban](http://www.douban.com/people/38501585/)
+
++ [<img src="./images/github.png" alt="Github" style="width: 40px;"/>](https://github.com/JackWuCode) Gitub
+
+
++ [<img src="./images/douban.png" alt="Douban" style="width: 40px;"/>](http://www.douban.com/people/38501585/) Douban
+
+
+**Also you can contact me at:**  
+
++ **<wuwei4455@gmail.com>**
     
 ## Blogs
 
