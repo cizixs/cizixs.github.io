@@ -8,8 +8,6 @@ tags: [regex, tutorial]
 {% include JB/setup %}
 
 
-----------
-
 ### 1.	What is Regular Expression and Why? 
 Regular Expression(Regex for simplicity) is a sequence of characters that forms a search pattern, mainly for use in pattern matching with string, or string matching.
 
