@@ -23,27 +23,52 @@ So, before moving to regex, make sure there is no other easy way to tackle your 
 ### 2.	Conventions
 Before further introduction, we need to make some conventions here. Because many programming language(like perl, python, ruby, perl...) have built-in regex, and the definition and usage diff from each other in some detail. Content below doesn't specify any language, only concerns simple and mutal regex knowledge.
 
-A string is a bunch of words between ", like *"I am too poor to buy a Macbook."*;  
-A regex is embedded in //, like */[1-4].\*/*.  
-A match is denotated by Re.m(str, regex).
+
+First some definitions and conventions:
+<dl>
+	<dt>character</dt>
+	<dd>Any printable element in ASCII table.</dd>
+
+	<dt>metacharacter</dt>
+	<dd>The character that has special meaning in regex, like .,*,?,^,$,\</dd>
+
+	<dt>(target)? string</dt>
+	<dd>The string used for regex to match certain spattern</dd>
+
+	<dt>regex</dt>
+	<dd>The special code block used to match pattern in a string</dd>
+
+	<dt>match</dt>
+	<dd>The real match between <strong>string</strong> and <strong>regex</strong> is denoted by =~, as used in ruby.</dd>
+</dl>
+
 
 ### 3.	Basic Matching
-Regex only does one thing: match a given string, return matched position if matched successufully or nil otherwise.
+Regex only does one thing: match a given string, return matched position if matched successufully or nil otherwise. If there are more than one matching reuslt, it only returns the first one.
 
-Re.m("Hello, world", /he/)	&nbsp; #=> true  
 
+	"Hello, world" =~ /or/			#=> 8  
+	"Hello, world" =~ /le/   		#=> nil
+	"Hello, world" =~ /l/			#=> 1
+
+In order to better illustrate and understand regex, we put emphisis on the matching part in place of mathcing position,like:  
+
+	"Hello, world" =~ /wo/			#=> Hello, <wo>rld
+	"Hello, world" =~ /.l/			#=> H<el>lo, world
+   
+The follow table shows metacharacters and their meaning.
   
-	| symbol	| matches                          |
-	|  ------   | -------------------------------  |
-	| .	        | any character                    |  
-	| *	        | zero or more repetition          | 
-	| +         | one or more repetition           | 
-	| ?	        | zero or one repetition           |
-	| {m,n}	    | at least m, at most n repetition |
-	| {m,}      | at least m repetition            |  
-	| []	    | any characters in []             |
-	| ^         | the start of line                |
-	| $         | the end of line                  |
+| symbol	| matches                          |
+|  ------   | -------------------------------  |
+| .	        | any character                    |  
+| *	        | zero or more repetition          | 
+| +         | one or more repetition           | 
+| ?	        | zero or one repetition           |
+| {m,n}	    | at least m, at most n repetition |
+| {m,}      | at least m repetition            |  
+| []	    | any characters in []             |
+| ^         | the start of line                |
+| $         | the end of line                  |
 
 Code above concerns two concepts: **position** and **repetition**. 
 
