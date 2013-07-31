@@ -26,20 +26,20 @@ Before further introduction, we need to make some conventions here. Because many
 
 First some definitions and conventions:
 <dl>
-	<dt>character</dt>
-	<dd>Any printable element in ASCII table.</dd>
+<dt>character</dt>
+<dd>Any printable element in ASCII table.</dd>
 
-	<dt>metacharacter</dt>
-	<dd>The character that has special meaning in regex, like .,*,?,^,$</dd>
+<dt>metacharacter</dt>
+<dd>The character that has special meaning in regex, like .,*,?,^,$</dd>
 
-	<dt>(target)? string</dt>
-	<dd>The string used for regex to match certain spattern</dd>
+<dt>(target)? string</dt>
+<dd>The string used for regex to match certain spattern</dd>
 
-	<dt>regex</dt>
-	<dd>The special code block used to match pattern in a string</dd>
+<dt>regex</dt>
+<dd>The special code block used to match pattern in a string</dd>
 
-	<dt>match</dt>
-	<dd>The real match between <strong>string</strong> and <strong>regex</strong> is denoted by =~, as used in ruby.</dd>
+<dt>match</dt>
+<dd>The real match between <strong>string</strong> and <strong>regex</strong> is denoted by =~, as used in ruby.</dd>
 </dl>
 
 
@@ -64,7 +64,7 @@ In order to better illustrate and understand regex, we put emphisis on the match
 The follow table shows metacharacters and their meaning.
   
 | symbol	| matches                          |
-|  ------   | -------------------------------  |
+| :------   | :------------------------------- |
 | .	        | any character                    |  
 | *	        | zero or more repetition          | 
 | +         | one or more repetition           | 
