@@ -27,5 +27,4 @@ Dairy is a way to help me remember, but they are hard to keep. Most of my dairie
 ### The Future of this Blog
 Once started, there will be no stop. I would keep wirting and sharing until the day come when death take me and my blog apart. Since it's been here, I'd try my best to perfect it. Clearing my thought and spread it out, if my blog could help anyone, it won't be a waste of time and energy.
 
-Life is a bith, Blog on!
-
+Life is a bitch, Blog on!
