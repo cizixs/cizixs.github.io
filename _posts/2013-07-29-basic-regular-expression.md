@@ -55,8 +55,13 @@ Regex only does one thing: match a given string, return matched position if matc
 
 In order to better illustrate and understand regex, we put emphisis on the matching part in place of mathcing position,like:  
 
-	"Hello, world" =~ /wo/			#=> Hello, <wo>rld
-	"Hello, world" =~ /.l/			#=> H<el>lo, world
+	"Hello, world" =~ /wo/								#=> Hello, <wo>rld
+	"Hello, world" =~ /.l/								#=> H<el>lo, world
+	"I'll use regular expressions." =~ /re.*/			#=> I'll use <regular expressions.>
+	"Think different!" =~ /if*/							#=> Think d<iff>erent!
+	"stay hungry stay foolish" =~ / s[tl]ay/			#=> stay hungry <stay> foolish 
+	"stay hungry stay foolish" =~ /^st[aeiou]y/			#=> <stay> hungry stay foolish
+	
    
 The follow table shows metacharacters and their meaning.
   
@@ -75,6 +80,8 @@ The follow table shows metacharacters and their meaning.
 Code above concerns two concepts: **position** and **repetition**. 
 
 
+While reading, you may wonder: what if I want to match a string in a certain position? What if I want to repeat a string instead of a char? This is where **group** comes to rescue.
+ 
 ### 4. More powerful
 * grouping
 	
