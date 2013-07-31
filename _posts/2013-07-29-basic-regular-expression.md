@@ -8,8 +8,6 @@ tags: [regex, tutorial]
 {% include JB/setup %}
 
 
-----------
-
 ### 1.	What is Regular Expression and Why? 
 Regular Expression(Regex for simplicity) is a sequence of characters that forms a search pattern, mainly for use in pattern matching with string, or string matching.
 
@@ -95,7 +93,12 @@ While reading, you may wonder: what if I want to match a string in a certain pos
 * __one-line regex__  
 	- [/ -~/](http://www.catonmat.net/blog/my-favorite-regex/)  matches all ASCII characters from the space to the tilde which are all printable characters!
 	
-	- [/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/](http://www.regular-expressions.info/email.html) matched valid email address
 
 	- [/^1?$|^(11+?)\1+$/](http://coolshell.cn/articles/2704.html) matches all prime numbers.
+	
+* __regex in practice__
+  
+		email   =>		/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/
+		ip		=>		/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/
+
 
