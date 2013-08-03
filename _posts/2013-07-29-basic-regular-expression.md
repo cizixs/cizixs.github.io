@@ -132,10 +132,9 @@ tags: [regex, tutorial]
 
 6. ### Interesting tricks
     * __one-line regex__
-    	- [/ -~/](http://www.catonmat.net/blog/my-favorite-regex/)  matches all ASCII characters from the space to the tilde which are all printable characters!
+    	- ["/ -~/"](http://www.catonmat.net/blog/my-favorite-regex/)  matches all ASCII characters from the space to the tilde which are all printable characters!
     	
-    
-    	- [/\^1?$|\^(11+?)\1+$/](http://coolshell.cn/articles/2704.html) matches all prime numbers.
+    	- ["/^1?$|^(11+?)\1+$/"](http://coolshell.cn/articles/2704.html)magically matches all prime numbers.
     	
     * __regex in practice__
       
