@@ -66,7 +66,6 @@ tags: [regex, tutorial]
         "Michelle Obama is quite awesome!"  =~ /Miachelle | Barack/     #=> true
     
     Note:
-    
     * __One '[]' only matches one character in it.__
     * __'|' selects string before or after it, not character, which means /ab|cd/ doesn't match 'abd', only matches 'ab' or 'cd'__
 
@@ -76,7 +75,6 @@ tags: [regex, tutorial]
     is a nightmare. '[]' solves it before you know, the powerful '-' sign. [a-z] matches anything from 'a' to 'z' and [0-9] matches from '0' to '9'.
         
     Note:  
-    
     * __'-' works in the ASCII table way,so [+-a] is also valid.__
     * __If you want to include '-' itself in '[]', just put it at the last position like [abc-].__ 
     
