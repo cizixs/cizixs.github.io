@@ -65,7 +65,7 @@ OR.
     "Did you vote for Obama?"   =~ /[oO]b[ae]ma/    #=> true
     "Michelle Obama is quite awesome!"  =~ /Miachelle | Barack/ #=> true
 
-Note:
+Note:  
 * __One '[]' only matches one character in it.__
 * __'|' selects string before or after it, not character, which means /ab|cd/ doesn't match 'abd', only matches 'ab' or 'cd'__
 
@@ -74,7 +74,7 @@ Now you may wonder: what if there are many options for a situation, like match a
 all of them in a pair of '[]': [abcdefghijklmnopqrstuvwxyz] or [0123456789]. Write these down for once may still be okay, but frequently using them 
 is a nightmare. '[]' solves it before you know, the powerful '-' sign. [a-z] matches anything from 'a' to 'z' and [0-matches from 'to '9'.
 
-Note:
+Note:  
 * __'-' works in the ASCII table way,so [+-a] is also valid.__
 * __If you want to include '-' itself in '[]', just put it at the last position like [abc-].__ 
 
@@ -132,7 +132,7 @@ Another thing to say about '[]' is it also disables abbove metacharacters' "supe
 ### Interesting tricks
 * __one-line regex__
 	- [/ -~/](http://www.catonmat.net/blog/my-favorite-regex/)  matches all ASCII characters from the space to the tilde which are all printable characters!
-	- [/\^1?$|\^(11+?)\1+$/wrong?](http://coolshell.cn/articles/2704.html)magically matches all prime numbers.
+	- [/\^1?$|\^(11+?)\1+$/](http://coolshell.cn/articles/2704.html)magically matches all prime numbers.
 * __regex in practice__
   
 		email   =>		/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/
