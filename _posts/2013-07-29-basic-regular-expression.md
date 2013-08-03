@@ -46,15 +46,15 @@ First some definitions and conventions:
 ### Basic Matching
 Regex only does one thing: match a given string, return matched position if matched successufully or nil otherwise. If there are more than one matching reuslt, it only returns the first one.
 
-	"Hello, world" =~ /or/			#=> 
+	"Hello, world" =~ /or/			#=> 8
 	"Hello, world" =~ /le/   		#=> nil
 	"Hello, world" =~ /l/			#=> 1
 
 So, the can't be simpler usage of regex is basic "find" function every text editor have in their menu: You type in anything, 
 it tells you if what you want exists in the target string. For example, if you want to find someone's name like "Obama":
 
-"Did you vote for Obama?"   =~ /Obama/  #=> true
-"Did you vote for Obama?"   =~ /obama/  #=> false
+    "Did you vote for Obama?"   =~ /Obama/  #=> true
+    "Did you vote for Obama?"   =~ /obama/  #=> false
 
 ### More flexible
 You might see the problem here. Only by typing the exact string, can you get the correct result. What if I don't care about the case of 
@@ -62,8 +62,8 @@ all letters? What if I allow some mispelling like "Obema"? What if I want to fin
 Where there is a probelm, there is a way. The hero here is '[]'(square bracket) and '|'. '[]' matches anything in it, while '|' repersents logic
 OR.
 
-"Did you vote for Obama?"   =~ /[oO]b[ae]ma/#=> true
-"Michelle Obama is quite awesome!"  =~ /Miachelle | Barack/ #=> true
+    "Did you vote for Obama?"   =~ /[oO]b[ae]ma/    #=> true
+    "Michelle Obama is quite awesome!"  =~ /Miachelle | Barack/ #=> true
 
 Note:
 * __One '[]' only matches one character in it.__
@@ -74,12 +74,13 @@ Now you may wonder: what if there are many options for a situation, like match a
 all of them in a pair of '[]': [abcdefghijklmnopqrstuvwxyz] or [0123456789]. Write these down for once may still be okay, but frequently using them 
 is a nightmare. '[]' solves it before you know, the powerful '-' sign. [a-z] matches anything from 'a' to 'z' and [0-matches from 'to '9'.
 
-Note:  
+Note:
 * __'-' works in the ASCII table way,so [+-a] is also valid.__
 * __If you want to include '-' itself in '[]', just put it at the last position like [abc-].__ 
 
 Is that enough? Of course NO! To match a phone number, we need to find a convenient way to repeat digit for certain times(depends on the length of phone number).
 As always, there is already a solution. Following examples will demonstrate what you need.
+
 ps: _In order to better illustrate and understand regex, we put emphisis on the matching part in place of mathcing position_  
 
 	"Hello, world" =~ /wo/								#=> Hello, <wo>rld
@@ -88,8 +89,8 @@ ps: _In order to better illustrate and understand regex, we put emphisis on the 
 	"Think different!" =~ /if*/							#=> Think d<iff>erent!
 	"stay hungry stay foolish" =~ / s[tl]ay/			#=> stay hungry <stay> foolish 
 	"stay hungry stay foolish" =~ /^st[aeiou]y/			#=> <stay> hungry stay foolish
-	"speak aloud!"  =~ /al[aeiou]{2}d/  #=> speak <aloud>!
-	"SHOUT Ahhhhoo!" =~ /Ah{3,5}oo/ #=> SHOUT <Ahhhhoo>!
+	"speak aloud!"  =~ /al[aeiou]{2}d/                  #=> speak <aloud>!
+	"SHOUT Ahhhhoo!" =~ /Ah{3,5}oo/                     #=> SHOUT <Ahhhhoo>!
 	
 
 The follow table shows metacharacters and their meaning.
