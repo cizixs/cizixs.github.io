@@ -94,13 +94,7 @@ ps: _In order to better illustrate and understand regex, we put emphisis on the 
 
 The follow table shows metacharacters and their meaning.
 
-![alt regex](../images/weibo.png)
-![alt regex](./images/weibo.png)
-
-<img src="../images/regex01.png" alt="regex"/>
-<img src="./images/regex01.png" alt="regex"/>
-<img src="../images/weibo.png" alt="regex"/>
-<img src="./images/weibo.png" alt="regex"/>
+![alt regex](../images/regex01.png)
 
 
 | symbol	| matches  |
