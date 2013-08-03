@@ -61,7 +61,6 @@ tags: [regex, tutorial]
     all letters? What if I allow some mispelling like "Obema"? What if I want to find "Obama" or "Michelle"? etc.
     Where there is a probelm, there is a way. The hero here is '[]'(square bracket) and '|'. '[]' matches anything in it, while '|' repersents logic
     OR.
-
     
         "Did you vote for Obama?"   =~ /[oO]b[ae]ma/                    #=> true
         "Michelle Obama is quite awesome!"  =~ /Miachelle | Barack/     #=> true
@@ -71,17 +70,19 @@ tags: [regex, tutorial]
     * __One '[]' only matches one character in it.__
     * __'|' selects string before or after it, not character, which means /ab|cd/ doesn't match 'abd', only matches 'ab' or 'cd'__
 
-    
+        
     Now you may wonder: what if there are many options for a situation, like match a digit or a letter? Of course you can write down 
     all of them in a pair of '[]': [abcdefghijklmnopqrstuvwxyz] or [0123456789]. Write these down for once may still be okay, but frequently using them 
     is a nightmare. '[]' solves it before you know, the powerful '-' sign. [a-z] matches anything from 'a' to 'z' and [0-9] matches from '0' to '9'.
-    
+        
     Note:  
     
     * __'-' works in the ASCII table way,so [+-a] is also valid.__
     * __If you want to include '-' itself in '[]', just put it at the last position like [abc-].__ 
     
-    In order to better illustrate and understand regex, we put emphisis on the matching part in place of mathcing position,like:  
+    Is that enough? Of course NO! To match a phone number, we need to find a convenient way to repeat digit for certain times(depends on the length of phone number).
+    As always, there is already a solution. Following examples will demonstrate what you need.
+    ps: _In order to better illustrate and understand regex, we put emphisis on the matching part in place of mathcing position_  
     
     	"Hello, world" =~ /wo/								#=> Hello, <wo>rld
     	"Hello, world" =~ /.l/								#=> H<el>lo, world
@@ -89,7 +90,10 @@ tags: [regex, tutorial]
     	"Think different!" =~ /if*/							#=> Think d<iff>erent!
     	"stay hungry stay foolish" =~ / s[tl]ay/			#=> stay hungry <stay> foolish 
     	"stay hungry stay foolish" =~ /^st[aeiou]y/			#=> <stay> hungry stay foolish
+    	"speak aloud!"  =~ /al[aeiou]{2}d/                  #=> speak <aloud>!
+    	"SHOUT Ahhhhoo!" =~ /Ah{3,5}oo/                     #=> SHOUT <Ahhhhoo>!
     	
+
     The follow table shows metacharacters and their meaning.
     
     | symbol	| matches                          |
@@ -98,19 +102,27 @@ tags: [regex, tutorial]
     | *	        | zero or more repetition          | 
     | +         | one or more repetition           | 
     | ?	        | zero or one repetition           |
+    | {m}       | m time(s) repetition             |
     | {m,n}	    | at least m, at most n repetition |
     | {m,}      | at least m repetition            |
     | []	    | any characters in []             |
     | ^         | the start of line                |
     | $         | the end of line                  |
 
-    
-    Code above concerns two concepts: **position** and **repetition**. 
-    
-    While reading, you may wonder: what if I want to match a string in a certain position? What if I want to repeat a string instead of a char? This is where **group** comes to rescue.
+    Symbols in above table are called "metacharacters"  as mentioned before. They have have different
+    "super power"s compared to normal characters. Here is a question: what if I just want to use the symbol itself
+    instead of its special meaning? Don't worry, you can escape them with a backslash '\'. '\' has a super power to 
+    disable others' "super power" including itself.(It must be hard living with such 'useless' super power.)
+    That means /\\/ matches one '\' sign.
+
+    Another thing to say about '[]' is it also disables abbove metacharacters' "super power"s. 
+    [*+?] matches '*' or '+' or '?'. 
  
+
 5. ###  More powerful
     * grouping
+
+    '?','*' and '+'only work on character right before them, and '|' selects from string before and after it.
     	
     * shortcuts
     
@@ -123,7 +135,7 @@ tags: [regex, tutorial]
     	- [/ -~/](http://www.catonmat.net/blog/my-favorite-regex/)  matches all ASCII characters from the space to the tilde which are all printable characters!
     	
     
-    	- [/^1?$|^(11+?)\1+$/](http://coolshell.cn/articles/2704.html) matches all prime numbers.
+    	- [/\^1?$|\^(11+?)\1+$/](http://coolshell.cn/articles/2704.html) matches all prime numbers.
     	
     * __regex in practice__
       
