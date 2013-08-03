@@ -127,8 +127,8 @@ tags: [regex, tutorial]
 
 6. ### Interesting tricks
     * __one-line regex__
-    	- ["/ -~/"](http://www.catonmat.net/blog/my-favorite-regex/)  matches all ASCII characters from the space to the tilde which are all printable characters!
-    	- ["/^1?$|^(11+?)\1+$/"](http://coolshell.cn/articles/2704.html)magically matches all prime numbers.
+    	- [/ -~/](http://www.catonmat.net/blog/my-favorite-regex/)  matches all ASCII characters from the space to the tilde which are all printable characters!
+    	- [/\^1?$|^(11+?)\1+$/](http://coolshell.cn/articles/2704.html)magically matches all prime numbers.
     * __regex in practice__
       
     		email   =>		/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/
