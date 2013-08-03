@@ -119,11 +119,8 @@ tags: [regex, tutorial]
 
 5. ###  More powerful
     * grouping
-
     '?','*' and '+'only work on character right before them, and '|' selects from string before and after it.
-    	
     * shortcuts
-    
     * variables
     	What is you want to use the matched string? The best way is to assign it to certain variables.Fortunately, you don't have to do it by yourself, many languages have built-in variables for this.  
     	
@@ -131,9 +128,7 @@ tags: [regex, tutorial]
 6. ### Interesting tricks
     * __one-line regex__
     	- ["/ -~/"](http://www.catonmat.net/blog/my-favorite-regex/)  matches all ASCII characters from the space to the tilde which are all printable characters!
-    	
     	- ["/^1?$|^(11+?)\1+$/"](http://coolshell.cn/articles/2704.html)magically matches all prime numbers.
-    	
     * __regex in practice__
       
     		email   =>		/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/
