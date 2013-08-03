@@ -1,13 +1,13 @@
-    ---
-    layout: post
-    title: "Basic Regular Expression"
-    description: ""
-    category: 
-    tags: [regex, tutorial]
-    ---
-    {% include JB/setup %}
-    
-    
+---
+layout: post
+title: "Basic Regular Expression"
+description: ""
+category: 
+tags: [regex, tutorial]
+---
+{% include JB/setup %}
+
+
 1. ### What is Regular Expression and Why? 
     Regular Expression(Regex for simplicity) is a sequence of characters that forms a search pattern, mainly for use in pattern matching with string, or string matching.
     
@@ -19,10 +19,10 @@
     The quote shows two main features of regex: powerful but difficult. When faced with tricked or unbelievable hard problems, regex is always a way. When you decide to use regex, itself becomes a problem due to its difficult to code, understand and maintain.
     
     So, before moving to regex, make sure there is no other easy way to tackle your problem. 
-    
+
 2. ### Conventions
     Before further introduction, we need to make some conventions here. Because many programming language(like perl, python, ruby, perl...) have built-in regex, and the definition and usage diff from each other in some detail. Content below doesn't specify any language, only concerns simple and mutal regex knowledge.
-    
+
     
     First some definitions and conventions:
     <dl>
@@ -41,8 +41,8 @@
     <dt>match</dt>
     <dd>The real match between <strong>string</strong> and <strong>regex</strong> is denoted by =~, as used in ruby.</dd>
     </dl>
-    
-    
+
+
 3. ### Basic Matching
     Regex only does one thing: match a given string, return matched position if matched successufully or nil otherwise. If there are more than one matching reuslt, it only returns the first one.
     
@@ -55,13 +55,13 @@
     
         "Did you vote for Obama?"   =~ /Obama/      #=> true
         "Did you vote for Obama?"   =~ /obama/      #=> false
-    
-3. ### More flexible
+
+4. ### More flexible
     You might see the problem here. Only by typing the exact string, can you get the correct result. What if I don't care about the case of 
     all letters? What if I allow some mispelling like "Obema"? What if I want to find "Obama" or "Michelle"? etc.
     Where there is a probelm, there is a way. The hero here is '[]'(square bracket) and '|'. '[]' matches anything in it, while '|' repersents logic
     OR.
-    
+
     
         "Did you vote for Obama?"   =~ /[oO]b[ae]ma/                    #=> true
         "Michelle Obama is quite awesome!"  =~ /Miachelle | Barack/     #=> true
@@ -70,7 +70,7 @@
     
     * __One '[]' only matches one character in it.__
     * __'|' selects string before or after it, not character, which means /ab|cd/ doesn't match 'abd', only matches 'ab' or 'cd'__
-    
+
     
     Now you may wonder: what if there are many options for a situation, like match a digit or a letter? Of course you can write down 
     all of them in a pair of '[]': [abcdefghijklmnopqrstuvwxyz] or [0123456789]. Write these down for once may still be okay, but frequently using them 
@@ -103,13 +103,13 @@
     | []	    | any characters in []             |
     | ^         | the start of line                |
     | $         | the end of line                  |
-    
+
     
     Code above concerns two concepts: **position** and **repetition**. 
     
     While reading, you may wonder: what if I want to match a string in a certain position? What if I want to repeat a string instead of a char? This is where **group** comes to rescue.
-     
-4. ###  More powerful
+ 
+5. ###  More powerful
     * grouping
     	
     * shortcuts
@@ -117,8 +117,8 @@
     * variables
     	What is you want to use the matched string? The best way is to assign it to certain variables.Fortunately, you don't have to do it by yourself, many languages have built-in variables for this.  
     	
-    
-4. ### Interesting tricks
+
+6. ### Interesting tricks
     * __one-line regex__
     	- [/ -~/](http://www.catonmat.net/blog/my-favorite-regex/)  matches all ASCII characters from the space to the tilde which are all printable characters!
     	
