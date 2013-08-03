@@ -67,9 +67,9 @@ OR.
     "Did you vote for Obama?"   =~ /[oO]b[ae]ma/                    #=> true
     "Michelle Obama is quite awesome!"  =~ /Miachelle | Barack/     #=> true
 
-Notice:
-* __One '[]' only matches one character in it.__
-* __'|' selects string before or after it, not character, which means /ab|cd/ doesn't match 'abd', only matches 'ab' or 'cd'__
+Note:  
+1. __One '[]' only matches one character in it.__  
+2. __'|' selects string before or after it, not character, which means /ab|cd/ doesn't match 'abd', only matches 'ab' or 'cd'__
 
 Now you may wonder: what if there are many options for a situation, like match a digit or a letter? Of course you can write down 
 all of them in a pair of '[]': [abcdefghijklmnopqrstuvwxyz] or [0123456789]. Write these down for once may still be okay, but frequently using them 
@@ -77,8 +77,8 @@ is a nightmare. '[]' solves it before you know, the powerful '-' sign. [a-z] mat
 
 
 Note:  
-* __'-' works in the ASCII table way,so [+-a] is also valid.__
-* __If you want to include '-' itself in '[]', just put it at the last position like [abc-].__ 
+1. __'-' works in the ASCII table way,so [+-a] is also valid.__  
+2. __If you want to include '-' itself in '[]', just put it at the last position like [abc-].__ 
 
 In order to better illustrate and understand regex, we put emphisis on the matching part in place of mathcing position,like:  
 
