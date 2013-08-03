@@ -82,7 +82,6 @@ Note:
 * __'-' works in the ASCII table way,so [+-a] is also valid.__
 * __If you want to include '-' itself in '[]', just put it at the last position like [abc-].__ 
 
-
 In order to better illustrate and understand regex, we put emphisis on the matching part in place of mathcing position,like:  
 
 	"Hello, world" =~ /wo/								#=> Hello, <wo>rld
@@ -95,17 +94,17 @@ In order to better illustrate and understand regex, we put emphisis on the match
  
 The follow table shows metacharacters and their meaning.
 
-| symbol	| matches                           |
-|-----------|---------------------------------- |
-| .	        | any character                     |
-| *	        | zero or more repetition           | 
-| +         | one or more repetition            | 
-| ?	        | zero or one repetition            |
-| {m,n}	    | at least m, at most n repetition  |
-| {m,}      | at least m repetition             |
-| []	    | any characters in []              |
-| ^         | the start of line                 |
-| $         | the end of line                   |
+| symbol	| matches|
+|-----------|----------------------------------|
+| .	| any character|
+| *	| zero or more repetition| 
+| +| one or more repetition| 
+| ?	| zero or one repetition|
+| {m,n}	| at least m, at most n repetition|
+| {m,}| at least m repetition|
+| []	| any characters in []|
+| ^| the start of line|
+| $| the end of line|
 
 
 Code above concerns two concepts: **position** and **repetition**. 
