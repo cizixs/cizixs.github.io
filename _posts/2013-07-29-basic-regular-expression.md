@@ -96,8 +96,8 @@ ps: _In order to better illustrate and understand regex, we put emphisis on the 
 	
 
 The follow table shows metacharacters and their meaning.
-![alt regex](../images/regex01.png)
 
+![alt regex](../images/regex01.png)
 
 | symbol	| matches  |
 |-----------|----------------------------------|
@@ -123,10 +123,10 @@ Another thing to say about '[]' is it also disables abbove metacharacters' "supe
  
 
 ###  More powerful
-* grouping
-'?','*' and '+'only work on character right before them, and '|' selects from string before and after it.
+* grouping  
+    '?','*' and '+'only work on character right before them, and '|' selects from string before and after it.
 * shortcuts
-* variables
+* variables  
 	What is you want to use the matched string? The best way is to assign it to certain variables.Fortunately, you don't have to do it by yourself, many languages have built-in variables for this.  
 	
 
