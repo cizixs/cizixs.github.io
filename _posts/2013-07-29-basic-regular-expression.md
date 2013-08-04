@@ -62,8 +62,8 @@ all letters? What if I allow some mispelling like "Obema"? What if I want to fin
 Where there is a probelm, there is a way. The hero here is '[]'(square bracket) and '|'. '[]' matches anything in it, while '|' repersents logic
 OR.
 
-    "Did you vote for Obama?"   =~ /[oO]b[ae]ma/    #=> true
-    "Michelle Obama is quite awesome!"  =~ /Miachelle | Barack/ #=> true
+    "Did you vote for Obama?"   =~ /[oO]b[ae]ma/                    #=> true
+    "Michelle Obama is quite awesome!"  =~ /Miachelle | Barack/     #=> true
 
 Note:  
 * __One '[]' only matches one character in it.__
@@ -81,7 +81,7 @@ Note:
 Is that enough? Of course NO! To match a phone number, we need to find a convenient way to repeat digit for certain times(depends on the length of phone number).
 As always, there is already a solution. Following examples will demonstrate what you need.
 
-ps: _In order to better illustrate and understand regex, we put emphisis on the matching part in place of mathcing position_  
+*ps: In order to better illustrate and understand regex, we put emphisis on the matching part in place of mathcing position*
 
 	"Hello, world" =~ /wo/								#=> Hello, <wo>rld
 	"Hello, world" =~ /.l/								#=> H<el>lo, world
@@ -94,22 +94,6 @@ ps: _In order to better illustrate and understand regex, we put emphisis on the 
 	
 
 The follow table shows metacharacters and their meaning.
-
-![alt regex](../images/regex01.png)
-
-
-| symbol	| matches  |
-|-----------|----------------------------------|
-| .	| any character|
-| *	| zero or more repetition  | 
-| + | one or more repetition   | 
-| ?	| zero or one repetition   |
-| {m}   | m time(s) repetition |
-| {m,n}	| at least m, at most n repetition |
-| {m,}  | at least m repetition|
-| []	| any characters in [] |
-| ^ | the start of line|
-| $ | the end of line  |
 
 Symbols in above table are called "metacharacters"  as mentioned before. They have have different
 "super power"s compared to normal characters. Here is a question: what if I just want to use the symbol itself
