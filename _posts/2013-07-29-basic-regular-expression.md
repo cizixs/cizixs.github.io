@@ -100,19 +100,6 @@ The follow table shows metacharacters and their meaning.
 ![regex](https://github.com/JackwuCode/jackwucode.github.com/raw/master/images/regex01.png)
 
 
-| symbol	| matches  |
-|-----------|----------------------------------|
-| .	| any character|
-| *	| zero or more repetition  | 
-| + | one or more repetition   | 
-| ?	| zero or one repetition   |
-| {m}   | m time(s) repetition |
-| {m,n}	| at least m, at most n repetition |
-| {m,}  | at least m repetition|
-| []	| any characters in [] |
-| ^ | the start of line|
-| $ | the end of line  |
-
 Symbols in above table are called "metacharacters"  as mentioned before. They have have different
 "super power"s compared to normal characters. Here is a question: what if I just want to use the symbol itself
 instead of its special meaning? Don't worry, you can escape them with a backslash '\'. '\' has a super power to 
@@ -134,7 +121,7 @@ Another thing to say about '[]' is it also disables abbove metacharacters' "supe
 ### Interesting tricks
 * __one-line regex__
 	- [/ -~/](http://www.catonmat.net/blog/my-favorite-regex/)  matches all ASCII characters from the space to the tilde which are all printable characters!
-	- [\^1?$|\^(11+?)\1+$](http://coolshell.cn/articles/2704.html)magically matches all prime numbers.
+	- [\\^1?$|\\^(11+?)\1+$](http://coolshell.cn/articles/2704.html)magically matches all prime numbers.
 * __regex in practice__
   
 		email   =>		/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/
