@@ -98,14 +98,9 @@ ps: _In order to better illustrate and understand regex, we put emphisis on the 
 The follow table shows metacharacters and their meaning.
 
 ![regex](../images/weibo.png)
-![regex](https://github.com/JackwuCode/jackwucode.github.com/tree/master/images/weibo.png)
-![regex](weibo.png)
+![regex](https://github.com/JackwuCode/jackwucode.github.com/raw/master/images/weibo.png)
 
-<img src="weibo.png" alt="image"/>
-
-[<img src="../images/weibo.png" alt="weibo" />](http://www.baidu.com)
-
-
+|-----------|----------|
 | symbol	| matches  |
 |-----------|----------------------------------|
 | .	| any character|
