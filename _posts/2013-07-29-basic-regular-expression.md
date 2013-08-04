@@ -128,6 +128,8 @@ That means [\*+?] matches '*' or '+' or '?'.
     Position is also an important concept, there is also a table:  
     ![regex position][]
 
+    **Note: Above tables come from [DaveChild][]**
+
 
 ### Interesting tricks
 * __one-line regex__
@@ -141,3 +143,4 @@ That means [\*+?] matches '*' or '+' or '?'.
 [regex table]: https://github.com/JackwuCode/jackwucode.github.com/raw/master/images/regex01.png "regex table"
 [regex position]: https://github.com/JackwuCode/jackwucode.github.com/raw/master/images/regex03.png "regex string"
 [regex quote]: http://www.jwz.org/
+[DaveChild]: http://www.cheatography.com/davechild/cheat-sheets/regular-expressions/
