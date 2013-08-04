@@ -26,7 +26,7 @@ problems as me.
 
 2. github images won't show  
     [Markdown syntax][] demonstrates to use images in two ways:
-    + \![alt text](/path/to/image.jpg)
+    + \![alt text] (/path/to/image.jpg)
     + \![alt text][id]  
     [id]: url/to/image "Option title attribute"
 
