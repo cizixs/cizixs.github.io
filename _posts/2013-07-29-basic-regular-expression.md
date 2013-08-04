@@ -100,7 +100,7 @@ The follow table shows metacharacters and their meaning.
 ![regex](../images/weibo.png)
 ![regex](https://github.com/JackwuCode/jackwucode.github.com/raw/master/images/weibo.png)
 
-|-----------|----------|
+
 | symbol	| matches  |
 |-----------|----------------------------------|
 | .	| any character|
