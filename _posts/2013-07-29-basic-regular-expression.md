@@ -66,6 +66,7 @@ OR.
     "Michelle Obama is quite awesome!"  =~ /Miachelle | Barack/     #=> true
 
 Note:  
+
 * __One '[]' only matches one character in it.__
 * __'|' selects string before or after it, not character, which means /ab|cd/ doesn't match 'abd', only matches 'ab' or 'cd'__
 
@@ -75,13 +76,14 @@ all of them in a pair of '[]': [abcdefghijklmnopqrstuvwxyz] or [0123456789]. Wri
 is a nightmare. '[]' solves it before you know, the powerful '-' sign. [a-z] matches anything from 'a' to 'z' and [0-matches from 'to '9'.
 
 Note:  
+
 * __'-' works in the ASCII table way,so [+-a] is also valid.__
 * __If you want to include '-' itself in '[]', just put it at the last position like [abc-].__ 
 
 Is that enough? Of course NO! To match a phone number, we need to find a convenient way to repeat digit for certain times(depends on the length of phone number).
 As always, there is already a solution. Following examples will demonstrate what you need.
 
-*ps: In order to better illustrate and understand regex, we put emphisis on the matching part in place of mathcing position*
+ps: _In order to better illustrate and understand regex, we put emphisis on the matching part in place of mathcing position_  
 
 	"Hello, world" =~ /wo/								#=> Hello, <wo>rld
 	"Hello, world" =~ /.l/								#=> H<el>lo, world
@@ -94,12 +96,27 @@ As always, there is already a solution. Following examples will demonstrate what
 	
 
 The follow table shows metacharacters and their meaning.
+![alt regex](../images/regex01.png)
+
+
+| symbol	| matches  |
+|-----------|----------------------------------|
+| .	| any character|
+| *	| zero or more repetition  | 
+| + | one or more repetition   | 
+| ?	| zero or one repetition   |
+| {m}   | m time(s) repetition |
+| {m,n}	| at least m, at most n repetition |
+| {m,}  | at least m repetition|
+| []	| any characters in [] |
+| ^ | the start of line|
+| $ | the end of line  |
 
 Symbols in above table are called "metacharacters"  as mentioned before. They have have different
 "super power"s compared to normal characters. Here is a question: what if I just want to use the symbol itself
 instead of its special meaning? Don't worry, you can escape them with a backslash '\'. '\' has a super power to 
 disable others' "super power" including itself.(It must be hard living with such 'useless' super power.)
-That means /\\/ matches one '\' sign.
+That means /\\\\/ matches one '\' sign.
 
 Another thing to say about '[]' is it also disables abbove metacharacters' "super power"s. 
 [*+?] matches '*' or '+' or '?'. 
