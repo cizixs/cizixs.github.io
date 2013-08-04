@@ -25,6 +25,9 @@ The best way to avoid this is to build your blog locally before you deploy it to
 fix all the problems.
 
 #### github images won't show  
+
+![weibo logo](images/weibo.png)
+
 [Markdown syntax][] demonstrates to use images in two ways:
 
     + ![alt text] (/path/to/image.jpg)  
