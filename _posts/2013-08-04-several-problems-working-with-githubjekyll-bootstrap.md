@@ -26,7 +26,8 @@ fix all the problems.
 
 #### github images won't show  
 
-![weibo logo](/images/weibo.png)
+
+![weibo test](../images/weibo.png)
 
 [Markdown syntax][] demonstrates to use images in two ways:
 
