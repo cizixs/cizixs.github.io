@@ -13,13 +13,13 @@ I majored in Computer Science at NJU which is a proud in my life.
 
 **You can find me at:**
 
-+ [<img src="images/weibo.png" alt="Weibo" style="width: 40px;"/>](http://weibo.com/1921727853/profile) [`Weibo`](http://weibo.com/1921727853/profile)
++ [<img src="./images/weibo.png" alt="Weibo" style="width: 40px;"/>](http://weibo.com/1921727853/profile) [`Weibo`](http://weibo.com/1921727853/profile)
 
-+ [<img src="images/facebook.png" alt="Facebook" style="width: 40px;"/>](http://www.facebook.com/wei.wu.353250) [`Facebook`](http://www.facebook.com/wei.wu.353250)
++ [<img src="./images/facebook.png" alt="Facebook" style="width: 40px;"/>](http://www.facebook.com/wei.wu.353250) [`Facebook`](http://www.facebook.com/wei.wu.353250)
 
-+ [<img src="images/github.png" alt="Github" style="width: 40px;"/>](https://github.com/JackWuCode) [`Gitub`](https://github.com/JackWuCode)
++ [<img src="./images/github.png" alt="Github" style="width: 40px;"/>](https://github.com/JackWuCode) [`Gitub`](https://github.com/JackWuCode)
 
-+ [<img src="images/douban.png" alt="Douban" style="width: 40px;"/>](http://www.douban.com/people/38501585/) [`Douban`](http://www.douban.com/people/38501585/)
++ [<img src="./images/douban.png" alt="Douban" style="width: 40px;"/>](http://www.douban.com/people/38501585/) [`Douban`](http://www.douban.com/people/38501585/)
 
 
 **Also you can contact me at:**  

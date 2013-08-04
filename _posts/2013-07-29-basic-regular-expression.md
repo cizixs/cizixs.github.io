@@ -11,7 +11,7 @@ tags: [regex, tutorial]
 ### What is Regular Expression and Why? 
 Regular Expression(Regex for simplicity) is a sequence of characters that forms a search pattern, mainly for use in pattern matching with string, or string matching.
 
-There is a very famous quote about regex by [Jamie Zawinski](http://www.jwz.org/):
+There is a very famous quote about regex by [Jamie Zawinski][regex quote]
 > Some people, when confronted with a problem, 
 > think “I know, I'll use regular expressions.”
 > Now they have two problems.
@@ -97,8 +97,7 @@ ps: _In order to better illustrate and understand regex, we put emphisis on the 
 
 The follow table shows metacharacters and their meaning.
 
-![regex](https://github.com/JackwuCode/jackwucode.github.com/raw/master/images/regex01.png)
-
+![regex][regex table]
 
 Symbols in above table are called "metacharacters"  as mentioned before. They have have different
 "super power"s compared to normal characters. Here is a question: what if I just want to use the symbol itself
@@ -107,16 +106,28 @@ disable others' "super power" including itself.(It must be hard living with such
 That means /\\\\/ matches one '\' sign.
 
 Another thing to say about '[]' is it also disables abbove metacharacters' "super power"s. 
-[*+?] matches '*' or '+' or '?'. 
+That means [\*+?] matches '*' or '+' or '?'. 
  
 
 ###  More powerful
 * grouping  
     '?','*' and '+'only work on character right before them, and '|' selects from string before and after it.
-* shortcuts
-* variables  
-	What is you want to use the matched string? The best way is to assign it to certain variables.Fortunately, you don't have to do it by yourself, many languages have built-in variables for this.  
-	
+    A better will enable user to change it the way he/she wishes it to be, like linux, Vim etc. '()' will do the magic:
+    you can group any elements as a unit for certain rule to apply to. 
+
+        abdefg  =~  /a(b|c)d/       #=> <abd>efg
+        ababb   =~  /(ab)+/         +=> <abab>b
+
+    __Note:[ab]+ is diffferent from (ab)+_  _
+    '()' also selects and stores the value in between for late use, this post won't cover it.
+
+* shortcuts  
+    Some strings like digit, letter, word, space etc are frequently used, regex already stores them in some variables for conveninence.
+    ![regex string][] 
+
+    Position is also an important concept, there is also a table:  
+    ![regex position][]
+
 
 ### Interesting tricks
 * __one-line regex__
@@ -126,3 +137,8 @@ Another thing to say about '[]' is it also disables abbove metacharacters' "supe
   
 		email   =>		/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/
 		ip		=>		/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/
+
+[regex table]: https://github.com/JackwuCode/jackwucode.github.com/raw/master/images/regex01.png "regex table"
+[regex string]: https://github.com/JackwuCode/jackwucode.github.com/raw/master/images/regex02.png "regex string"
+[regex position]: https://github.com/JackwuCode/jackwucode.github.com/raw/master/images/regex03.png "regex string"
+[regex quote]: http://www.jwz.org/

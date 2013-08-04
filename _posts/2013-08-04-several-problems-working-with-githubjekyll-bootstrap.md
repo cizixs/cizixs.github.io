@@ -16,7 +16,7 @@ headache. Some of the problems are solved while others remain. This post aims to
 problems as me.
 
 ##Problems
-#### [github pages build failure][1]
+#### 1. [github pages build failure][1]
 Yep, the first thing that bugs me. Due to build failure, blog won't update. This is caused mainly by syntax error in
 my posts and pages. Actually, github will email if such thing happens(I didn't realize this until a day after the problem),
 just keep an eye on your email.
@@ -24,10 +24,7 @@ just keep an eye on your email.
 The best way to avoid this is to build your blog locally before you deploy it to github. Ruby + Jekyll will do, make sure to 
 fix all the problems.
 
-#### github images won't show  
-
-
-![weibo test](../images/weibo.png)
+#### 2. github images won't show  
 
 [Markdown syntax][] demonstrates to use images in two ways:
 
@@ -43,7 +40,7 @@ I googled the problem and find [this answer][], and replace the image url to:
 
     https://github.com/user/repository/raw/branch/filename.
 
-#### github repository and github pages diff from each other.  
+#### 3. github repository and github pages diff from each other.  
 I don't know why, the correct layout in repository will be a mess viewed from blog page itself.
 
 [1]: https://help.github.com/articles/pages-don-t-build-unable-to-run-jekyll
