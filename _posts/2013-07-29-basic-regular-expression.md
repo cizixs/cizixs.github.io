@@ -123,7 +123,7 @@ That means [\*+?] matches '*' or '+' or '?'.
 
 * shortcuts  
     Some strings like digit, letter, word, space etc are frequently used, regex already stores them in some variables for conveninence.  
-    <img src=" https://github.com/JackwuCode/jackwucode.github.com/raw/master/images/regex02.png" align="center" />
+    <img src=" https://github.com/JackwuCode/jackwucode.github.com/raw/master/images/regex02.png" width="300"/>
 
     Position is also an important concept, there is also a table:  
     ![regex position][]
