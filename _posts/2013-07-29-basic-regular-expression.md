@@ -122,8 +122,8 @@ That means [\*+?] matches '*' or '+' or '?'.
     '()' also selects and stores the value in between for late use, this post won't cover it.
 
 * shortcuts  
-    Some strings like digit, letter, word, space etc are frequently used, regex already stores them in some variables for conveninence.
-    ![regex string][] 
+    Some strings like digit, letter, word, space etc are frequently used, regex already stores them in some variables for conveninence.  
+    <img src=" https://github.com/JackwuCode/jackwucode.github.com/raw/master/images/regex02.png" align="center" />
 
     Position is also an important concept, there is also a table:  
     ![regex position][]
@@ -139,6 +139,5 @@ That means [\*+?] matches '*' or '+' or '?'.
 		ip		=>		/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/
 
 [regex table]: https://github.com/JackwuCode/jackwucode.github.com/raw/master/images/regex01.png "regex table"
-[regex string]: https://github.com/JackwuCode/jackwucode.github.com/raw/master/images/regex02.png "regex string"
 [regex position]: https://github.com/JackwuCode/jackwucode.github.com/raw/master/images/regex03.png "regex string"
 [regex quote]: http://www.jwz.org/
