@@ -26,8 +26,8 @@ problems as me.
 
 2. github images won't show  
     [Markdown syntax][] demonstrates to use images in two ways:
-    + ![alt text](/path/to/image.jpg)
-    + ![alt text][id]
+    + \![alt text](/path/to/image.jpg)
+    + \![alt text][id]  
     [id]: url/to/image "Option title attribute"
 
     But github works in a mysterious way. When I use './images/img.jpg' under my root directory of blog, it works out well.
