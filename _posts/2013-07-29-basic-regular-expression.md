@@ -13,7 +13,7 @@ Regular Expression(Regex for simplicity) is a sequence of characters that forms 
 
 There is a very famous quote about regex by [Jamie Zawinski](http://www.jwz.org/):
 > Some people, when confronted with a problem, 
-> think “I know, I'll use regular expressions.”   
+> think “I know, I'll use regular expressions.”
 > Now they have two problems.
 
 The quote shows two main features of regex: powerful but difficult. When faced with tricked or unbelievable hard problems, regex is always a way. When you decide to use regex, itself becomes a problem due to its difficult to code, understand and maintain.
@@ -60,17 +60,17 @@ In order to better illustrate and understand regex, we put emphisis on the match
 	"stay hungry stay foolish" =~ / s[tl]ay/			#=> stay hungry <stay> foolish 
 	"stay hungry stay foolish" =~ /^st[aeiou]y/			#=> <stay> hungry stay foolish
 	
-   
+ 
 The follow table shows metacharacters and their meaning.
-  
+
 | symbol	| matches                          |
 |-----------|----------------------------------|
-| .	        | any character                    |  
+| .	        | any character                    |
 | *	        | zero or more repetition          | 
 | +         | one or more repetition           | 
 | ?	        | zero or one repetition           |
 | {m,n}	    | at least m, at most n repetition |
-| {m,}      | at least m repetition            |  
+| {m,}      | at least m repetition            |
 | []	    | any characters in []             |
 | ^         | the start of line                |
 | $         | the end of line                  |
@@ -101,5 +101,3 @@ While reading, you may wonder: what if I want to match a string in a certain pos
   
 		email   =>		/\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/
 		ip		=>		/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/
-
-
