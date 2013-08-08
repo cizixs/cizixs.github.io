@@ -19,3 +19,9 @@ Now I work at ctrip at Shanghai.
 ##More detail
 I spent my four years in college to get to know computer, watch movies, stay in a relationship .
 Really hate education system, that's why I choose to work after graduation instead of further education
+
+{% highlight ruby %}
+def show
+    @widget = Widget(params[:id])
+end
+{% endhighlight %}
