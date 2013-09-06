@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "Basic Regular Expression"
+title: "RESTful API design"
 description: ""
 category: 
-tags: [regex, tutorial]
+tags: [RESTful, API]
 ---
 {% include JB/setup %}
 
