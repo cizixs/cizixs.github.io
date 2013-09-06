@@ -40,6 +40,7 @@ RESTful API design
 
 ###How RESTful is better?
 先来看看RESTful的特点，这样就能更好地理解上面的内容：
+
 1. 明确地使用HTTP方法（Use HTTP methods explicitly）
 2. 无状态（Be stateless）
 3. 把URI组织成目录形式（Expose directory structure-like URIs）
@@ -84,6 +85,7 @@ GET只是一条请求，adduser指定具体的行为。
 最后一个原则是：RESTful提供XML和json两种格式的数据传输，这没什么可说的。
 
 总的来说，RESTful的这些原则都很不错，你也大致对它的优点有了直观的了解，现在总结一下吧：
+
 + 美感（aesthetic）
 + 可扩展性（scalablility）
 + 普遍性（generality）
