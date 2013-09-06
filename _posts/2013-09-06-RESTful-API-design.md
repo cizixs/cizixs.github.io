@@ -101,6 +101,7 @@ API就是客户端和服务器端通信的中间人（翻译），设计优美�
 + 轮询、异步处理
 + 错误RESTful 调用处理
 
+这些就不再这里说啦！
 
 ###参考资料
 1. [Thoughts on RESTful API Design](https://restful-api-design.readthedocs.org/en/latest/index.html)
