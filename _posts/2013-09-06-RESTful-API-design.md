@@ -8,9 +8,6 @@ tags: [RESTful, API]
 {% include JB/setup %}
 
 
-RESTful API design
---------------------
-
 这篇文章主要介绍RESTful的基本概念和设计时需要注意的事项。所有的内容仅针对刚接触RESTful的同学，其他人请移步。
 
 ### RESTful, WTF? 
