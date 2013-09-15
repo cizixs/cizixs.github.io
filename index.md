@@ -17,9 +17,7 @@ I majored in Computer Science at NJU which is a proud in my life.
 
 + [<img src="./images/facebook.png" alt="Facebook" style="width: 40px;"/>](http://www.facebook.com/wei.wu.353250) [`Facebook`](http://www.facebook.com/wei.wu.353250)
 
-
 + [<img src="./images/github.png" alt="Github" style="width: 40px;"/>](https://github.com/JackWuCode) [`Gitub`](https://github.com/JackWuCode)
-
 
 + [<img src="./images/douban.png" alt="Douban" style="width: 40px;"/>](http://www.douban.com/people/38501585/) [`Douban`](http://www.douban.com/people/38501585/)
 
@@ -27,7 +25,7 @@ I majored in Computer Science at NJU which is a proud in my life.
 **Also you can contact me at:**  
 
 + **<wuwei4455@gmail.com>**
-    
+ 
 ## Blogs
 
 I write blogs on github pages, which is a delight for guys like me who can't care less about building a website.
