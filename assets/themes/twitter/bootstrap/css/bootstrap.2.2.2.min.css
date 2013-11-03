@@ -784,7 +784,7 @@ button.close{padding:0;cursor:pointer;background:transparent;border:0;-webkit-ap
 .customed_post{ 
     display: block;
     background-color: #eeeeee;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
     margin-top: 20px;
     box-shadow: 3px 3px 5px 6px #ccc;
     -moz-box-shadow: 3px 3px 5px 6px #ccc;
@@ -794,6 +794,7 @@ button.close{padding:0;cursor:pointer;background:transparent;border:0;-webkit-ap
 .customed_post .post_info{
     padding-left: 10px;
     margin-bottom: 30px;
+    margin-top: 20px;
 }
 
 .customed_post .post_info .post_title{
