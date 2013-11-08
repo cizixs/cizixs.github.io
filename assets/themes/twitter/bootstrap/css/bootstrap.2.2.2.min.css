@@ -20,7 +20,21 @@ a:hover,a:active{outline:0;}
 sub,sup{position:relative;font-size:75%;line-height:0;vertical-align:baseline;}
 sup{top:-0.5em;}
 sub{bottom:-0.25em;}
-img{max-width:100%;width:auto\9;height:auto;vertical-align:middle;border:0;-ms-interpolation-mode:bicubic;}
+img{
+    max-width:100%;
+    width:auto\9;
+    height:auto;
+    vertical-align:middle;
+    border:0;
+    -ms-interpolation-mode:bicubic;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    -webkit-box-shadow: 3px 3px 3px #7C7C7C; 
+    box-shadow: 3px 3px 3px #7C7C7C;
+}
 #map_canvas img,.google-maps img{max-width:none;}
 button,input,select,textarea{margin:0;font-size:100%;vertical-align:middle;}
 button,input{*overflow:visible;line-height:normal;}
