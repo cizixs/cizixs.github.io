@@ -26,14 +26,16 @@ img{
     height:auto;
     vertical-align:middle;
     border:0;
+    border-radius: 8px;
     -ms-interpolation-mode:bicubic;
     margin-top: 30px;
     margin-bottom: 30px;
     display: block;
     margin-left: auto;
     margin-right: auto;
-    -webkit-box-shadow: 3px 3px 3px #7C7C7C; 
-    box-shadow: 3px 3px 3px #7C7C7C;
+    -webkit-box-shadow: 3px 3px 3px 5px #7C7C7C; 
+    -moz-box-shadow: 3px 3px 3px 5px #7C7C7C;
+    box-shadow: 3px 3px 3px 5px #7C7C7C;
 }
 #map_canvas img,.google-maps img{max-width:none;}
 button,input,select,textarea{margin:0;font-size:100%;vertical-align:middle;}
@@ -797,8 +799,9 @@ button.close{padding:0;cursor:pointer;background:transparent;border:0;-webkit-ap
 
 .customed_post{ 
     display: block;
-    background-color: #eeeeee;
+    background-color: #ffffff;
     margin-top: 50px;
+    border-radius: 8px;
     box-shadow: 3px 3px 5px 6px #ccc;
     -moz-box-shadow: 3px 3px 5px 6px #ccc;
     -webkit-box-shadow: 3px 3px 5px 6px #ccc;
@@ -806,9 +809,9 @@ button.close{padding:0;cursor:pointer;background:transparent;border:0;-webkit-ap
 
 .customed_post .post_info{
     padding-left: 10px;
-    padding-top: 10px;
+    padding-top: 30px;
     margin-bottom: 10px;
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
 .customed_post .post_info .post_title{
@@ -819,7 +822,7 @@ button.close{padding:0;cursor:pointer;background:transparent;border:0;-webkit-ap
 
 .customed_post .post_info a{
     color: #396FBB;
-    font-size: 24px;
+    font-size: 26px;
     text-decoration: none;
 }
 
@@ -836,7 +839,34 @@ button.close{padding:0;cursor:pointer;background:transparent;border:0;-webkit-ap
     padding: 30px;
     margin-top: 30px;
     margin-bottom: 30px;
+    border-radius: 8px;
     box-shadow: 3px 3px 5px 6px #ccc;
     -moz-box-shadow: 3px 3px 5px 6px #ccc;
     -webkit-box-shadow: 3px 3px 5px 6px #ccc;
+}
+
+.fa-hover{
+    float: left;
+    width: 20%;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.fa-hover .fa{
+    -webkit-transform: scale(1,1);
+    -webkit-transition-timing-function: ease-out;
+    -webkit-transition-duration: 250ms;
+    -moz-transform: scale(1,1);
+    -moz-transition-timing-function: ease-out;
+    -moz-transition-duration: 250ms;
+}
+
+.fa-hover .fa:hover{
+    color: #3e4f5d;
+    -webkit-transform: scale(1.6,1.6);
+    -webkit-transition-timing-function: ease-out;
+    -webkit-transition-duration: 250ms;
+    -moz-transform: scale(1.6,1.6);
+    -moz-transition-timing-function: ease-out;
+    -moz-transition-duration: 250ms;
 }
