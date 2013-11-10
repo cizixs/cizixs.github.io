@@ -1,18 +1,54 @@
 /* Custom container */
 .container-narrow {
-  margin: 0 auto;
+  padding-left: 240px;
+  //margin: 0 auto;
   max-width: 760px; 
+  float: left;
 }
 
 .container-narrow .content{
-    padding: 10px,40px;
+    padding-top: 30px;
+    padding-left: 15px;
 }
 
 .container-narrow > hr {
   margin: 30px 0; }
 
+.navbar{
+}
+
 .navbar .nav {
-  float: right; }
+  float: right; 
+}
+
+.navbar .title{
+    font-size: 40px;
+    color: #9E3B33;
+    padding-top: 24px;
+    text-align: center;
+    font-weight: bold;
+    -webkit-transform: rotate(0deg) scale(1,1);
+    -webkit-transition-timing-function: ease-out;
+    -webkit-transition-duration: 150ms;
+    -moz-transform: rotate(0deg) scale(1,1);
+    -moz-transition-timing-function: ease-out;
+    -moz-transition-duration: 150ms;
+}
+
+.navbar .title:hover{
+    -webkit-transform: rotate(-2deg) scale(1.2,1.2);
+    -webkit-transition-timing-function: ease-out;
+    -webkit-transition-duration: 150ms;
+    -moz-transform: rotate(-2deg) scale(1.2,1.2);
+    -moz-transition-timing-function: ease-out;
+    -moz-transition-duration: 150ms;
+}
+
+#content-wrap{
+    float: left;
+    margin-left: 30px;
+    margin-right: 30px;
+}
 
 /* posts index */
 .post > h3.title {
