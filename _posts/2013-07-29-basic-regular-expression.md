@@ -20,6 +20,9 @@ The quote shows two main features of regex: powerful but difficult. When faced w
 
 So, before moving to regex, make sure there is no other easy way to tackle your problem. 
 
+
+![regex]
+
 ### Conventions
 Before further introduction, we need to make some conventions here. Because many programming language(like perl, python, ruby, perl...) have built-in regex, and the definition and usage diff from each other in some detail. Content below doesn't specify any language, only concerns simple and mutal regex knowledge.
 
@@ -144,3 +147,4 @@ That means [\*+?] matches '*' or '+' or '?'.
 [regex position]: https://github.com/JackwuCode/jackwucode.github.com/raw/master/images/regex03.png "regex string"
 [regex quote]: http://www.jwz.org/
 [DaveChild]: http://www.cheatography.com/davechild/cheat-sheets/regular-expressions/
+[regex]: http://twiki.org/p/pub/Codev/TWikiPresentation2013x03x07/regex-example-2.png

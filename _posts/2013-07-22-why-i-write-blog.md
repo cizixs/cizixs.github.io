@@ -15,6 +15,7 @@ many thanks to [Github](http://www.github.com) and [jekyllbootstrap](http://jeky
 jekyll-bootstrap is amazingly easy to start, but flexible enough for anyone to customize themes, comments, pictures, rss etc.
 There may not enough themes to choose from at first, but the simplicity design is incredibly comfortable, so, here we go!
 
+![walle]
 
 ### Why I Write Blog?
 
@@ -36,3 +37,5 @@ Once started, there will be no stop. I would keep wirting and sharing until the 
 Since it's been here, I'd try my best to perfect it. Clearing my thought and spread it out, if my blog could help anyone, it won't be a waste of time and energy.
 
 Life is a bitch, Blog on!
+
+[walle]: http://earnthis.net/wp-content/uploads/2013/09/walle-photo-1.jpg

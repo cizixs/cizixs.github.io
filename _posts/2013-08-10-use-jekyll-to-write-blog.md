@@ -15,9 +15,12 @@ To create a new post:
 
 It will automatically create a post under _post folder with format 'date-title.md'.
 
+![jekyll]
+
 To create a new page:
 
     rake page name='page name'
 
 You can specify the path of the page, like /about.md, pages/about.md.
 
+[jekyll]: http://blog.paulisageek.com/images/jekyll.png

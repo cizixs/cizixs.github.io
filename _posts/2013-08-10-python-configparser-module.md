@@ -12,6 +12,7 @@ Python has a rich library which is clear, simple and easy-to-use.
 It covers all subjects you might think of, from text process to network parser, from email to UI.
 About python libraries and modules, you can refer to [python wiki](http://wiki.python.org/moin/UsefulModules), and [Python Module of the Module](http://pymotw.com/2/).
 
+![python]
 
 ##About ConfigParser
 ConfigParser is a relatively simple module, it involves standard read, write ,remove and  udpate functions.
@@ -49,3 +50,4 @@ Like any kind of data, it provides **read**, **write**, **remove** and **update*
     parser.remove_option('section', 'key')  #remove a certain item
     parser.add_section('section')           #add a new section
 
+[python]: http://rlv.zcache.com/python_programming_language_fridge_magnet-r1728c7a603db4d8c9922cb0d122bf95f_x7js9_8byvr_512.jpg

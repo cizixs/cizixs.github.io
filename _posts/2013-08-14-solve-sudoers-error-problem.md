@@ -26,6 +26,7 @@ Yep, I have to edit 'sudoers' file, but it requires root privilege. There are 2 
 + login as root -> but I don't know the password
 + using 'sudo' and become root for once -> sudo didn't work because of /etc/sudoers
 
+![sudoer]
 
 ###How to solve?
 I was desperate for a solution, and started turning to google for help. The 
@@ -51,3 +52,5 @@ You never want this to happen again! Now I have access to root user, but remembe
     Don't use root account unless you knoe exactly what you're doing.
 
 That doesn't mean throwing away root like I did in the past. **Root** is the superhero who'll come to rescue when some shit happens.
+
+[sudoer]: http://imgs.xkcd.com/comics/sandwich.png
