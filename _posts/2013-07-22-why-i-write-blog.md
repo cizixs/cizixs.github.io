@@ -2,8 +2,8 @@
 layout: post
 title: "Why I Write Blog?"
 description: ""
-category: 
-tags: []
+category: 生活杂谈
+tags: [blog, me]
 ---
 {% include JB/setup %}
 

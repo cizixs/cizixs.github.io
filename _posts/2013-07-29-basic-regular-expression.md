@@ -2,8 +2,8 @@
 layout: post
 title: "Basic Regular Expression"
 description: ""
-category: 
-tags: [regex, tutorial]
+category: 程序技术 
+tags: [regex, tutorial, basic]
 ---
 {% include JB/setup %}
 

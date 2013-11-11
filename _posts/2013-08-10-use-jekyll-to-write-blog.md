@@ -2,7 +2,7 @@
 layout: post
 title: "Use Jekyll to Write Blog"
 description: ""
-category: 
+category: 程序技术
 tags: [jekyll, blog]
 ---
 {% include JB/setup %}

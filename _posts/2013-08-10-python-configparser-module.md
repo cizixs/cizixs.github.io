@@ -2,8 +2,8 @@
 layout: post
 title: "Python ConfigParser Module"
 description: ""
-category: 
-tags: [python, library, configparser]
+category: 程序技术
+tags: [python, library, configparser, basic]
 ---
 {% include JB/setup %}
 

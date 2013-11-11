@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "Several Problems Working with Github+Jekyll bootstrap"
+title: "Problems Working with Github+Jekyll"
 description: ""
-category: Blog
-tags: [Error, Learning, Github Pages, Jekyll]
+category: 程序技术
+tags: [error, learning, github pages, jekyll]
 ---
 {% include JB/setup %}
 

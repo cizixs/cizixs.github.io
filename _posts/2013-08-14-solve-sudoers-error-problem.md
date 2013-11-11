@@ -2,8 +2,8 @@
 layout: post
 title: "solve sudoers error problem"
 description: ""
-category: 
-tags: []
+category: 程序技术 
+tags: [error, sudo, linux]
 ---
 {% include JB/setup %}
 
