@@ -1,9 +1,9 @@
 /* Custom container */
 .container-narrow {
-  padding-left: 240px;
-  //margin: 0 auto;
-  max-width: 760px; 
-  float: left;
+  margin: 0 auto;
+  //max-width: 760px; 
+  min-width: 640px;
+  width: 60%;
 }
 
 .container-narrow .content{
