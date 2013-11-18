@@ -4,7 +4,7 @@ tagline:
 ---
 {% include JB/setup %}
 
-<p align="right"> <h4>  与你那时的面貌相比，我更爱你现在备受摧残的面容。 </h4> </p> 
+<p align="right"> <h4>  与你那时的面貌相比，我更爱你现在备受摧残的面容。 </h4> </p>
 <p align="right"> 【杜拉斯】《情人》 </p>
 {% for post in site.posts offset: 0 limit: 3 %}
 <div class="customed_post">
@@ -17,3 +17,7 @@ tagline:
     </div>
 </div>
 {% endfor %}
+
+<div class="continue">
+    <a href="/pages/archive.html"><i class="fa fa-hand-o-left fa-3x"></i> Read All </a>
+</div>

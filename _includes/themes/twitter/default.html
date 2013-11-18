@@ -40,10 +40,10 @@
 
     <script>
     $(document).ready(function(){
-    
+
         // hide #back-top first
         $("#back-top").hide();
-    
+
         // fade in #back-top
         $(function () {
             $(window).scroll(function () {
@@ -53,7 +53,7 @@
                     $('#back-top').fadeOut();
                 }
         });
-    
+
     // scroll body to 0px on click
         $('#back-top a').click(function () {
             $('body,html').animate({
@@ -62,7 +62,7 @@
             return false;
             });
         });
-    
+
     });
     </script>
 
@@ -89,7 +89,6 @@
   </head>
 
   <body>
-  <!-- 
     <div class="navbar">
       <div class="navbar-inner">
           <a class="brand" href="{{ HOME_PATH }}">{{ site.title }}</a>
@@ -100,9 +99,16 @@
             <li> <a href="/pages/about.html"> About </a> </li>
           </ul>
         </div>
+        <div class="social">
+            <a href="http://weibo.com/1921727853/profile" target="_blank"> <i class="fa fa-weibo"></i></a>
+            <a href="www.facebook.com/wei.wu.353250" target="_blank"> <i class="fa fa-facebook-square"></i></a>
+            <a href="http://github.com/cizixs" target="_blank"> <i class="fa fa-github"></i></a>
+            <a href="http://www.renren.com/293912760/profile" target="_blank"> <i class="fa fa-renren"></i></a>
+            <a href="twitter" target="_blank"> <i class="fa fa-twitter"></i></a>
+        </div>
       </div>
-    -->
 
+   <!--
    <div class="navbar">
        <div class="title">
            Cizixs Writes Here!
@@ -111,7 +117,7 @@
 
     <div id="left-side-bar">
         <div class="title"> {{ page.title }} </div>
-        
+
         <ul class="nav">
             <li> <a href="/index.html"> Home <i class="fa fa-home"> </i> </a></li>
             <li> <a href="/pages/archive.html"> Archive <i class="fa fa-archive"> </i> </a> </li>
@@ -130,7 +136,7 @@
         </div>
 
     </div>
-
+-->
     <div class="container-narrow">
         <div class="content">
             {{ content }}
