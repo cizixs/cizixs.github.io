@@ -902,7 +902,7 @@ button.close{padding:0;cursor:pointer;background:transparent;border:0;-webkit-ap
 #back-top{
     position: fixed;
     bottom: 30px;
-    right: 60px;
+    right: 30px;
     text-align: center;
 }
 
@@ -924,7 +924,7 @@ button.close{padding:0;cursor:pointer;background:transparent;border:0;-webkit-ap
     position: fixed;
     top: 60px;
     left: 20px;
-    width: 180px;
+    width: 160px;
     text-align: right;
     padding-right: 8px;
     box-shadow: 3px 3px 6px 4px #ccc;

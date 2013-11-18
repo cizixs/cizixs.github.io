@@ -2,8 +2,8 @@
 layout: post
 title: "RESTful API design"
 description: ""
-category: 
-tags: [RESTful, API]
+category: 程序技术 
+tags: [RESTful, API, basic]
 ---
 {% include JB/setup %}
 
