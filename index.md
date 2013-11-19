@@ -1,5 +1,6 @@
 ---
 layout: page
+title: Write, Code and Love
 tagline:
 ---
 {% include JB/setup %}

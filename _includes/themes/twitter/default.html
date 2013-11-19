@@ -127,19 +127,32 @@
             <li> <a href="/pages/about.html">About <i class="fa fa-user"> </i> </a> </li>
         </ul>
 
-        <div class="social">
-            <a href="http://weibo.com/1921727853/profile" target="_blank"> <i class="fa fa-weibo"></i></a>
-            <a href="www.facebook.com/wei.wu.353250" target="_blank"> <i class="fa fa-facebook-square"></i></a>
-            <a href="http://github.com/cizixs" target="_blank"> <i class="fa fa-github"></i></a>
-            <a href="http://www.renren.com/293912760/profile" target="_blank"> <i class="fa fa-renren"></i></a>
-            <a href="twitter" target="_blank"> <i class="fa fa-twitter"></i></a>
-        </div>
-
     </div>
 -->
     <div class="container-narrow">
         <div class="content">
             {{ content }}
+        </div>
+        <div class="right-side-bar">
+          <div class="author-info">
+            <div class="title">
+              cizixs
+            </div>
+            <div class="social">
+            <a href="http://weibo.com/1921727853/profile" target="_blank"> <i class="fa fa-weibo"></i></a>
+            <a href="www.facebook.com/wei.wu.353250" target="_blank"> <i class="fa fa-facebook-square"></i></a>
+            <a href="http://github.com/cizixs" target="_blank"> <i class="fa fa-github"></i></a>
+            <a href="http://www.renren.com/293912760/profile" target="_blank"> <i class="fa fa-renren"></i></a>
+            <a href="twitter" target="_blank"> <i class="fa fa-twitter"></i></a>
+            </div>
+          </div>
+
+          <div class="recent-posts">
+            <ul>
+              <li>post1</li>
+              <li>post2</li>
+            </ul>
+          </div>
         </div>
 
         <p id="back-top"><a href="#top"><i class="fa fa-chevron-circle-up fa-3x"></i> <br> Back to top </a> </p>
@@ -152,9 +165,6 @@
           and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
         </p>
       </footer>
-    </div>
-
-    <div id="right-side-bar">
     </div>
 
     {% include JB/analytics %}
