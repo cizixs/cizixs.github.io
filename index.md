@@ -20,5 +20,5 @@ tagline:
 {% endfor %}
 
 <div class="continue">
-    <a href="/pages/archive.html"><i class="fa fa-hand-o-left fa-3x"></i> Read All </a>
+    <a href="/pages/archive.html"><i class="fa fa-hand-o-left fa-2x"></i> Read All </a>
 </div>

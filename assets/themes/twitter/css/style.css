@@ -1,6 +1,6 @@
 /* Custom container */
 .container-narrow {
-  margin:50px auto 0;
+  margin:0px auto 0;
   //max-width: 760px;
   //min-width: 840px;
   width: 74%;
@@ -24,12 +24,18 @@
 .navbar{
     position: fixed;
     top: 0px;
+    border:1px solid #d4d4d4;
+    -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.065);
+    -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.065);
+    box-shadow:0 1px 4px rgba(0, 0, 0, 0.065);
 }
 
 .navbar .title{
-    font-size: 40px;
+    font-size: 24px;
     color: #9E3B33;
-    padding-top: 24px;
+    float: left;
+    display: block;
+    padding: 10px 20px 10px;
     text-align: center;
     font-weight: bold;
     -webkit-transform: rotate(0deg) scale(1,1);
