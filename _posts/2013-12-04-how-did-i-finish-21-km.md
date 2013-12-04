@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "我是怎么跑完21km的？"
+title: "我是怎么跑完21km的?"
 description: ""
 category: 生活杂谈
 tags: [marathon, running, life]
@@ -66,6 +66,7 @@ tags: [marathon, running, life]
 + 跑马拉松的女生不少，还有很多跑全程的，更重要的是漂亮的也很多
 + 后来知道[廖智](http://weibo.com/guwuchina)也来跑，可惜没见到
 + 沿途很多的志愿者确实很鼓舞人心，着实感激
++ 跑完之后腿疼了两天才好
 + 希望明年能跑进2小时或者1000名
 
 > Written with [StackEdit](https://stackedit.io/).
