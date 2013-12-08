@@ -2,8 +2,8 @@
 layout: post
 title: "why evolution is true"
 description: ""
-category:
-tags: []
+category:翻译文章
+tags: [进化论,科学,quora,翻译]
 ---
 {% include JB/setup %}
 
