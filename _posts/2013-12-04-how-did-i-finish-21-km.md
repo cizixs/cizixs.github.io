@@ -72,5 +72,5 @@ tags: [marathon, running, life]
 > Written with [StackEdit](https://stackedit.io/).
 
 
-[1]: http://www1.shmarathon.com/images/shmarathon_map.jpg
+[1]: http://cizixs.u.qiniudn.com/personal-marathon.jpeg
 [2]: http://cizixs.u.qiniudn.com/marathon.png

@@ -156,7 +156,7 @@ h1 small{font-size:24.5px;}
 h2 small{font-size:17.5px;}
 h3 small{font-size:14px;}
 h4 small{font-size:14px;}
-.page-header{padding-bottom:9px;margin:20px 0 20px;border-bottom:1px solid #eeeeee;}
+.page-header{margin:35px auto;;border-bottom:1px solid #eeeeee; text-align: center; }
 ul,ol{padding:0;margin:0 0 10px 25px;}
 ul ul,ul ol,ol ol,ol ul{margin-bottom:0;}
 li{line-height:30px;}

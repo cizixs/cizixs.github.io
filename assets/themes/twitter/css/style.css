@@ -3,14 +3,14 @@
   margin:0px auto 0;
   //max-width: 760px;
   //min-width: 840px;
-  width: 74%;
+  width: 84%;
 }
 
 .container-narrow > .content{
     padding-top: 20px;
     padding-left: 15px;
     margin-top: 20px;
-    width: 74%;
+    width: 85%;
     float: left;
 }
 
