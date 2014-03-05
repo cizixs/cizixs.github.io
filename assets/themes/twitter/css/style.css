@@ -2,7 +2,7 @@
 .container-narrow {
   margin:0px auto 0;
   //max-width: 760px;
-  //min-width: 840px;
+  min-width: 800px;
   width: 84%;
 }
 
@@ -11,6 +11,7 @@
     padding-left: 15px;
     margin-top: 20px;
     width: 85%;
+    min-width: 750px;
     float: left;
 }
 
@@ -22,8 +23,10 @@
 }
 
 .navbar{
-    position: fixed;
+    left: 0px;
     top: 0px;
+    position: fixed;
+    background: #ffffff;
     border:1px solid #d4d4d4;
     -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.065);
     -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.065);
