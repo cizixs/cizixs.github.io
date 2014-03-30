@@ -2,17 +2,17 @@
 .container-narrow {
   margin:0px auto 0;
   //max-width: 760px;
-  min-width: 800px;
-  width: 84%;
+ // min-width: 800px;
+  //width: 84%;
 }
 
 .container-narrow > .content{
     padding-top: 20px;
     padding-left: 15px;
-    margin-top: 20px;
-    width: 85%;
-    min-width: 750px;
-    float: left;
+    margin: 20px auto;
+    width: 96%;
+    max-width: 850px;
+    //float: left;
 }
 
 .container-narrow > hr {

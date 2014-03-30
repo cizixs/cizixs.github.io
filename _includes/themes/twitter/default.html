@@ -34,6 +34,10 @@
     <link rel="icon" type="image/ico" href="/favicon.ico"/>
     <link rel="shortcut icon" href="/favicon.ico" />
 
+    <!-- responsive style-->
+    <link rel="stylesheet" href="{{ ASSET_PATH }}/css/responsive-nav.css">
+    <script src="{{ ASSET_PATH }}/css/responsive-nav.js"></script>
+
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
@@ -86,12 +90,12 @@
     <div class="container-narrow">
       <div class="navbar-inner">
           <a class="title" href="{{ HOME_PATH }}"><i class="fa fa-linux fa-lg"></i> {{ site.title }}</a>
-          <ul class="nav">
-            <li> <a href="{{ HOME_PATH }}"> <i class="fa fa-home fa-lg"></i> Home </a> </li>
-            <li> <a href="/pages/archive.html"> <i class="fa fa-archive fa-lg"></i> Archive </a> </li>
-            <li> <a href="/pages/categories.html"> <i class="fa fa-bars fa-lg"></i> Categories </a> </li>
-            <li> <a href="/pages/about.html"> <i class="fa fa-user fa-lg"></i> About </a> </li>
-          </ul>
+            <ul class="nav">
+              <li> <a href="{{ HOME_PATH }}"> <i class="fa fa-home fa-lg"></i> Home </a> </li>
+              <li> <a href="/pages/archive.html"> <i class="fa fa-archive fa-lg"></i> Archive </a> </li>
+              <li> <a href="/pages/categories.html"> <i class="fa fa-bars fa-lg"></i> Categories </a> </li>
+              <li> <a href="/pages/about.html"> <i class="fa fa-user fa-lg"></i> About </a> </li>
+            </ul>
         </div>
       </div>
     </div>
@@ -137,5 +141,8 @@
     </div>
 
     {% include JB/analytics %}
+	<script>
+		var nav = responsiveNav(".nav");//-collapse");
+	</script>
   </body>
 </html>

@@ -7,8 +7,9 @@ tags: [C, string]
 ---
 {% include JB/setup %}
 
-
 本文主要讲述一下c语言里的字符串常用的函数以及一些经典的实现，讲解了数组和指针的用法。
+
+![string](http://cizixs.u.qiniudn.com/stringC-string-700x309.png)
 
 ## C 中的字符串
 文字的处理是计算机重要的功能之一，C语言自然也提供了完备的机制。
