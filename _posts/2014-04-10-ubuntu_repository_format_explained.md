@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "当使用 apt 命令的时候，背后都发生了什么？"
-description: ""
-category: 
-tags: []
+title: "apt 背后的故事"
+description: "how apt works"
+category: 程序技术
+tags: [linux, ubuntu, apt, sources.list, mirrors]
 ---
 {% include JB/setup %}
 
@@ -53,8 +53,11 @@ deb-src http://mirrors.163.com/ubuntu/ precise main restricted universe multiver
 ![repo file tree](http://cizixs.u.qiniudn.com/ARCHIVE_tree.jpg)
 
 > **NOTE**：
+> 
 > 1. 所有的兄弟文件夹（父目录相同的文件夹）都只展开第一个
+> 
 > 2. Pool文件夹的四个子文件夹里，存放的是按照字母顺序分类的各个软件包
+> 
 > 3. 每个repo的文件夹会有出入，实际以你使用的为准
 
 ### 重要的文件(夹)和解释
@@ -118,7 +121,17 @@ deb-src http://mirrors.163.com/ubuntu/ precise main restricted universe multiver
 + Description-md5（可选）
 
 ### Sources文件的内容
+![sources](http://cizixs.u.qiniudn.com/sources.png)
 
+文件`$DIST/$COMP/source/Sources`被称为源码文件索引。它们和Packages文件相似，分为很多段，每一段描述一个源码文件包。
+几个重要的选项有：
+
++ Directory： 文件包所在的目录
++ Package: 文件名
++ version： 版本号
++ Priority： 优先级，包括source、optional等选项
++ Files: 包括的文件
++ Checksums-Sha1(256): 校验和
 
 ### 3. apt-get 的流程
 
@@ -141,18 +154,12 @@ deb-src http://mirrors.163.com/ubuntu/ precise main restricted universe multiver
 ---------------
 ### 参考资料
 + [Debian Repository HOWTO ](https://www.debian.org/doc/manuals/repository-howto/repository-howto)
-
 + [Debian Repository Format](https://wiki.debian.org/RepositoryFormat)
 + [debian软件源source.list文件格式说明](http://www.cnblogs.com/beanmoon/p/3387652.html)
-
 + [Ubuntu Repository Wiki](https://help.ubuntu.com/community/Repositories/Ubuntu)
-
 + [difference between Debian's contrib and non-free sections](http://askubuntu.com/questions/27513/what-is-the-difference-between-debian-contrib-non-free-and-how-it-corresponds)
-
 + [debian repository](http://ftp.debian.org/debian/)
-
 + [ubuntu codename wiki](https://wiki.ubuntu.com/DevelopmentCodeNames)
-
 + [debian release](https://wiki.debian.org/DebianReleases)
 
  
