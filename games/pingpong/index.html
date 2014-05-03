@@ -1,0 +1,27 @@
+---
+layout: page
+title: "ping pong"
+description: "ping pong game"
+---
+{% include JB/setup %}
+
+        <link rel="stylesheet" type="text/css" href="static/pingpong.css">
+        <script src="static/pingpong.js"></script>
+
+        <div id="scoreboard">
+            <div class="score">Player A : <span id="scoreA">0</span></div>
+            <div class="score">Player B : <span id="scoreB">0</span></div>
+        </div>
+
+        <div id="key">
+
+        </div>
+
+        <div id="game" align="center">
+            <div id="playground">
+                <div id="paddleA" class="paddle"></div>
+                <div id="paddleB" class="paddle"></div>
+                <div id="ball"></div>
+                <div id="msg"></div>
+            </div>
+        </div>
