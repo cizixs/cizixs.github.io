@@ -239,7 +239,7 @@
 <p><img src="https://ws3.sinaimg.cn/large/006tNbRwgy1fundt2q5alj31kw0sh7cx.jpg" alt="应用容错性"></p>
 <p>应用数量的增多，对于日常的应用发布来说也是个难题。应用的发布需要非常谨慎，如果应用都是一次性升级的，出现错误会导致整个线上应用不可用，影响范围太大；而且，很多情况我们需要同时存在不同的版本，使用 AB 测试验证哪个版本更好；如果版本升级改动了 API，并且互相有依赖，那么我们还希望能自动地控制发布期间不同版本访问不同的地址。这些问题都需要智能的流量控制机制。</p>
 <p><img src="https://ws4.sinaimg.cn/large/006tNbRwgy1fune76uq2wj31550jb0uc.jpg" alt="应用发布困难"></p>
-<p>为了保证整个系统的安全性，每个应用都需要实现一套相似的认证、授权、HTTPS、限流等功能。一方面大多数的程序员都安全相关的功能并不擅长或者感兴趣，另外这些完全相似的内容每次都要实现一遍是非常冗余的。这个问题需要一个能自动管理安全相关内容的系统。</p>
+<p>为了保证整个系统的安全性，每个应用都需要实现一套相似的认证、授权、HTTPS、限流等功能。一方面大多数的程序员对安全相关的功能并不擅长或者感兴趣，另外这些完全相似的内容每次都要实现一遍是非常冗余的。这个问题需要一个能自动管理安全相关内容的系统。</p>
 <p><img src="https://ws2.sinaimg.cn/large/006tNbRwgy1funelzxf46j31kw0qu79g.jpg" alt="应用安全"></p>
 <p>上面提到的这些问题是不是非常熟悉？它们就是 istio 尝试解决的问题，如果把上面的问题和 istio 提供的功能做个映射，你会发现它们是非常匹配，毕竟 istio 就是为了解决微服务的这些问题才出现的。</p>
 <p><img src="https://ws2.sinaimg.cn/large/006tNbRwgy1funghiputng31hc0te7ip.gif" alt="istio solves microservice issues"></p>
