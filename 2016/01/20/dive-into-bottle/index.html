@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>bottle 源码解析 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="bottle 源码解析 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2016/01/20/dive-into-bottle/">
+
+	
+	<meta property="article:published_time" content="2016-01-20T00:01:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2016/01/20/dive-into-bottle/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2016-01-19T16:00:00.000Z" itemprop="datePublished">
+                    2016-01-20
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">bottle 源码解析</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p>这篇文章不会讲如何使用 bottle，如果感兴趣，直接看它们的官方文档。<br>主要讲讲 web 框架的一些东西，阅读之前最好对下面的这些知识有一定的了解：</p>
+<ul>
+<li>熟悉 HTTP 协议</li>
+<li>对 python 有一定的了解</li>
+<li>知道 wsgi 是干什么的</li>
+<li>写过 web 应用</li>
+</ul>
+<p>如果不太了解 web 框架，可以阅读我之前的一篇文章：<a href="http://cizixs.com/2015/09/21/what-is-a-web-framework/">什么是 web 框架？</a>。</p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>bottle 是一个极简的 python web 框架，可以用来用来快速搭建 web 应用，并不是开发复杂项目的第一选择，因为它并没有提供配置文件集成，数据库管理，可扩展的中间件等特性。</p>
+<p>bottle 只是实现了 web 框架最核心的部分，因此代码很少。事实上，这篇文章参考的 bottle 0.12.9 版本只有 4k 行代码，如果去除很长的 import 头部、文档、三方 wsgi server 的支持，最核心的代码估计只有 2k-3k 行，对于我们学习 web 框架提供了便利。</p>
+<p>在阅读 bottle 代码的时候，要学会思考：什么是 web 框架最核心的功能？为什么要这么写？有哪些功能实现的不好？怎该怎么修改？</p>
+<p>就我个人而言，觉得 bottle 在下面几个方面表现得并不好：</p>
+<ul>
+<li>代码风格没有特定的规范：虽然都是空格、某行太长、缩进不规范，一行有多个表达式这种小问题，但对于开源项目来说，遵守 code style 是很重要的。好在 bottle 很小，不会因为这个带来大的问题</li>
+<li>python2 和 python3 的兼容处理的不好，在文件的头部有一堆 import。当然你可以说这是 python 的问题！</li>
+<li>所有的文件都在同一个文件，把文件分成不同的模块会更好理解。当然我理解这么做事为了突出 bottle 的小：只要一个文件就搞定！</li>
+<li>request 和 response 都是全局变量，所有要使用到请求 context 的时候都要访问全局变量，这种设计是 anti-pattern 的。</li>
+</ul>
+<h2 id="hello-world"><a href="#hello-world" class="headerlink" title="hello world"></a>hello world</h2><p>我们来看看 bottle 的 hello world 怎么写：</p>
+<pre><code>from bottle import route, run, template
+
+@route(&#39;/hello/&lt;name&gt;&#39;)
+def index(name):
+    return template(&#39;&lt;b&gt;Hello {{name}}&lt;/b&gt;!&#39;, name=name)
+
+run(host=&#39;localhost&#39;, port=8080)
+</code></pre><p>后面所有的分析都会基于这个 hello world，所以最好自己创建个文件运行 一下，感受感受。</p>
+<p>使用浏览器打开或者使用 curl：</p>
+<pre><code>curl http://localhost:8080/hello/world
+</code></pre><p>看看结果。</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>好了，我们看看上面的 hello world 程序有哪几部分组成：</p>
+<ul>
+<li>路由（route）：这是 web 框架最关键的功能，把请求转发到对应的处理函数</li>
+<li>运行（run）：提供 wsgi server，能够监听所有请求并传递给后面的应用（就是 bottle 应用）</li>
+<li>模板（template）：动态生成 HTML 文件，发送给客户端</li>
+</ul>
+<p>除了上面的三个模块，还有两个隐藏的东西没有在代码中出现：</p>
+<ul>
+<li>请求（request）：对 HTTP 请求的封装</li>
+<li>响应（response)：对 HTTP 响应的封装</li>
+</ul>
+<p>下面会逐个分析这五个部分的内容，在那之前我们先看看整个流程的流转过程：</p>
+<ol>
+<li>wsgi 启动，加载 bottle 应用，监听在设置的端口</li>
+<li>请求进来之后，被 wsgi server 封装好，调用 Bottle 的 <code>__call__</code> 函数，交给 bottle 处理</li>
+<li>bottle 根据传过来的 environ 字典，初始化 request 和 response 对象</li>
+<li>bottle 获取传过来的 url 值，匹配之前根据代码中装饰器生成的路由器对象，找到处理函数</li>
+<li>调用处理函数</li>
+<li>处理函数会使用默认的模板引擎，替换所有的变量，返回处理结果</li>
+<li>把处理函数返回的值封装成 wsgi 兼容的对象</li>
+<li>把封装好的 response 返回给 wsgi server</li>
+</ol>
+<p>每个 bottle 应用都是一个 bottle app，上面代码中没有显示定义，默认是</p>
+<pre><code>app = default_app = AppStack()
+app.push()
+</code></pre><p>而 AppStack 的定义是：</p>
+<pre><code>class AppStack(list):
+    &quot;&quot;&quot; A stack-like list. Calling it returns the head of the stack. &quot;&quot;&quot;
+
+    def __call__(self):
+        &quot;&quot;&quot; Return the current default application. &quot;&quot;&quot;
+        return self[-1]
+
+    def push(self, value=None):
+        &quot;&quot;&quot; Add a new :class:`Bottle` instance to the stack &quot;&quot;&quot;
+        if not isinstance(value, Bottle):
+            value = Bottle()
+        self.append(value)
+        return value
+</code></pre><h3 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h3><p>bottle 的路由一般使用 python 的装饰器实现，比如上面的 <code>@route(&#39;/hello/&lt;name&gt;&#39;)</code>，route 装饰器的实现是这样的：</p>
+<pre><code>def route(self,
+          path=None,
+          method=&#39;GET&#39;,
+          callback=None,
+          name=None,
+          apply=None,
+          skip=None, **config):
+
+    if callable(path): path, callback = None, path
+    plugins = makelist(apply)
+    skiplist = makelist(skip)
+
+    def decorator(callback):
+        if isinstance(callback, basestring): callback = load(callback)
+        for rule in makelist(path) or yieldroutes(callback):
+            for verb in makelist(method):
+                verb = verb.upper()
+                route = Route(self, rule, verb, callback,
+                              name=name,
+                              plugins=plugins,
+                              skiplist=skiplist, **config)
+                self.add_route(route)
+        return callback
+
+    return decorator(callback) if callback else decorator
+</code></pre><p>做的事情就是解析参数和 callback 函数，生成多个 route 对象，添加到自己的列表中，以备后续的查询和使用。在我们的例子中，rule 就是 <code>&#39;/hello/&lt;name&gt;&#39;</code>，verb 就是 <code>GET</code>，callback 就是定义的函数 <code>index</code>。</p>
+<p>add_route 方法实现如下：</p>
+<pre><code>def add_route(self, route):
+    &quot;&quot;&quot; Add a route object, but do not change the :data:`Route.app`
+        attribute.&quot;&quot;&quot;
+    self.routes.append(route)
+    self.router.add(route.rule, route.method, route, name=route.name)
+    if DEBUG: route.prepare()
+</code></pre><p>主要做了两件事：把生成的 route 对象加入到内部的变量列表中，和调用 router 的 add 方法。后面这件事情比较复杂，但最核心的逻辑是：如果是静态路径，直接添加到对应的变量中；如果是动态路径，还要经过正则匹配和编译，再把结果添加到对应的变量。</p>
+<p>而具体的调用处理函数的逻辑在 <code>Bottle._handle(self, environ)</code>，比较核心的部分如下：</p>
+<pre><code>def _inner_handle():
+        # Maybe pass variables as locals for better performance?
+        try:
+            route, args = self.router.match(environ)
+            environ[&#39;route.handle&#39;] = route
+            environ[&#39;bottle.route&#39;] = route
+            environ[&#39;route.url_args&#39;] = args
+            return route.call(**args)
+        except HTTPResponse:
+            return _e()
+        except RouteReset:
+            route.reset()
+            return _inner_handle()
+        except (KeyboardInterrupt, SystemExit, MemoryError):
+            raise
+        except Exception:
+            if not self.catchall: raise
+            stacktrace = format_exc()
+            environ[&#39;wsgi.errors&#39;].write(stacktrace)
+            return HTTPError(500, &quot;Internal Server Error&quot;, _e(), stacktrace)
+</code></pre><p>调用 <code>router.match</code> 进行匹配，返回对应的 route 对象和参数，然后调用 <code>route.call(**args)</code>来执行业务逻辑。</p>
+<h3 id="请求"><a href="#请求" class="headerlink" title="请求"></a>请求</h3><p>请求对象比较简单，就是对 environ 变量的包装，添加了一下 bottle 相关的内容，方便访问某些信息。</p>
+<p>初始化传入的参数就是 <code>environ</code>:</p>
+<pre><code>def __init__(self, environ=None):
+    &quot;&quot;&quot; Wrap a WSGI environ dictionary. &quot;&quot;&quot;
+    #: The wrapped WSGI environ dictionary. This is the only real attribute.
+    #: All other attributes actually are read-only properties.
+    self.environ = {} if environ is None else environ
+    self.environ[&#39;bottle.request&#39;] = self
+</code></pre><p>值得一提的是，为了方便访问某些信息，比如请求的头部、cookie 等，request 对象把它们封装成 <code>DictProperty</code>：</p>
+<pre><code>@DictProperty(&#39;environ&#39;, &#39;bottle.request.headers&#39;, read_only=True)
+def headers(self):
+    &quot;&quot;&quot; A :class:`WSGIHeaderDict` that provides case-insensitive access to
+        HTTP request headers. &quot;&quot;&quot;
+    return WSGIHeaderDict(self.environ)
+</code></pre><p>这个 <code>DictProperty</code> 是一个描述器（descriptor）：</p>
+<pre><code>class DictProperty(object):
+    &quot;&quot;&quot; Property that maps to a key in a local dict-like attribute. &quot;&quot;&quot;
+
+    def __init__(self, attr, key=None, read_only=False):
+        self.attr, self.key, self.read_only = attr, key, read_only
+
+    def __call__(self, func):
+        functools.update_wrapper(self, func, updated=[])
+        self.getter, self.key = func, self.key or func.__name__
+        return self
+
+    def __get__(self, obj, cls):
+        if obj is None: return self
+        key, storage = self.key, getattr(obj, self.attr)
+        if key not in storage: storage[key] = self.getter(obj)
+        return storage[key]
+
+    def __set__(self, obj, value):
+        if self.read_only: raise AttributeError(&quot;Read-Only property.&quot;)
+        getattr(obj, self.attr)[self.key] = value
+
+    def __delete__(self, obj):
+        if self.read_only: raise AttributeError(&quot;Read-Only property.&quot;)
+        del getattr(obj, self.attr)[self.key]
+</code></pre><p>只有第一次访问的时候会调用函数生成，因为它会把生产的值添加到对象的变量 environ 中，后面的调用会直接用之前生成的值。</p>
+<h3 id="响应（response）"><a href="#响应（response）" class="headerlink" title="响应（response）"></a>响应（response）</h3><p>你也许已经猜到了，Response 对象就是对 http 响应的以下部分的封装：</p>
+<ul>
+<li>status line</li>
+<li>headers</li>
+<li>body</li>
+</ul>
+<p>这部分的内容也不多讲了，如果想了解直接看代码，也比较简单。</p>
+<h3 id="wsgi-server"><a href="#wsgi-server" class="headerlink" title="wsgi server"></a>wsgi server</h3><p>当所有的代码都准备好了之后，剩下的就是运行了。因为 <a href="https://www.python.org/dev/peps/pep-0333/" target="_blank" rel="noopener">PEP 0333-WSGI</a> 协议规范，已经有很多优秀的 WSGI server 可以直接使用，所以 bottle 里面这部分也是直接使用外部的 WSGI server 来运行的，默认使用的是 <code>wsgiref.simpe_server</code>，不过支持的 server 很多：</p>
+<ul>
+<li>cgi</li>
+<li>cherrypy</li>
+<li>paste</li>
+<li>tornado</li>
+<li>twisted</li>
+<li>gunicorn</li>
+<li>eventlet</li>
+<li>gevent</li>
+<li>……</li>
+</ul>
+<h3 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h3><p>目前支持三种模板引擎：Mako，Cheetah，和 Jinja2。使用起来也很简单，把相关的参数组织以下，调用模板引擎的对应函数就行，Jinja2 为例：</p>
+<pre><code>class Jinja2Template(BaseTemplate):
+    def prepare(self, filters=None, tests=None, globals={}, **kwargs):
+        from jinja2 import Environment, FunctionLoader
+        self.env = Environment(loader=FunctionLoader(self.loader), **kwargs)
+        if filters: self.env.filters.update(filters)
+        if tests: self.env.tests.update(tests)
+        if globals: self.env.globals.update(globals)
+        if self.source:
+            self.tpl = self.env.from_string(self.source)
+        else:
+            self.tpl = self.env.get_template(self.filename)
+
+    def render(self, *args, **kwargs):
+        for dictarg in args:
+            kwargs.update(dictarg)
+        _defaults = self.defaults.copy()
+        _defaults.update(kwargs)
+        return self.tpl.render(**_defaults)
+
+    def loader(self, name):
+        if name == self.filename:
+            fname = name
+        else:
+            fname = self.search(name, self.lookup)
+        if not fname: return
+        with open(fname, &quot;rb&quot;) as f:
+            return f.read().decode(self.encoding)
+</code></pre><h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>除了上面主要的功能之外，bottle 还有一些特性：</p>
+<ul>
+<li>支持 hook，能够在处理请求之前和之后执行用户添加的 hooks</li>
+<li>可以引入三方的 middleware，比如使用 Beaker 来添加 session 的功能</li>
+<li>app mount：能够添加 wsgi 兼容的 app 到某个 url 下，这样就可以和其他框架一起工作，扩展 bottle 的功能</li>
+<li>plugins：支持插件，帮助完成一些重复的工作，或者集成三方的功能</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://bottlepy.org/docs/dev/index.html" target="_blank" rel="noopener">bottle 官方文档</a></li>
+<li><a href="https://github.com/bottlepy/bottle" target="_blank" rel="noopener">bottle github 上的源码</a></li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="nova scheduler 原理介绍和源码解析" href="/2016/02/01/nova-scheduler-insight/">
+        ← nova scheduler 原理介绍和源码解析
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="python 描述器简介" href="/2015/12/31/python-descriptor-introduction/">
+        python 描述器简介 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hello-world"><span class="toc-text">hello world</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析"><span class="toc-text">分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#路由"><span class="toc-text">路由</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#请求"><span class="toc-text">请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#响应（response）"><span class="toc-text">响应（response）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#wsgi-server"><span class="toc-text">wsgi server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模板"><span class="toc-text">模板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他"><span class="toc-text">其他</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">bottle 源码解析</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

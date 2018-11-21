@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>kubernetes 简介：controller manager 和自动扩容 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="kubernetes 简介：controller manager 和自动扩容 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2017/03/27/kubernetes-introduction-controller-manager/">
+
+	
+	<meta property="article:published_time" content="2017-03-27T00:03:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2017/03/27/kubernetes-introduction-controller-manager/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2017-03-26T16:00:00.000Z" itemprop="datePublished">
+                    2017-03-27
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">kubernetes 简介：controller manager 和自动扩容</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <h2 id="controller-manager-简介"><a href="#controller-manager-简介" class="headerlink" title="controller manager 简介"></a>controller manager 简介</h2><p>在配置了<a href="http://cizixs.com/2017/03/10/kubernetes-intro-scheduler">调度器</a>之后，我们的 kubernetes 集群已经能够实现计算资源（容器或者 pod）自动选择合适的节点去运行，看起来很不错，但是 kubernetes 还提供另外一个很重要的特性——保证特定副本的 pod 在运行。为什么呢？</p>
+<p>因为在大规模的集群中，总会出现各种各样想不到的错误，某个运行的 pod 会因为各种问题无法运行（代码有 bug、内存泄漏、磁盘满了、权限问题甚至是宿主机故障），而我们希望 kubernetes 能提供一定的高可用和自动化功能，它能够检测出有 pod 异常退出并对它进行重启，或者启动新的 pod 替代它，保证我们的服务不受异常 pod 的影响。</p>
+<p>其实除了 pod 之外，往外扩展还有其他需要自动化处理的东西。比如自动检测管理的节点是否正常，如果发现节点异常就不要继续往它上面调度资源了，而且需要把节点上运行的 pod 转移到其他节点。kubernetes master 上运行的 controller manager 会运行多个不同的 manager 分别负责不同的功能，这篇文章我们只关注 <strong>Replication Manager</strong>：它保证在任何时间某个 pod 都有特定数量的副本在运行。</p>
+<p>replication manager 的出现有很多用处，上面提到了错误修复，另外一个重要的作用是提供服务的扩容，我们可以在访问量增长的时候增加副本的数量，实现服务的横向扩展。</p>
+<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><p>controller manager 主要的工作就是和 apiserver 通信，获取集群的特定信息，然后做出响应的反馈动作。它的启动配置参数很多，比较常用的参数包括：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>–address=0.0.0.0</td>
+<td>监听的 HTTP 地址</td>
+<td></td>
+</tr>
+<tr>
+<td>–alsologtostderr</td>
+<td>是否把日志打印到标准输出</td>
+<td>false</td>
+</tr>
+<tr>
+<td>–cluster-name</td>
+<td>集群名，会添加到实体名称最前面</td>
+<td>kubernetes</td>
+</tr>
+<tr>
+<td>–controller-start-interval</td>
+<td>启动 controller manager 之间的时间间隔</td>
+<td>0</td>
+</tr>
+<tr>
+<td>–deleting-pods-burst</td>
+<td>node 不可用的时候，删除 pod 的 burst 值</td>
+<td>1</td>
+</tr>
+<tr>
+<td>–deleting-pods-qps</td>
+<td>node 不可用的时候，删除 pod 的速率</td>
+<td>0.1</td>
+</tr>
+<tr>
+<td>–deployment-controller-sync-period</td>
+<td>同步 deployments 的频率周期</td>
+<td>30s</td>
+</tr>
+<tr>
+<td>–kube-api-burst</td>
+<td>和 API Server 通信的 burst 值</td>
+<td>30</td>
+</tr>
+<tr>
+<td>–kube-api-qps</td>
+<td>和 API Server 通信的 QPS 值</td>
+<td>20</td>
+</tr>
+<tr>
+<td>–kubeconfig</td>
+<td>包含了认证和 master 地址信息的配置文件地址</td>
+<td></td>
+</tr>
+<tr>
+<td>–log-dir</td>
+<td>日志目录地址</td>
+<td></td>
+</tr>
+<tr>
+<td>–master</td>
+<td>master API 的地址，会覆盖 kubeconfig 里面 master API 的值</td>
+<td></td>
+</tr>
+<tr>
+<td>–node-monitor-grace-period</td>
+<td>node 被认为不可使用的失联时间，必须是 node 向 API Server 注册/更新状态频率的整数倍</td>
+<td>40s</td>
+</tr>
+<tr>
+<td>–port</td>
+<td>controller manger 监听的 HTTP 端口</td>
+<td>10252</td>
+</tr>
+<tr>
+<td>–profiling</td>
+<td>是否开启 profiling。开启后，可以在 <code>host:port/debug/pprof</code> 看到</td>
+<td>true</td>
+</tr>
+<tr>
+<td>–v</td>
+<td>日志级别</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="配置和使用"><a href="#配置和使用" class="headerlink" title="配置和使用"></a>配置和使用</h2><p>下载或者编译 kube-controller-manager 的二进制文件，然后如下运行它（可以使用 systemd 或者其他软件进行管理）：</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># /opt/kubernetes/bin/kube-controller-manager \</span>
+    --logtostderr<span class="token operator">=</span>false \
+    --v<span class="token operator">=</span>4 \
+    --master<span class="token operator">=</span>172.17.8.100:8080 \
+    --log_dir<span class="token operator">=</span>/var/log/kubernetes \
+    --root_ca_file<span class="token operator">=</span>/srv/kubernetes/ca.crt \
+    --service-account-private-key-file<span class="token operator">=</span>/srv/kubernetes/server.key
+</code></pre>
+<p>启动 <code>kube-controller-manager</code> 之后，就可以创建 <code>replication controller</code> 自动监控和管理 pod 了。和 Pod 的配置文件一样，我们也需要编写对应的 <code>ReplicationController</code> yaml 文件，沿用我们之前的例子，它的配置如下：</p>
+<pre><code># cat nginx-log-rc.yml
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: nginx-server
+spec:
+  replicas: 2
+  selector:
+    app: nginx
+  template:
+    metadata:
+      name: nginx
+      labels:
+        app: nginx
+        env: dev
+    spec:
+      containers:
+      - name: nginx-server
+        image: 172.16.1.41:5000/nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /var/log/nginx
+          name: nginx-logs
+      - name: log-output
+        image: 172.16.1.41:5000/busybox
+        command:
+        - bin/sh
+        args: [-c, &#39;tail -f /logdir/access.log&#39;]
+        volumeMounts:
+        - mountPath: /logdir
+          name: nginx-logs
+      volumes:
+      - name: nginx-logs
+        emptyDir: {}
+</code></pre><p>注意 <code>replicas: 2</code> 这一行，它告诉 kubernetes：在集群中运行两个 pod。这就像领导（应用的创建者）布置的任务，kubernetes 会想办法做到，而使用者不用关心它到底是怎么实现的。</p>
+<p>使用 <code>kubectl create -f nginx_rc.yml</code> 可以创建 <code>ReplicationController</code>，命令成功执行后，可以使用 <code>kubectl get rc</code> 查看刚刚创建的 <code>rc</code>（<code>ReplicationController</code> 的简写） 资源：</p>
+<pre><code># kubectl get rc
+NAME           DESIRED   CURRENT   READY     AGE
+nginx-server   2         2         1         9s
+whoami         3         3         3         3h
+[root@localhost ~]# kubectl describe rc nginx-server
+Name:           nginx-server
+Namespace:      default
+Image(s):       172.16.1.41:5000/library/nginx,172.16.1.41:5000/library/busybox
+Selector:       app=nginx
+Labels:         app=nginx
+                env=dev
+Replicas:       2 current / 2 desired
+Pods Status:    2 Running / 0 Waiting / 0 Succeeded / 0 Failed
+Volumes:
+  nginx-logs:
+    Type:       EmptyDir (a temporary directory that shares a pod&#39;s lifetime)
+    Medium:
+Events:
+  FirstSeen     LastSeen        Count   From                            SubObjectPath   Type            Reason                  Message
+  ---------     --------        -----   ----                            -------------   --------        ------                  -------
+  14s           14s             1       {replication-controller }                       Normal          SuccessfulCreate        Created pod: nginx-server-4s7vw
+  14s           14s             1       {replication-controller }                       Normal          SuccessfulCreate        Created pod: nginx-server-zl85w
+
+[root@localhost ~]# kubectl get pods
+NAME                 READY     STATUS    RESTARTS   AGE
+nginx-server-4s7vw   2/2       Running   1          20s
+nginx-server-zl85w   2/2       Running   0          20s
+
+</code></pre><p>怎么验证 <code>rc</code> 可以保证特定 pod 副本运行的功能呢？ 如果你手动删除某个 pod <code>kubectl delete pod &lt;podname&gt;</code>，过一段时间可以看到又有一个新的 pod 创建并运行。当然如果运行的 pod 数量大于指定的数目，controller manager 也会自动删除多余的 pod，保证正确的副本数量。</p>
+<h2 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h2><p>在互联网时代，用户和流量在快速增长，后台的服务也需要应对随时变化的网络流量。云计算的一个重要任务就是能够自动伸缩——根据用户的流量来自动地增加或者减少服务的数量，实现高可用和高性能以及最优的资源利用率。有了 Replication Manager，kubernetes 也能够很简单地修改某个 pod 的副本数量。</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token punctuation">[</span>root@localhost ~<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># kubectl scale --replicas=3 rc/nginx-server</span>
+
+<span class="token punctuation">[</span>root@localhost ~<span class="token punctuation">]</span><span class="token comment" spellcheck="true"># kubectl get pods</span>
+NAME                 READY     STATUS    RESTARTS   AGE
+nginx-server-4s7vw   2/2       Running   1          8m
+nginx-server-xzqmt   2/2       Running   0          5m
+nginx-server-zl85w   2/2       Running   0          8m
+</code></pre>
+<p>通过增加副本数来提供服务能力的前提是，多个副本能够提供无差别的服务，这就需要服务做到无状态。对于有状态的服务，还需要其他额外的配置，这里就不介绍了。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>如果 pod 被分配到不同的机器上，可以看到它们网络都是使用 docker 的默认 bridge 模式，也就是说它们的网络地址都是私有的，无法通信。比如，在我的环境中，两个 pod 的 ip 都是在 <code>172.17.0.0/16</code> 这个网段。这就导致一个问题：不同主机上的 pod 无法通信。kubernetes 本身并不提供网络解决方案，但它对网络有一个要求：所有的 pod 都能够互相通信，网络的配置可以选择 flannel，之前也<a href="http://cizixs.com/2016/06/15/flannel-overlay-network">有一篇文章</a>介绍过。</p>
+<p>另外一个问题是，我们怎么访问不同 pod 的服务？最简单的办法是我们从 kubernetes 中获取某个 rc 中所有 pod 的 ip 地址，然后在应用程序中和某个建立连接去使用它提供的服务。但是这个办法把所有的复杂度都转移给应用程序的编写，显然是不符合 kubernetes 这类集群管理的设计原则，它们本来就是为了让应用更容易部署和使用的。</p>
+<p>其实这两个问题都和网络有关，我们会在下一篇文章讲讲 kubernetes 网络和服务（service）的概念。</p>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="编写 Dockerfile 的最佳实践" href="/2017/03/28/dockerfile-best-practice/">
+        ← 编写 Dockerfile 的最佳实践
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="HTTP 隧道代理原理和实现" href="/2017/03/22/http-tunnel-proxy-and-golang-implementation/">
+        HTTP 隧道代理原理和实现 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#controller-manager-简介"><span class="toc-text">controller manager 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参数"><span class="toc-text">参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置和使用"><span class="toc-text">配置和使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#扩容"><span class="toc-text">扩容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#问题"><span class="toc-text">问题</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">kubernetes 简介：controller manager 和自动扩容</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

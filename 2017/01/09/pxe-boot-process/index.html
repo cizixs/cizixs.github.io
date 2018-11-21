@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>pxe 自动安装系统流程分析 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="pxe 自动安装系统流程分析 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2017/01/09/pxe-boot-process/">
+
+	
+	<meta property="article:published_time" content="2017-01-09T00:01:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2017/01/09/pxe-boot-process/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2017-01-08T16:00:00.000Z" itemprop="datePublished">
+                    2017-01-9
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">pxe 自动安装系统流程分析</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p>TL;DR</p>
+<p>本文介绍 pxe 安装 linux 系统过程中，每个阶段用到网络协议的作用和它们的数据格式。不会介绍 pxe 安装系统的原理和配置，而是假设读者已经了解这方面的信息（如果不了解的话，可以查看这篇文章： <a href="http://www.programering.com/a/MDMzcTNwATc.html" target="_blank" rel="noopener">CentOS 6.4 PXE+Kickstart unattended installation operating system</a>，或者网络上其他的教程）。</p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><img src="http://images.cnitblog.com/blog/370046/201406/152331542808644.jpg" alt="此处输入图片的描述"></p>
+<ol>
+<li>机器从网络启动，触发 pxe 相关的固件模块发送 DHCP 请求，请求以广播方式向整个网段传播</li>
+<li>DHCP server 接收到请求，并响应请求，回应 ip 信息和 next_ip(tftp ip 的地址)</li>
+<li>机器配置接收到的 ip 和其他网络信息，发送 ARP 广播，获取 tftp server 的 mac 地址</li>
+<li>拿到 tftp server 的 ip 和 mac，机器就向 tftp server 请求启动脚本 <code>pxelinux.0</code></li>
+<li>tftp server 应答启动脚本 <code>pxelinux.0</code></li>
+<li>执行 <code>pxelinux.0</code> 文件，机器把 pxe 对应的功能在内存里开始运行</li>
+<li>pxe 模块根据约定，向 TFTP server 发起请求，获取启动脚本 <code>pxelinux.cfg</code></li>
+<li>根据启动脚本的内容，请求并加载内核文件 <code>vmlinuz</code>、<code>initrd.img</code></li>
+<li>启动安装系统流程，到指定的地址下载 kickstart（ftp/http）。</li>
+<li>根据 kickstart 文件从对应的地址（nfs/http/ftp）下载安装包安装系统，并自动配置所有的选项</li>
+<li>系统安装完成</li>
+</ol>
+<h2 id="DHCP"><a href="#DHCP" class="headerlink" title="DHCP"></a>DHCP</h2><p>机器刚启动的时候是没有网络（ip/netmask/gateway）信息的，也就是说没有办法进行网络通信。所以这时候最关键的就是获取到 ip，DHCP 协议就是完成这个功能的。DHCP 协议是 C/S 模式，服务器端配置好一段网络地址，等待客户端发送请求过来，就分配一个 ip 给它使用。</p>
+<p>DHCP 是无连接的，底层使用 UDP 协议，使用了 67（客户端） 和 68（服务器端） 端口。<br>如果客户端和服务器端不在同一个网络里，将会使用到 DHCP relay 技术。</p>
+<p>启动过程用到 DHCP 的四个步骤：</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/DHCP_session.svg/260px-DHCP_session.svg.png" alt=""></p>
+<ol>
+<li>Discovery （发现）<br> 因为机器刚启动，没有 ip，也不知道 dhcp server 的地址，此时的数据报是以广播的方式向机器所在的网络发送的。源地址是 <code>0.0.0.0</code>，目的地址是 <code>255.255.255.255</code>。网络中所有的机器都会收到这个请求，但是只有 dhcp server 才会作出相应。</li>
+<li>Offer （提供）<br> dhcp server 接收到客户端的请求，然后根据配置从维护的网络段把 IP 地址、子网掩码、网关地址等信息发送给申请的客户端。这个数据报是通过广播的形式，客户端会根据 mac 地址判断是否数据是发送给自己的。</li>
+<li>Request （请求）<br> 接收到 offer 的客户端发送确认使用该配置的数据报给服务器端，因为某个网段可能会有多个 dhcp server。如果每个 dhcp server 同时向客户端发送应答，没有收到回复就认为客户端使用了该地址，就会造成 ip 的浪费甚至网络的错误。为了让所有的 dhcp server 都收到该请求，这个数据报也是广播。需要注意的是，此时数据报的源地址依然是 <code>0.0.0.0</code>，因为客户端还没有最终配置 ip，可以看下一步的解释。</li>
+<li>Acknowledge （确认）<br> 服务器端接收到客户端的请求数据，向客户端发送应答数据报，授权客户端使用前一步配置的网络信息，这个数据报也是单播。然后客户端才把网络根据参数配置好！</li>
+</ol>
+<p><img src="http://i3.tietuku.com/6cce4a0f61fb6c81.png" alt="此处输入图片的描述"></p>
+<p>除了上面用到的四个基本数据报文之外，dhcp 还有下面几种数据报类型，来实现错误处理和续租等功能：</p>
+<ol>
+<li><p>NAK<br> 这种类型的数据报文和 ACK 相反，是上面第四步的时候，服务器端不能满足客户端使用之前网络配置的数据报。</p>
+</li>
+<li><p>Decline（拒绝）<br> 拒绝报文对应上面的第三步，客户端发现服务器端在第二步提供的网络信息不正确（比如 ip 已经被使用），向服务器发送的报文。</p>
+</li>
+<li><p>Information（信息）<br> 对应于上面第三步，客户端向服务器端请求更多的信息。</p>
+</li>
+<li><p>Release（释放）<br> 当客户端要终止服务器端提供的网络配置的使用，会发送该报文，以便服务器端对 ip 进行回收。</p>
+</li>
+</ol>
+<p>详细的 dhcp 状态转移图，来自<a href="http://www.tcpipguide.com/free/t_DHCPGeneralOperationandClientFiniteStateMachine.htm" target="_blank" rel="noopener">这篇文章</a><br><img src="http://www.tcpipguide.com/free/diagrams/dhcpfsm.png" alt="dhcp 状态转移图"></p>
+<p>下面我们就根据实际例子中的报文分析一下 DHCP 整个过程。</p>
+<p>首先来看一下 DHCP 数据报文的格式，关于格式的解释可以参考 <a href="http://www.tcpipguide.com/free/t_DHCPMessageFormat.htm" target="_blank" rel="noopener">DHCP Message Format</a> 和 wikipedia。</p>
+<p><img src="http://www.tcpipguide.com/free/diagrams/dhcpformat.png" alt=""></p>
+<p>需要简单解释一下几个重要的选项：</p>
+<ul>
+<li>OP: 操作码，请求是 1，应答是 2</li>
+<li>HType：物理网络类型</li>
+<li>HAL：物理地址长度，一般是 6</li>
+<li>Hops：dhcp relay 会用到，hop count。</li>
+<li>XID：交易标号，用于定位通信</li>
+<li>CIADDR：客户端 IP，一般是 <code>0.0.0.0</code>，如果客户端之前有 ip，就填到这个位置</li>
+<li>YIADDR：服务器端应答给客户端使用的 ip</li>
+<li>SIADDR：tftp server 的 ip</li>
+<li>GIADDR：DHCP relay 的 ip 地址</li>
+<li>CHADDR：客户端的物理地址</li>
+<li>SNAME：服务器端域名</li>
+<li>Boot File：tftp 启动脚本</li>
+<li>Options：选项，其他预定义的数据和</li>
+</ul>
+<p>其他需要注意的事项：</p>
+<ol>
+<li>客户端是租期（lease period）过半的时候需要续租（release）</li>
+<li>客户端如果不续租，服务器端将回收 ip ，用于其他机器的配置</li>
+<li>客户端发送 discovery 请求没有收到回复时，将重复四次然后报错或者不断重复该步骤</li>
+<li>客户端发送 ARP 协议包来判断服务器分配给自己的 ip 有没有在使用</li>
+</ol>
+<h2 id="ARP-协议"><a href="#ARP-协议" class="headerlink" title="ARP 协议"></a>ARP 协议</h2><h3 id="ARP-介绍"><a href="#ARP-介绍" class="headerlink" title="ARP 介绍"></a>ARP 介绍</h3><p>机器有了自己的 ip，还知道 tftp server 的 ip，下一步就是向 tftp server 发出请求，获取启动文件。<br>然而仅仅知道目的机器的 ip 是不够的，网络的二层要想发送数据还需要目的机器的 mac 地址。那么知道目的机器 ip 地址后，机器还需要通过某种方式得到目的机器的 mac 地址，而根据 ip 地址获取 mac 地址就是 ARP 协议要实现的功能。</p>
+<p>ARP 协议相对很简单，通俗地说是这样的：机器向所在的网络发送 ARP 请求广播，内容是“<strong>谁知道 <code>10.3.4.5</code> 这个 ip 对应的 mac 地址，把它发给我</strong>”；该网段所有机器都接收到这个请求，但是只有 <code>10.3.4.5</code> 这台机器会处理，其他机器都直接丢弃掉报文（事实上，其他机器也会根据这个报文更新自己的 ARP 缓存）。 <code>10.3.4.5</code> 这台机器接收到数据之后，发送一条单播报文，告诉请求机器 “<strong><code>10.3.4.5</code> 的 mac 地址是 11.22.33.44.55.66</strong>”。</p>
+<h3 id="报文格式解析"><a href="#报文格式解析" class="headerlink" title="报文格式解析"></a>报文格式解析</h3><p><img src="https://reaper81.files.wordpress.com/2010/07/arp-header3.png" alt="此处输入图片的描述"></p>
+<h3 id="缓存以及性能"><a href="#缓存以及性能" class="headerlink" title="缓存以及性能"></a>缓存以及性能</h3><p>机器每次要发送请求的时候都去获取一遍 mac 地址是很傻的做法，很明显它只要请求一次，并保存下来，下次要使用的时候就直接查询一下就可以啦。不过只要隔一段时间就更新一下，否则如果有机器的 ip 和 mac 对应关系发生变化，就会出错。</p>
+<p>源机器保存它获取到的目的机器的 ARP 信息，反过来想，目的机器在接收到 ARP 请求的时候，也能从数据报里看到源机器的 ARP 信息。这个时候它也可以保存下来，以供后面使用，当然也要考虑到 ARP 缓存失效的问题。</p>
+<p>其实上面也提到，不仅是目的机器收到了 ARP 请求，网段里所有的机器都能收到，这个时候所有机器都更新自己的 ARP 缓存，也是提高效率的好办法。</p>
+<p>加上缓存功能，那么更加详细的 ARP 协议是这样的：</p>
+<ol>
+<li>源机器查看自己的 ARP 缓存，是否有目的机器的 mac 地址。如果有，而且没有过期，就直接使用；否则到下一步</li>
+<li>源机器构建 ARP 请求报文，并广播出去</li>
+<li>网络中所有机器都接收到该报文，并根据报文里源机器的 ip 和 mac 地址，更新自己的 ARP 缓存</li>
+<li>目的机器接收到该报文，并构建 ARP 应答报文，发送出去，目的 ip 和 mac 地址在接收到的报文里都能获取到</li>
+<li>源机器接收到 ARP 应答报文，拿到想要的 mac 地址，并根据报文里目的机器的 ip 和 mac 更新自己的 ARP 缓存</li>
+</ol>
+<p>缓存机制带来的好处是节省网络流量，缩短获取目的机器 mac 地址的时间，从而加快请求的速度。当然，它也是有缺点的，那就是缓存中数据的过期问题。<br>当机器更换网卡、重新配置 ip、或者迁移的时候，各个机器保存的关于这台机器的 ARP 信息都是错误的。如果不能及时更新，会发生数据丢包的问题。</p>
+<h2 id="TFTP（Trivial-File-Transfer-Protocol）-协议"><a href="#TFTP（Trivial-File-Transfer-Protocol）-协议" class="headerlink" title="TFTP（Trivial File Transfer Protocol） 协议"></a>TFTP（Trivial File Transfer Protocol） 协议</h2><p>从名字中也可以看出，TFTP 协议比较简单。TFTP 需要服务器端和客户端两个节点，简单的流程如下：</p>
+<ol>
+<li>客户端发起请求，要求读服务器端的文件。此时客户端端口是随意的，记做 P1，服务器端端口是 69。</li>
+<li>服务器端驻守在 69 端口的进程收到请求，应答一个报文，表示将开始传输数据，也可能在该报文里协定数据块（data block）大小，并重新建一个端口（记做 P2）传输剩余的报文。文件以默认 512 字节 传输（此外可以通过<a href="https://tools.ietf.org/html/rfc2348" target="_blank" rel="noopener">协商</a>来定义每次传输的字节块）</li>
+<li>数据传输和确认通过 P1 和 P2 端口进行。每次客户端收到数据后，需要发送确认帧，服务器只有收到确认帧之后才会发送下一段数据</li>
+<li>直到服务器端接收到的数据小于规定的数据块（data block），默认是 512 字节</li>
+</ol>
+<p>TFTP 协议还定义了三种传输的模式: netascii，octet，mail。</p>
+<ol>
+<li>netascii：就是 ascii 模式，</li>
+<li>octet: raw data 传输，按照字节原本的</li>
+<li>mail</li>
+</ol>
+<p>TFTP 底层使用的是 UDP 协议，没有差错处理和流量控制等特性。</p>
+<p><img src="http://telescript.denayer.wenk.be/~hcr/cn/idoceo/images/tftpformat.gif" alt=""></p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><a href="http://blog.csdn.net/wuruixn/article/details/8282554" target="_blank" rel="noopener">DHCP协议原理及其实现流程</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Dynamic_Host_Configuration_Protocol" target="_blank" rel="noopener">wikipedia Dynamic Host Configuration Protocol 页面</a></li>
+<li><a href="http://www.h3c.com.cn/minisite/technology_circle/sutra_case/201012/703849_97665_0.htm" target="_blank" rel="noopener">一个网上问题的处理，引发我们对DHCP协议新的思考</a></li>
+<li><a href="https://wiki.wireshark.org/DHCP" target="_blank" rel="noopener">wireshark 官网 DHCP 介绍页面</a></li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="flask 源码解析：简介" href="/2017/01/10/flask-insight-introduction/">
+        ← flask 源码解析：简介
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="让 CPU 告诉你硬盘和网络到底有多慢" href="/2017/01/03/how-slow-is-disk-and-network/">
+        让 CPU 告诉你硬盘和网络到底有多慢 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DHCP"><span class="toc-text">DHCP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ARP-协议"><span class="toc-text">ARP 协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ARP-介绍"><span class="toc-text">ARP 介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#报文格式解析"><span class="toc-text">报文格式解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#缓存以及性能"><span class="toc-text">缓存以及性能</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TFTP（Trivial-File-Transfer-Protocol）-协议"><span class="toc-text">TFTP（Trivial File Transfer Protocol） 协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文档"><span class="toc-text">参考文档</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">pxe 自动安装系统流程分析</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

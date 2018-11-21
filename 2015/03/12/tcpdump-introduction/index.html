@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>抓包神器 tcpdump 使用介绍 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="抓包神器 tcpdump 使用介绍 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2015/03/12/tcpdump-introduction/">
+
+	
+	<meta property="article:published_time" content="2015-03-12T00:03:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2015/03/12/tcpdump-introduction/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2015-03-11T16:00:00.000Z" itemprop="datePublished">
+                    2015-03-12
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/程序技术/">程序技术</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">抓包神器 tcpdump 使用介绍</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <h2 id="tcpdump-命令使用简介"><a href="#tcpdump-命令使用简介" class="headerlink" title="tcpdump 命令使用简介"></a>tcpdump 命令使用简介</h2><h3 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h3><p>tcpdump 是一款强大的网络抓包工具，运行在 linux 平台上。熟悉 tcpdump 的使用能够帮助你分析、调试网络数据。</p>
+<p>要想使用很好地掌握 tcpdump， 必须对网络报文（<a href="http://en.wikipedia.org/wiki/TCPIP" target="_blank" rel="noopener">TCP/IP</a> 协议）有一定的了解。不过对于简单的使用来说，只要有网络基础概念就行了。</p>
+<p>tcpdump 是一个很复杂的命令，想了解它的方方面面非常不易，也不值得推荐，能够使用它解决日常工作中的问题才是关键。</p>
+<p><img src="http://www.securitywizardry.com/packets/png/TCP-header-Colour.png" alt=""></p>
+<h3 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h3><p>tcpdump 的选项也很多，要想知道所有选项的话，请参考 <code>man tcpdump</code>，下面只记录 tcpdump 最常用的选项。</p>
+<p>需要注意的是，tcpdump 默认只会截取前 96 字节的内容，要想截取所有的报文内容，可以使用 <code>-s number</code>， <code>number</code> 就是你要截取的报文字节数，如果是 0 的话，表示截取报文全部内容。</p>
+<ul>
+<li><code>-n</code> 表示不要解析域名，直接显示 ip。</li>
+<li><code>-nn</code> 不要解析域名和端口</li>
+<li><code>-X</code> 同时用 hex 和 ascii 显示报文的内容。</li>
+<li><code>-XX</code> 同 <code>-X</code>，但同时显示以太网头部。</li>
+<li><code>-S</code> 显示绝对的序列号（sequence number），而不是相对编号。</li>
+<li><code>-i any</code> 监听所有的网卡</li>
+<li><code>-v, -vv, -vvv</code>：显示更多的详细信息</li>
+<li><code>-c number</code>: 截取 number 个报文，然后结束</li>
+<li><code>-A</code>： 只使用 ascii 打印报文的全部数据，不要和 <code>-X</code> 一起使用。截取 http 请求的时候可以用 <code>sudo tcpdump -nSA port 80</code>！</li>
+</ul>
+<h3 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h3><h4 id="1-tcpdump-nS"><a href="#1-tcpdump-nS" class="headerlink" title="1. tcpdump -nS"></a>1. tcpdump -nS</h4><p>监听所有端口，直接显示 ip 地址。</p>
+<h4 id="2-tcpdump-nnvvS"><a href="#2-tcpdump-nnvvS" class="headerlink" title="2. tcpdump -nnvvS"></a>2. tcpdump -nnvvS</h4><p>显示更详细的数据报文，包括 tos, ttl, checksum 等。</p>
+<h4 id="3-tcpdump-nnvvXS"><a href="#3-tcpdump-nnvvXS" class="headerlink" title="3. tcpdump -nnvvXS"></a>3. tcpdump -nnvvXS</h4><p>显示数据报的全部数据信息，用 hex 和 ascii 两列对比输出。</p>
+<p>下面是抓取 ping 命令的请求和返回的两个报文，可以看到全部的数据。</p>
+<pre><code>➜  ~  sudo tcpdump -nnvXSs 0 -c2 icmp
+tcpdump: data link type PKTAP
+tcpdump: listening on pktap, link-type PKTAP (Packet Tap), capture size 65535 bytes
+
+22:58:16.781856 IP (tos 0x0, ttl 64, id 61452, offset 0, flags [none], proto ICMP (1), length 84)
+    192.168.1.106 &gt; 192.168.1.1: ICMP echo request, id 65302, seq 0, length 64
+    0x0000:  0c72 2c28 b9ac 80e6 5019 4c38 0800 4500  .r,(....P.L8..E.
+    0x0010:  0054 f00c 0000 4001 06e1 c0a8 016a c0a8  .T....@......j..
+    0x0020:  0101 0800 72c9 ff16 0000 5500 5808 000b  ....r.....U.X...
+    0x0030:  ee08 0809 0a0b 0c0d 0e0f 1011 1213 1415  ................
+    0x0040:  1617 1819 1a1b 1c1d 1e1f 2021 2223 2425  ...........!&quot;#$%
+    0x0050:  2627 2829 2a2b 2c2d 2e2f 3031 3233 3435  &amp;&#39;()*+,-./012345
+    0x0060:  3637                                     67
+22:58:17.674304 IP (tos 0x0, ttl 64, id 13972, offset 0, flags [none], proto ICMP (1), length 84)
+    192.168.1.1 &gt; 192.168.1.106: ICMP echo reply, id 65302, seq 0, length 64
+    0x0000:  80e6 5019 4c38 0c72 2c28 b9ac 0800 4500  ..P.L8.r,(....E.
+    0x0010:  0054 3694 0000 4001 c059 c0a8 0101 c0a8  .T6...@..Y......
+    0x0020:  016a 0000 7ac9 ff16 0000 5500 5808 000b  .j..z.....U.X...
+    0x0030:  ee08 0809 0a0b 0c0d 0e0f 1011 1213 1415  ................
+    0x0040:  1617 1819 1a1b 1c1d 1e1f 2021 2223 2425  ...........!&quot;#$%
+    0x0050:  2627 2829 2a2b 2c2d 2e2f 3031 3233 3435  &amp;&#39;()*+,-./012345
+    0x0060:  3637                                     67
+
+2 packets captured
+5875 packets received by filter
+0 packets dropped by kernel
+</code></pre><h3 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h3><p>机器上的网络报文数量异常的多，很多时候我们只关系和具体问题有关的数据报（比如访问某个网站的数据，或者 icmp 超时的报文等等），而这些数据只占到很小的一部分。把所有的数据截取下来，从里面找到想要的信息无疑是一件很费时费力的工作。而 tcpdump 提供了灵活的语法可以精确地截取关心的数据报，简化分析的工作量。这些选择数据包的语句就是过滤器（filter）！</p>
+<p>过滤器也可以简单地分为三类：<code>type</code>, <code>dir</code> 和 <code>proto</code>。</p>
+<p><code>Type</code> 让你区分报文的类型，主要由 <code>host</code>（主机）, <code>net</code>（网络） 和 <code>port</code>（端口） 组成。<code>src</code> 和 <code>dst</code> 也可以用来过滤报文的源地址和目的地址。</p>
+<h4 id="host-过滤某个主机的数据报文"><a href="#host-过滤某个主机的数据报文" class="headerlink" title="host: 过滤某个主机的数据报文"></a>host: 过滤某个主机的数据报文</h4><pre><code>tcpdump host 1.2.3.4
+</code></pre><h4 id="src-dst-过滤源地址和目的地址"><a href="#src-dst-过滤源地址和目的地址" class="headerlink" title="src, dst: 过滤源地址和目的地址"></a>src, dst: 过滤源地址和目的地址</h4><pre><code>tcpdump src 2.3.4.5
+tcpdump dst 3.4.5.6
+</code></pre><h4 id="net-过滤某个网段的数据，CIDR-模式"><a href="#net-过滤某个网段的数据，CIDR-模式" class="headerlink" title="net: 过滤某个网段的数据，CIDR 模式"></a>net: 过滤某个网段的数据，<a href="http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing" target="_blank" rel="noopener">CIDR</a> 模式</h4><pre><code>tcpdump net 1.2.3.0/24
+</code></pre><h4 id="proto-过滤某个协议的数据，支持-tcp-udp-和-icmp。使用的时候可以省略-proto-关键字。"><a href="#proto-过滤某个协议的数据，支持-tcp-udp-和-icmp。使用的时候可以省略-proto-关键字。" class="headerlink" title="proto: 过滤某个协议的数据，支持 tcp, udp 和 icmp。使用的时候可以省略 proto 关键字。"></a>proto: 过滤某个协议的数据，支持 tcp, udp 和 icmp。使用的时候可以省略 proto 关键字。</h4><pre><code>tcpdump icmp
+</code></pre><h4 id="port-过滤通过某个端口的数据报"><a href="#port-过滤通过某个端口的数据报" class="headerlink" title="port: 过滤通过某个端口的数据报"></a>port: 过滤通过某个端口的数据报</h4><pre><code>tcpdump port 3389
+</code></pre><h4 id="src-dst-port-protocol-结合三者"><a href="#src-dst-port-protocol-结合三者" class="headerlink" title="src/dst, port, protocol: 结合三者"></a>src/dst, port, protocol: 结合三者</h4><pre><code>tcpdump src port 1025 and tcp
+tcpdump udp and src port 53
+</code></pre><p>此外还有指定端口和数据报文范围的过滤器：</p>
+<h4 id="port-范围"><a href="#port-范围" class="headerlink" title="port 范围"></a>port 范围</h4><pre><code>tcpdump portrange 21-23
+</code></pre><h4 id="数据报大小，单位是字节"><a href="#数据报大小，单位是字节" class="headerlink" title="数据报大小，单位是字节"></a>数据报大小，单位是字节</h4><pre><code>tcpdump less 32
+tcpdump greater 128
+tcpdump &gt; 32
+tcpdump &lt;= 128
+</code></pre><p>过于过滤器的更多详细信息，请访问 tcpdump 官方 map page 的 <a href="http://www.tcpdump.org/manpages/pcap-filter.7.html" target="_blank" rel="noopener">PCAP-FILTER 部分</a>。</p>
+<h3 id="输出到文件"><a href="#输出到文件" class="headerlink" title="输出到文件"></a>输出到文件</h3><p>使用 tcpdump 截取数据报文的时候，默认会打印到屏幕的默认输出，你会看到按照顺序和格式，很多的数据一行行快速闪过，根本来不及看清楚所有的内容。不过，tcpdump 提供了把截取的数据保存到文件的功能，以便后面使用其他图形工具（比如 wireshark，Snort）来分析。</p>
+<p><code>-w</code> 选项用来把数据报文输出到文件，比如下面的命令就是把所有 80 端口的数据导入到文件</p>
+<pre><code># sudo tcpdump -w capture_file.pcap port 80
+</code></pre><p><code>-r</code> 可以读取文件里的数据报文，显示到屏幕上。</p>
+<pre><code># tcpdump -nXr capture_file.pcap host web30
+</code></pre><p><strong>NOTE：保存到文件的数据不是屏幕上看到的文件信息，而是包含了额外信息的固定格式 pcap，需要特殊的软件来查看，使用 vim 或者 cat 命令会出现乱码。</strong></p>
+<h3 id="强大的过滤器"><a href="#强大的过滤器" class="headerlink" title="强大的过滤器"></a>强大的过滤器</h3><p>过滤的真正强大之处在于你可以随意组合它们，而连接它们的逻辑就是常用的 <code>与/AND/&amp;&amp;</code> 、 <code>或/OR/||</code> 和 <code>非/not/!</code>。</p>
+<h4 id="源地址是-10-5-2-3，目的端口是-3389-的数据报"><a href="#源地址是-10-5-2-3，目的端口是-3389-的数据报" class="headerlink" title="源地址是 10.5.2.3，目的端口是 3389 的数据报"></a>源地址是 10.5.2.3，目的端口是 3389 的数据报</h4><pre><code>tcpdump -nnvS src 10.5.2.3 and dst port 3389
+</code></pre><h4 id="从-192-168-网段到-10-或者-172-16-网段的数据报"><a href="#从-192-168-网段到-10-或者-172-16-网段的数据报" class="headerlink" title="从 192.168 网段到 10 或者 172.16 网段的数据报"></a>从 192.168 网段到 10 或者 172.16 网段的数据报</h4><pre><code>tcpdump -nvX src net 192.168.0.0/16 and dat net 10.0.0.0/8 or 172.16.0.0/16
+</code></pre><h4 id="从-Mars-或者-Pluto-发出的数据报，并且目的端口不是-22"><a href="#从-Mars-或者-Pluto-发出的数据报，并且目的端口不是-22" class="headerlink" title="从 Mars 或者 Pluto 发出的数据报，并且目的端口不是 22"></a>从 Mars 或者 Pluto 发出的数据报，并且目的端口不是 22</h4><pre><code>tcpdump -vv src mars or pluto and not dat port 22
+</code></pre><p>从上面的例子就可以看出，你可以随意地组合之前的过滤器来截取自己期望的数据报，最重要的就是知道自己要精确匹配的数据室怎样的！</p>
+<p>对于比较复杂的过滤器表达式，为了逻辑的清晰，可以使用括号。不过默认情况下，tcpdump 把 <code>()</code> 当做特殊的字符，所以必须使用单引号 <code>&#39;</code> 来消除歧义：</p>
+<pre><code>tcpdump -nvv -c 20 &#39;src 10.0.2.4 and (dat port 3389 or 22)&#39;
+</code></pre><h3 id="理解-tcpdump-的输出"><a href="#理解-tcpdump-的输出" class="headerlink" title="理解 tcpdump 的输出"></a>理解 tcpdump 的输出</h3><p>截取数据只是第一步，第二步就是理解这些数据，下面就解释一下 tcpdump 命令输出各部分的意义。</p>
+<pre><code>21:27:06.995846 IP (tos 0x0, ttl 64, id 45646, offset 0, flags [DF], proto TCP (6), length 64)
+    192.168.1.106.56166 &gt; 124.192.132.54.80: Flags [S], cksum 0xa730 (correct), seq 992042666, win 65535, options [mss 1460,nop,wscale 4,nop,nop,TS val 663433143 ecr 0,sackOK,eol], length 0
+
+21:27:07.030487 IP (tos 0x0, ttl 51, id 0, offset 0, flags [DF], proto TCP (6), length 44)
+    124.192.132.54.80 &gt; 192.168.1.106.56166: Flags [S.], cksum 0xedc0 (correct), seq 2147006684, ack 992042667, win 14600, options [mss 1440], length 0
+
+21:27:07.030527 IP (tos 0x0, ttl 64, id 59119, offset 0, flags [DF], proto TCP (6), length 40)
+    192.168.1.106.56166 &gt; 124.192.132.54.80: Flags [.], cksum 0x3e72 (correct), ack 2147006685, win 65535, length 0
+</code></pre><p>最基本也是最重要的信息就是数据报的源地址/端口和目的地址/端口，上面的例子第一条数据报中，源地址  ip 是 <code>192.168.1.106</code>，源端口是 <code>56166</code>，目的地址是 <code>124.192.132.54</code>，目的端口是 <code>80</code>。 <code>&gt;</code> 符号代表数据的方向。</p>
+<p>此外，上面的三条数据还是 tcp 协议的三次握手过程，第一条就是 <code>SYN</code> 报文，这个可以通过 <code>Flags [S]</code> 看出。下面是常见的 TCP 报文的 Flags:</p>
+<ul>
+<li><code>[S]</code>： SYN（开始连接）</li>
+<li><code>[.]</code>: 没有 Flag</li>
+<li><code>[P]</code>: PSH（推送数据）</li>
+<li><code>[F]</code>: FIN （结束连接）</li>
+<li><code>[R]</code>: RST（重置连接）</li>
+</ul>
+<p>而第二条数据的 <code>[S.]</code> 表示 <code>SYN-ACK</code>，就是 <code>SYN</code> 报文的应答报文。</p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p>本文主要参考了下面两篇文章，算是翻译和二次创作。</p>
+<ul>
+<li><a href="https://danielmiessler.com/study/tcpdump/" target="_blank" rel="noopener">A tcpdump Tutorial and Primer</a></li>
+<li><a href="http://bencane.com/2014/10/13/quick-and-practical-reference-for-tcpdump/" target="_blank" rel="noopener">A Quick and Practical Reference for tcpdump</a></li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="salt api 配置和使用" href="/2015/03/24/salt-api-usage/">
+        ← salt api 配置和使用
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="linux 系统启动过程" href="/2015/01/18/linux-boot-process/">
+        linux 系统启动过程 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#tcpdump-命令使用简介"><span class="toc-text">tcpdump 命令使用简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#简单介绍"><span class="toc-text">简单介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#选项"><span class="toc-text">选项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#简单使用"><span class="toc-text">简单使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-tcpdump-nS"><span class="toc-text">1. tcpdump -nS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-tcpdump-nnvvS"><span class="toc-text">2. tcpdump -nnvvS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-tcpdump-nnvvXS"><span class="toc-text">3. tcpdump -nnvvXS</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤器"><span class="toc-text">过滤器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#host-过滤某个主机的数据报文"><span class="toc-text">host: 过滤某个主机的数据报文</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#src-dst-过滤源地址和目的地址"><span class="toc-text">src, dst: 过滤源地址和目的地址</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#net-过滤某个网段的数据，CIDR-模式"><span class="toc-text">net: 过滤某个网段的数据，CIDR 模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#proto-过滤某个协议的数据，支持-tcp-udp-和-icmp。使用的时候可以省略-proto-关键字。"><span class="toc-text">proto: 过滤某个协议的数据，支持 tcp, udp 和 icmp。使用的时候可以省略 proto 关键字。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#port-过滤通过某个端口的数据报"><span class="toc-text">port: 过滤通过某个端口的数据报</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#src-dst-port-protocol-结合三者"><span class="toc-text">src/dst, port, protocol: 结合三者</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#port-范围"><span class="toc-text">port 范围</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据报大小，单位是字节"><span class="toc-text">数据报大小，单位是字节</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#输出到文件"><span class="toc-text">输出到文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#强大的过滤器"><span class="toc-text">强大的过滤器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#源地址是-10-5-2-3，目的端口是-3389-的数据报"><span class="toc-text">源地址是 10.5.2.3，目的端口是 3389 的数据报</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#从-192-168-网段到-10-或者-172-16-网段的数据报"><span class="toc-text">从 192.168 网段到 10 或者 172.16 网段的数据报</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#从-Mars-或者-Pluto-发出的数据报，并且目的端口不是-22"><span class="toc-text">从 Mars 或者 Pluto 发出的数据报，并且目的端口不是 22</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#理解-tcpdump-的输出"><span class="toc-text">理解 tcpdump 的输出</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文档"><span class="toc-text">参考文档</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">抓包神器 tcpdump 使用介绍</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

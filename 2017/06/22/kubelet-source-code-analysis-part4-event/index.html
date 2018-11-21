@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>kubelet 源码分析： 事件处理 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="kubelet 源码分析： 事件处理 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2017/06/22/kubelet-source-code-analysis-part4-event/">
+
+	
+	<meta property="article:published_time" content="2017-06-22T00:06:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2017/06/22/kubelet-source-code-analysis-part4-event/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2017-06-21T16:00:00.000Z" itemprop="datePublished">
+                    2017-06-22
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">kubelet 源码分析： 事件处理</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p>前几篇源码分析的文章介绍了 kubelet 提供的各种功能，这篇文章继续介绍 kubelet 的源码部分：事件机制。事件并不是 kubelet 对外提供的功能，但是对于 kubernetes 系统却非常重要。</p>
+<h2 id="kubelet-事件机制"><a href="#kubelet-事件机制" class="headerlink" title="kubelet 事件机制"></a>kubelet 事件机制</h2><p>我们知道 kubernetes 是分布式的架构，apiserver 是整个集群的交互中心，客户端主要和它打交道，kubelet 是各个节点上的 worker，负责执行具体的任务。对于用户来说，每次创建资源的时候，除了看到它的最终状态（一般是运行态），希望看到资源执行的过程，中间经过了哪些步骤。这些反馈信息对于调试来说非常重要，有些任务会失败或者卡在某个步骤，有了这些信息，我们就能够准确地定位问题。</p>
+<p>kubelet 需要把关键步骤中的执行事件发送到 apiserver，这样客户端就能通过查询知道整个流程发生了哪些事情，不需要登录到 kubelet 所在的节点查看日志的内容或者容器的运行状态。</p>
+<h2 id="事件机制源码分析"><a href="#事件机制源码分析" class="headerlink" title="事件机制源码分析"></a>事件机制源码分析</h2><p>这部分我们讲直接分析 kubelet 的源码，了解事件机制实现的来龙去脉。</p>
+<h3 id="谁会发送事件？"><a href="#谁会发送事件？" class="headerlink" title="谁会发送事件？"></a>谁会发送事件？</h3><p>kubernetes 是以 pod 为核心概念的，不管是 deployment、statefulSet、replicaSet，最终都会创建出来 pod。因此事件机制也是围绕 pod 进行的，在 pod 生命周期的关键步骤都会产生事件消息。比如 Controller Manager 会记录节点注册和销毁的事件、Deployment 扩容和升级的事件；kubelet 会记录镜像回收事件、volume 无法挂载事件等；Scheduler 会记录调度事件等。这篇文章只关心 kubelet 的情况，其他组件实现原理是一样的。</p>
+<p>查看 <code>pkg/kubelet/kubelet.go</code> 文件的代码，你会看到类似下面的代码：</p>
+<pre class=" language-go"><code class="language-go">kl<span class="token punctuation">.</span>recorder<span class="token punctuation">.</span><span class="token function">Eventf</span><span class="token punctuation">(</span>kl<span class="token punctuation">.</span>nodeRef<span class="token punctuation">,</span> api<span class="token punctuation">.</span>EventTypeWarning<span class="token punctuation">,</span> events<span class="token punctuation">.</span>ContainerGCFailed<span class="token punctuation">,</span> err<span class="token punctuation">.</span><span class="token function">Error</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p>上面这行代码是容器 GC 失败的时候出现的，它发送了一条事件消息，通知 apiserver 容器 GC 失败的原因。除了 kubelet 本身之外，kubelet 的各个组件（比如 imageManager、probeManager 等）也会有这个字段，记录重要的事件，读者可以搜索源码去看 kubelet 哪些地方会发送事件。</p>
+<p><code>recorder</code> 是 kubelet 结构的一个字段：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">type</span> kubelet <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+    <span class="token operator">...</span>
+    <span class="token comment" spellcheck="true">// The EventBroader to use</span>
+    recorder    record<span class="token punctuation">.</span>EventRecorder
+    <span class="token operator">...</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>它的类型是 <code>record.EventRecorder</code>，这是个定义了三个方法的  interface，代码在  <code>pkg/client/record/event.go</code> 文件中：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">type</span> EventRecorder <span class="token keyword">interface</span> <span class="token punctuation">{</span>
+    <span class="token function">Event</span><span class="token punctuation">(</span>object runtime<span class="token punctuation">.</span>Object<span class="token punctuation">,</span> eventtype<span class="token punctuation">,</span> reason<span class="token punctuation">,</span> message <span class="token builtin">string</span><span class="token punctuation">)</span>
+
+    <span class="token function">Eventf</span><span class="token punctuation">(</span>object runtime<span class="token punctuation">.</span>Object<span class="token punctuation">,</span> eventtype<span class="token punctuation">,</span> reason<span class="token punctuation">,</span> messageFmt <span class="token builtin">string</span><span class="token punctuation">,</span> args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+    <span class="token function">PastEventf</span><span class="token punctuation">(</span>object runtime<span class="token punctuation">.</span>Object<span class="token punctuation">,</span> timestamp unversioned<span class="token punctuation">.</span>Time<span class="token punctuation">,</span> eventtype<span class="token punctuation">,</span> reason<span class="token punctuation">,</span> messageFmt <span class="token builtin">string</span><span class="token punctuation">,</span> args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>这里的三个方法都是记录事件用的，<code>Eventf</code> 就是封装了类似 <code>Printf</code> 的信息打印机制，内部也会调用 <code>Event</code>，而 <code>PastEventf</code> 允许用户传进来自定义的时间戳，因此可以设置事件产生的时间。我们后面会详解介绍它们参数的意思和内部实现。</p>
+<h3 id="EventRecorder-和-EventBroadcaster"><a href="#EventRecorder-和-EventBroadcaster" class="headerlink" title="EventRecorder 和 EventBroadcaster"></a>EventRecorder 和 EventBroadcaster</h3><p>我们已经知道了 <code>recorder</code> 就是事件的负责人，那么接下来就要了解它是怎么实现事件发送机制的。不过在那之前，先让我们找到 <code>recorder</code> 是什么时候被创建的？</p>
+<p>在 <a href="http://cizixs.com/2017/06/06/kubelet-source-code-analysis-part-1">kubelet 启动流程</a> 这篇文章中，我们讲到 <code>RunKubelet</code> 中会初始化 <code>EventBroadcaster</code> 和 <code>Recorder</code>，对应的代码如下：</p>
+<p><code>cmd/kubelet/app/server.go#RunKubelet</code>：</p>
+<pre class=" language-go"><code class="language-go">eventBroadcaster <span class="token operator">:=</span> record<span class="token punctuation">.</span><span class="token function">NewBroadcaster</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+kubeDeps<span class="token punctuation">.</span>Recorder <span class="token operator">=</span> eventBroadcaster<span class="token punctuation">.</span><span class="token function">NewRecorder</span><span class="token punctuation">(</span>api<span class="token punctuation">.</span>EventSource<span class="token punctuation">{</span>Component<span class="token punctuation">:</span> <span class="token string">"kubelet"</span><span class="token punctuation">,</span> Host<span class="token punctuation">:</span> <span class="token function">string</span><span class="token punctuation">(</span>nodeName<span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+eventBroadcaster<span class="token punctuation">.</span><span class="token function">StartLogging</span><span class="token punctuation">(</span>glog<span class="token punctuation">.</span><span class="token function">V</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">.</span>Infof<span class="token punctuation">)</span>
+
+<span class="token keyword">if</span> kubeDeps<span class="token punctuation">.</span>EventClient <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+    eventBroadcaster<span class="token punctuation">.</span><span class="token function">StartRecordingToSink</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>unversionedcore<span class="token punctuation">.</span>EventSinkImpl<span class="token punctuation">{</span>Interface<span class="token punctuation">:</span> kubeDeps<span class="token punctuation">.</span>EventClient<span class="token punctuation">.</span><span class="token function">Events</span><span class="token punctuation">(</span><span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    glog<span class="token punctuation">.</span><span class="token function">Warning</span><span class="token punctuation">(</span><span class="token string">"No api server defined - no events will be sent to API server."</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>正如名字所示的那样， <code>eventBroadcaster</code> 是个事件广播器，<code>StartLogging</code> 和 <code>StartRecordingToSink</code> 创建了两个不同的事件处理函数，分别把事件记录到日志和发送给 apiserver。而 <code>NewRecorder</code> 新建了一个 <code>Recoder</code> 对象，通过它的 <code>Event</code>、<code>Eventf</code> 和 <code>PastEventf</code> 方法，用户可以往里面发送事件，<code>eventBroadcaster</code> 会把接收到的事件发送个多个处理函数，比如这里提到的写日志和发送到 apiserver。</p>
+<p>知道了 <code>EventBroadcaster</code> 的功能，我们来看看它的实现：</p>
+<p><code>pkg/client/record/event.go</code></p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">type</span> EventBroadcaster <span class="token keyword">interface</span> <span class="token punctuation">{</span>
+    <span class="token function">StartEventWatcher</span><span class="token punctuation">(</span>eventHandler <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token operator">*</span>api<span class="token punctuation">.</span>Event<span class="token punctuation">)</span><span class="token punctuation">)</span> watch<span class="token punctuation">.</span>Interface
+    <span class="token function">StartRecordingToSink</span><span class="token punctuation">(</span>sink EventSink<span class="token punctuation">)</span> watch<span class="token punctuation">.</span>Interface
+    <span class="token function">StartLogging</span><span class="token punctuation">(</span>logf <span class="token keyword">func</span><span class="token punctuation">(</span>format <span class="token builtin">string</span><span class="token punctuation">,</span> args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span> watch<span class="token punctuation">.</span>Interface
+
+    <span class="token function">NewRecorder</span><span class="token punctuation">(</span>source api<span class="token punctuation">.</span>EventSource<span class="token punctuation">)</span> EventRecorder
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>EventBroadcaster</code> 是个接口类型，<code>NewRecorder</code> 新建一个 <code>EventRecoder</code> 对象，它就像一个事件记录仪，用户可以通过它记录事件，它在内部会把事件发送给 <code>EventBroadcaster</code>。</p>
+<p>此外，<code>EventBroadcaster</code> 定义了三个 <code>Start</code> 开头的方法，它们用来添加事件处理 handler 。其中核心方法是 <code>StartEventWatcher</code>，它会在后台启动一个 goroutine，不断从 EventBroadcaster 提供的管道中接收事件，然后调用 <code>eventHandler</code> 处理函数对事件进行处理。<code>StartRecordingToSink</code> 和 <code>StartLogging</code> 是对 <code>StartEventWatcher</code> 的封装，分别实现了不同的处理函数（发送给 apiserver 和写日志）。</p>
+<p>至此，<code>EventBroadcaster</code> 的工作原理就比较清晰了：它通过 <code>EventRecorder</code> 提供接口供用户写事件，内部把接收到的事件发送给处理函数。处理函数是可以扩展的，用户可以通过 <code>StartEventWatcher</code> 来编写自己的事件处理逻辑，<code>kubelet</code> 默认会使用 <code>StartRecordingToSink</code> 和 <code>StartLogging</code>，也就是说任何一个事件会同时发送给 apiserver，并打印到日志中。</p>
+<p>知道了 <code>EventBroadcaster</code> 做的事情，接下来我们就要分析它是怎么做的。这些内容可以分为三个部分：</p>
+<ol>
+<li><code>EventRecorder</code> 是怎么把事件发送给 <code>EventBroadcaster</code> 的？</li>
+<li><code>EventBroadcaster</code> 是怎么实现事件广播的？</li>
+<li><code>StartRecodingToSink</code> 内部是如何把事件发送到 apiserver 的？</li>
+</ol>
+<p>分析完以上三点，我们就能知道事件的整个流程。</p>
+<h3 id="发送事件的过程"><a href="#发送事件的过程" class="headerlink" title="发送事件的过程"></a>发送事件的过程</h3><p>通过上面的分析，我们知道事件是通过 <code>EventRecorder</code> 对象发送出来的，它的具体实现在 <code>pkg/event/record/event.go</code>：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">type</span> recorderImpl <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+    source api<span class="token punctuation">.</span>EventSource
+    <span class="token operator">*</span>watch<span class="token punctuation">.</span>Broadcaster
+    clock clock<span class="token punctuation">.</span>Clock
+<span class="token punctuation">}</span>
+
+<span class="token keyword">func</span> <span class="token punctuation">(</span>eventBroadcaster <span class="token operator">*</span>eventBroadcasterImpl<span class="token punctuation">)</span> <span class="token function">NewRecorder</span><span class="token punctuation">(</span>source api<span class="token punctuation">.</span>EventSource<span class="token punctuation">)</span> EventRecorder <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token operator">&amp;</span>recorderImpl<span class="token punctuation">{</span>source<span class="token punctuation">,</span> eventBroadcaster<span class="token punctuation">.</span>Broadcaster<span class="token punctuation">,</span> clock<span class="token punctuation">.</span>RealClock<span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">func</span> <span class="token punctuation">(</span>recorder <span class="token operator">*</span>recorderImpl<span class="token punctuation">)</span> <span class="token function">Event</span><span class="token punctuation">(</span>object runtime<span class="token punctuation">.</span>Object<span class="token punctuation">,</span> eventtype<span class="token punctuation">,</span> reason<span class="token punctuation">,</span> message <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    recorder<span class="token punctuation">.</span><span class="token function">generateEvent</span><span class="token punctuation">(</span>object<span class="token punctuation">,</span> unversioned<span class="token punctuation">.</span><span class="token function">Now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> eventtype<span class="token punctuation">,</span> reason<span class="token punctuation">,</span> message<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">func</span> <span class="token punctuation">(</span>recorder <span class="token operator">*</span>recorderImpl<span class="token punctuation">)</span> <span class="token function">Eventf</span><span class="token punctuation">(</span>object runtime<span class="token punctuation">.</span>Object<span class="token punctuation">,</span> eventtype<span class="token punctuation">,</span> reason<span class="token punctuation">,</span> messageFmt <span class="token builtin">string</span><span class="token punctuation">,</span> args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    recorder<span class="token punctuation">.</span><span class="token function">Event</span><span class="token punctuation">(</span>object<span class="token punctuation">,</span> eventtype<span class="token punctuation">,</span> reason<span class="token punctuation">,</span> fmt<span class="token punctuation">.</span><span class="token function">Sprintf</span><span class="token punctuation">(</span>messageFmt<span class="token punctuation">,</span> args<span class="token operator">...</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">func</span> <span class="token punctuation">(</span>recorder <span class="token operator">*</span>recorderImpl<span class="token punctuation">)</span> <span class="token function">PastEventf</span><span class="token punctuation">(</span>object runtime<span class="token punctuation">.</span>Object<span class="token punctuation">,</span> timestamp unversioned<span class="token punctuation">.</span>Time<span class="token punctuation">,</span> eventtype<span class="token punctuation">,</span> reason<span class="token punctuation">,</span> messageFmt <span class="token builtin">string</span><span class="token punctuation">,</span> args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    recorder<span class="token punctuation">.</span><span class="token function">generateEvent</span><span class="token punctuation">(</span>object<span class="token punctuation">,</span> timestamp<span class="token punctuation">,</span> eventtype<span class="token punctuation">,</span> reason<span class="token punctuation">,</span> fmt<span class="token punctuation">.</span><span class="token function">Sprintf</span><span class="token punctuation">(</span>messageFmt<span class="token punctuation">,</span> args<span class="token operator">...</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>recorderImpl</code> 是具体的实现，<code>eventBroadcaster.NewRecorder</code> 会创建一个指定 <code>EventSource</code> 的 <code>EventRecorder</code>，<code>EventSource</code> 指明了哪个节点的哪个组件。</p>
+<p>recorder 对外暴露了三个方法：<code>Event</code>、<code>Eventf</code> 和 <code>PastEventf</code>，它们的内部最终都是调用 <code>generateEvent</code> 方法：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token punctuation">(</span>recorder <span class="token operator">*</span>recorderImpl<span class="token punctuation">)</span> <span class="token function">generateEvent</span><span class="token punctuation">(</span>object runtime<span class="token punctuation">.</span>Object<span class="token punctuation">,</span> timestamp unversioned<span class="token punctuation">.</span>Time<span class="token punctuation">,</span> eventtype<span class="token punctuation">,</span> reason<span class="token punctuation">,</span> message <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    ref<span class="token punctuation">,</span> err <span class="token operator">:=</span> api<span class="token punctuation">.</span><span class="token function">GetReference</span><span class="token punctuation">(</span>object<span class="token punctuation">)</span>
+    <span class="token operator">...</span><span class="token operator">...</span>
+
+    <span class="token keyword">if</span> <span class="token operator">!</span><span class="token function">validateEventType</span><span class="token punctuation">(</span>eventtype<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        glog<span class="token punctuation">.</span><span class="token function">Errorf</span><span class="token punctuation">(</span><span class="token string">"Unsupported event type: '%v'"</span><span class="token punctuation">,</span> eventtype<span class="token punctuation">)</span>
+        <span class="token keyword">return</span>
+    <span class="token punctuation">}</span>
+
+    event <span class="token operator">:=</span> recorder<span class="token punctuation">.</span><span class="token function">makeEvent</span><span class="token punctuation">(</span>ref<span class="token punctuation">,</span> eventtype<span class="token punctuation">,</span> reason<span class="token punctuation">,</span> message<span class="token punctuation">)</span>
+
+    <span class="token keyword">if</span> pod<span class="token punctuation">,</span> ok <span class="token operator">:=</span> object<span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token operator">*</span>api<span class="token punctuation">.</span>Pod<span class="token punctuation">)</span><span class="token punctuation">;</span> ok <span class="token operator">&amp;&amp;</span> pod<span class="token punctuation">.</span>ObjectMeta<span class="token punctuation">.</span>Labels <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// add the labels in pod to event</span>
+        event<span class="token punctuation">.</span>ObjectMeta<span class="token punctuation">.</span>Labels <span class="token operator">=</span> <span class="token keyword">map</span><span class="token punctuation">[</span><span class="token builtin">string</span><span class="token punctuation">]</span><span class="token builtin">string</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
+        <span class="token keyword">for</span> k<span class="token punctuation">,</span> v <span class="token operator">:=</span> <span class="token keyword">range</span> pod<span class="token punctuation">.</span>ObjectMeta<span class="token punctuation">.</span>Labels <span class="token punctuation">{</span>
+            event<span class="token punctuation">.</span>ObjectMeta<span class="token punctuation">.</span>Labels<span class="token punctuation">[</span>k<span class="token punctuation">]</span> <span class="token operator">=</span> v
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    event<span class="token punctuation">.</span>Source <span class="token operator">=</span> recorder<span class="token punctuation">.</span>source
+
+    <span class="token keyword">go</span> <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">defer</span> utilruntime<span class="token punctuation">.</span><span class="token function">HandleCrash</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        recorder<span class="token punctuation">.</span><span class="token function">Action</span><span class="token punctuation">(</span>watch<span class="token punctuation">.</span>Added<span class="token punctuation">,</span> event<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>generateEvent</code> 就是根据传入的参数，生成一个 <code>api.Event</code> 对象，并发送出去。它各个参数的意思是：</p>
+<ul>
+<li>object：哪个组件/对象发出的事件，比如 kubelet 产生的事件会使用 node 对象</li>
+<li>timestamp：事件产生的时间</li>
+<li>eventtype：事件类型，目前有两种：<code>Normal</code> 和 <code>Warning</code>，分别代表正常的事件和可能有问题的事件，定义在 <code>pkg/api/types.go</code> 文件中，未来可能有其他类型的事件扩展</li>
+<li>reason：事件产生的原因，可以在 <code>pkg/kubelet/events/event.go</code> 看到 kubelet 定义的所有事件类型</li>
+<li>message：事件的具体内容，用户可以理解的语句</li>
+</ul>
+<p><code>makeEvent</code> 就是根据参数构建 <code>api.Event</code> 对象，自动填充时间戳和 namespace：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token punctuation">(</span>recorder <span class="token operator">*</span>recorderImpl<span class="token punctuation">)</span> <span class="token function">makeEvent</span><span class="token punctuation">(</span>ref <span class="token operator">*</span>api<span class="token punctuation">.</span>ObjectReference<span class="token punctuation">,</span> eventtype<span class="token punctuation">,</span> reason<span class="token punctuation">,</span> message <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token operator">*</span>api<span class="token punctuation">.</span>Event <span class="token punctuation">{</span>
+    t <span class="token operator">:=</span> unversioned<span class="token punctuation">.</span>Time<span class="token punctuation">{</span>Time<span class="token punctuation">:</span> recorder<span class="token punctuation">.</span>clock<span class="token punctuation">.</span><span class="token function">Now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">}</span>
+    namespace <span class="token operator">:=</span> ref<span class="token punctuation">.</span>Namespace
+    <span class="token keyword">if</span> namespace <span class="token operator">==</span> <span class="token string">""</span> <span class="token punctuation">{</span>
+        namespace <span class="token operator">=</span> api<span class="token punctuation">.</span>NamespaceDefault
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> <span class="token operator">&amp;</span>api<span class="token punctuation">.</span>Event<span class="token punctuation">{</span>
+        ObjectMeta<span class="token punctuation">:</span> api<span class="token punctuation">.</span>ObjectMeta<span class="token punctuation">{</span>
+            Name<span class="token punctuation">:</span>      fmt<span class="token punctuation">.</span><span class="token function">Sprintf</span><span class="token punctuation">(</span><span class="token string">"%v.%x"</span><span class="token punctuation">,</span> ref<span class="token punctuation">.</span>Name<span class="token punctuation">,</span> t<span class="token punctuation">.</span><span class="token function">UnixNano</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            Namespace<span class="token punctuation">:</span> namespace<span class="token punctuation">,</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        InvolvedObject<span class="token punctuation">:</span> <span class="token operator">*</span>ref<span class="token punctuation">,</span>
+        Reason<span class="token punctuation">:</span>         reason<span class="token punctuation">,</span>
+        Message<span class="token punctuation">:</span>        message<span class="token punctuation">,</span>
+        FirstTimestamp<span class="token punctuation">:</span> t<span class="token punctuation">,</span>
+        LastTimestamp<span class="token punctuation">:</span>  t<span class="token punctuation">,</span>
+        Count<span class="token punctuation">:</span>          <span class="token number">1</span><span class="token punctuation">,</span>
+        Type<span class="token punctuation">:</span>           eventtype<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><strong>注意 Event 事件的名字的构成</strong>，它有两部分：事件关联对象的名字和当前的时间，中间用点隔开。</p>
+<p><code>api.Event</code> 这个结构体定义在 <code>pkg/api/types.go</code>：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">type</span> Event <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+    unversioned<span class="token punctuation">.</span>TypeMeta <span class="token string">`json:",inline"`</span>
+    ObjectMeta <span class="token string">`json:"metadata,omitempty"`</span>
+
+    InvolvedObject ObjectReference <span class="token string">`json:"involvedObject,omitempty"`</span>
+
+    Reason <span class="token builtin">string</span> <span class="token string">`json:"reason,omitempty"`</span>
+    Message <span class="token builtin">string</span> <span class="token string">`json:"message,omitempty"`</span>
+    Source EventSource <span class="token string">`json:"source,omitempty"`</span>
+    Type <span class="token builtin">string</span> <span class="token string">`json:"type,omitempty"`</span>
+
+    FirstTimestamp unversioned<span class="token punctuation">.</span>Time <span class="token string">`json:"firstTimestamp,omitempty"`</span>
+    LastTimestamp unversioned<span class="token punctuation">.</span>Time <span class="token string">`json:"lastTimestamp,omitempty"`</span>
+    Count <span class="token builtin">int32</span> <span class="token string">`json:"count,omitempty"`</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>除了所有的 kubernetes 资源都有的 <code>unversioned.TypeMeta</code>（资源的类型和版本，对应了 yaml 文件的 <code>Kind</code> 和 <code>apiVersion</code> 字段） 和 <code>ObjectMera</code> 字段（资源的元数据，比如 name、nemspace、labels、uuid、创建时间等）之外，还有和事件本身息息相关的字段，比如事件消息、来源、类型，以及数量（kubernetes 会把多个相同的事件汇聚到一起）和第一个事件的发生的时间等。</p>
+<p>中间有个 <code>InvolvedObject</code> 字段，它其实指向了和事件关联的对象，如果是启动容器的事件，这个对象就是 Pod。</p>
+<p>至此，我们就疏通了事件是怎么创建出来的。下面看看事件是怎么发出去的，发送是通过 <code>recorder.Action()</code> 实现的。找到对应的代码部分，竟然简单得只有一句话，把对象封装一下，发送到 <code>m.incoming</code> 管道。</p>
+<pre class=" language-go"><code class="language-go"><span class="token comment" spellcheck="true">// Action distributes the given event among all watchers.</span>
+<span class="token keyword">func</span> <span class="token punctuation">(</span>m <span class="token operator">*</span>Broadcaster<span class="token punctuation">)</span> <span class="token function">Action</span><span class="token punctuation">(</span>action EventType<span class="token punctuation">,</span> obj runtime<span class="token punctuation">.</span>Object<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    m<span class="token punctuation">.</span>incoming <span class="token operator">&lt;-</span> Event<span class="token punctuation">{</span>action<span class="token punctuation">,</span> obj<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>Broadcaster</code> 是 <code>Recoder</code> 内部的对象，调用 <code>NewRecoder</code> 的时候 <code>EventBroadcaster</code> 传给它的。接下来，我们要分析 <code>EventBroadcaster</code> 的实现。</p>
+<h3 id="EventBroadcaster-实现事件的分发"><a href="#EventBroadcaster-实现事件的分发" class="headerlink" title="EventBroadcaster 实现事件的分发"></a>EventBroadcaster 实现事件的分发</h3><p><code>EventBroadcaster</code> 也在 <code>pkg/event/record/event.go</code> 文件中：</p>
+<pre><code>type eventBroadcasterImpl struct {
+    *watch.Broadcaster
+    sleepDuration time.Duration
+}
+
+func NewBroadcaster() EventBroadcaster {
+    return &amp;eventBroadcasterImpl{watch.NewBroadcaster(maxQueuedEvents, watch.DropIfChannelFull), defaultSleepDuration}
+}
+</code></pre><p>它的核心组件是 <code>watch.Broadcaster</code>，<code>Broadcaster</code> 就是广播的意思，主要功能就是把发给它的消息，广播给所有的监听者（watcher）。它的实现代码在 <code>pkg/watch/mux.go</code>，我们不再深入剖析，不过这部分代码如何使用 golang channel 是值得所有读者学习的。</p>
+<p>简单来说，<code>watch.Broadcaster</code> 是一个分发器，内部保存了一个消息队列，可以通过 <code>Watch</code> 创建监听它内部的 worker。当有消息发送到队列中，<code>watch.Broadcaster</code> 后台运行的 goroutine 会接收消息并发送给所有的 watcher。而每个 <code>watcher</code> 都有一个接收消息的 channel，用户可以通过它的 <code>ResultChan()</code> 获取这个 channel 从中读取数据进行处理。</p>
+<p>前面说过 <code>StartLogging</code> 和 <code>StartRecordingToSink</code> 都是启动一个事件处理的函数，我们就以后者为例，看看事件的处理过程：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token punctuation">(</span>eventBroadcaster <span class="token operator">*</span>eventBroadcasterImpl<span class="token punctuation">)</span> <span class="token function">StartRecordingToSink</span><span class="token punctuation">(</span>sink EventSink<span class="token punctuation">)</span> watch<span class="token punctuation">.</span>Interface <span class="token punctuation">{</span>
+    randGen <span class="token operator">:=</span> rand<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span>rand<span class="token punctuation">.</span><span class="token function">NewSource</span><span class="token punctuation">(</span>time<span class="token punctuation">.</span><span class="token function">Now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">UnixNano</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    eventCorrelator <span class="token operator">:=</span> <span class="token function">NewEventCorrelator</span><span class="token punctuation">(</span>clock<span class="token punctuation">.</span>RealClock<span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> eventBroadcaster<span class="token punctuation">.</span><span class="token function">StartEventWatcher</span><span class="token punctuation">(</span>
+        <span class="token keyword">func</span><span class="token punctuation">(</span>event <span class="token operator">*</span>api<span class="token punctuation">.</span>Event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">recordToSink</span><span class="token punctuation">(</span>sink<span class="token punctuation">,</span> event<span class="token punctuation">,</span> eventCorrelator<span class="token punctuation">,</span> randGen<span class="token punctuation">,</span> eventBroadcaster<span class="token punctuation">.</span>sleepDuration<span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>StartRecordingToSink</code> 就是对 <code>StartEventWatcher</code> 的封装，将处理函数设置为 <code>recordToSink</code>。我们先看看 <code>StartEventWatcher</code> 的代码：</p>
+<pre><code>func (eventBroadcaster *eventBroadcasterImpl) StartEventWatcher(eventHandler func(*api.Event)) watch.Interface {
+    watcher := eventBroadcaster.Watch()
+    go func() {
+        defer utilruntime.HandleCrash()
+        for {
+            watchEvent, open := &lt;-watcher.ResultChan()
+            if !open {
+                return
+            }
+            event, ok := watchEvent.Object.(*api.Event)
+            if !ok {
+                continue
+            }
+            eventHandler(event)
+        }
+    }()
+    return watcher
+}
+</code></pre><p>它启动一个 goroutine，不断从 <code>watcher.ResultChan()</code> 中读取消息，然后调用 <code>eventHandler(event)</code> 对事件进行处理。</p>
+<p>而我们的处理函数就是 <code>recordToSink</code>，它的代码是下一节的重点。</p>
+<h3 id="事件的处理过程"><a href="#事件的处理过程" class="headerlink" title="事件的处理过程"></a>事件的处理过程</h3><p><code>recordToSink</code> 负责把事件发送到 apiserver，这里的 sink 其实就是和 apiserver 交互的 restclient， event 是要发送的事件，eventCorrelator 在发送事件之前先对事件进行预处理。</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">recordToSink</span><span class="token punctuation">(</span>sink EventSink<span class="token punctuation">,</span> event <span class="token operator">*</span>api<span class="token punctuation">.</span>Event<span class="token punctuation">,</span> eventCorrelator <span class="token operator">*</span>EventCorrelator<span class="token punctuation">,</span> randGen <span class="token operator">*</span>rand<span class="token punctuation">.</span>Rand<span class="token punctuation">,</span> sleepDuration time<span class="token punctuation">.</span>Duration<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    eventCopy <span class="token operator">:=</span> <span class="token operator">*</span>event
+    event <span class="token operator">=</span> <span class="token operator">&amp;</span>eventCopy
+    result<span class="token punctuation">,</span> err <span class="token operator">:=</span> eventCorrelator<span class="token punctuation">.</span><span class="token function">EventCorrelate</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span>
+    <span class="token keyword">if</span> result<span class="token punctuation">.</span>Skip <span class="token punctuation">{</span>
+        <span class="token keyword">return</span>
+    <span class="token punctuation">}</span>
+
+    tries <span class="token operator">:=</span> <span class="token number">0</span>
+    <span class="token keyword">for</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token function">recordEvent</span><span class="token punctuation">(</span>sink<span class="token punctuation">,</span> result<span class="token punctuation">.</span>Event<span class="token punctuation">,</span> result<span class="token punctuation">.</span>Patch<span class="token punctuation">,</span> result<span class="token punctuation">.</span>Event<span class="token punctuation">.</span>Count <span class="token operator">></span> <span class="token number">1</span><span class="token punctuation">,</span> eventCorrelator<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">break</span>
+        <span class="token punctuation">}</span>
+        tries<span class="token operator">++</span>
+        <span class="token keyword">if</span> tries <span class="token operator">>=</span> maxTriesPerEvent <span class="token punctuation">{</span>
+            glog<span class="token punctuation">.</span><span class="token function">Errorf</span><span class="token punctuation">(</span><span class="token string">"Unable to write event '%#v' (retry limit exceeded!)"</span><span class="token punctuation">,</span> event<span class="token punctuation">)</span>
+            <span class="token keyword">break</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment" spellcheck="true">// 第一次重试增加随机性，防止 apiserver 重启的时候所有的事件都在同一时间发送事件</span>
+        <span class="token keyword">if</span> tries <span class="token operator">==</span> <span class="token number">1</span> <span class="token punctuation">{</span>
+            time<span class="token punctuation">.</span><span class="token function">Sleep</span><span class="token punctuation">(</span>time<span class="token punctuation">.</span><span class="token function">Duration</span><span class="token punctuation">(</span><span class="token function">float64</span><span class="token punctuation">(</span>sleepDuration<span class="token punctuation">)</span> <span class="token operator">*</span> randGen<span class="token punctuation">.</span><span class="token function">Float64</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+            time<span class="token punctuation">.</span><span class="token function">Sleep</span><span class="token punctuation">(</span>sleepDuration<span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>recordToSink</code> 对事件的处理分为两个步骤：<code>eventCorrelator.EventCorrelate</code> 会对事件做预处理，主要是聚合相同的事件（避免产生的事件过多，增加 etcd 和 apiserver 的压力，也会导致查看 pod 事件很不清晰）；<code>recordEvent</code> 负责最终把事件发送到 apiserver，它会重试很多次（默认是 12 次），并且每次重试都有一定时间间隔（默认是 10 秒钟）。</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">recordEvent</span><span class="token punctuation">(</span>sink EventSink<span class="token punctuation">,</span> event <span class="token operator">*</span>api<span class="token punctuation">.</span>Event<span class="token punctuation">,</span> patch <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">,</span> updateExistingEvent <span class="token builtin">bool</span><span class="token punctuation">,</span> eventCorrelator <span class="token operator">*</span>EventCorrelator<span class="token punctuation">)</span> <span class="token builtin">bool</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> newEvent <span class="token operator">*</span>api<span class="token punctuation">.</span>Event
+    <span class="token keyword">var</span> err <span class="token builtin">error</span>
+
+    <span class="token comment" spellcheck="true">// 更新已经存在的事件</span>
+    <span class="token keyword">if</span> updateExistingEvent <span class="token punctuation">{</span>
+        newEvent<span class="token punctuation">,</span> err <span class="token operator">=</span> sink<span class="token punctuation">.</span><span class="token function">Patch</span><span class="token punctuation">(</span>event<span class="token punctuation">,</span> patch<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// 创建一个新的事件</span>
+    <span class="token keyword">if</span> <span class="token operator">!</span>updateExistingEvent <span class="token operator">||</span> <span class="token punctuation">(</span>updateExistingEvent <span class="token operator">&amp;&amp;</span> <span class="token function">isKeyNotFoundError</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        event<span class="token punctuation">.</span>ResourceVersion <span class="token operator">=</span> <span class="token string">""</span>
+        newEvent<span class="token punctuation">,</span> err <span class="token operator">=</span> sink<span class="token punctuation">.</span><span class="token function">Create</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> err <span class="token operator">==</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// we need to update our event correlator with the server returned state to handle name/resourceversion</span>
+        eventCorrelator<span class="token punctuation">.</span><span class="token function">UpdateState</span><span class="token punctuation">(</span>newEvent<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token boolean">true</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">// 如果是已知错误，就不要再重试了；否则，返回 false，让上层进行重试</span>
+    <span class="token keyword">switch</span> err<span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token keyword">type</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">case</span> <span class="token operator">*</span>restclient<span class="token punctuation">.</span>RequestConstructionError<span class="token punctuation">:</span>
+        glog<span class="token punctuation">.</span><span class="token function">Errorf</span><span class="token punctuation">(</span><span class="token string">"Unable to construct event '%#v': '%v' (will not retry!)"</span><span class="token punctuation">,</span> event<span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token boolean">true</span>
+    <span class="token keyword">case</span> <span class="token operator">*</span>errors<span class="token punctuation">.</span>StatusError<span class="token punctuation">:</span>
+        <span class="token keyword">if</span> errors<span class="token punctuation">.</span><span class="token function">IsAlreadyExists</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            glog<span class="token punctuation">.</span><span class="token function">V</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Infof</span><span class="token punctuation">(</span><span class="token string">"Server rejected event '%#v': '%v' (will not retry!)"</span><span class="token punctuation">,</span> event<span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+            glog<span class="token punctuation">.</span><span class="token function">Errorf</span><span class="token punctuation">(</span><span class="token string">"Server rejected event '%#v': '%v' (will not retry!)"</span><span class="token punctuation">,</span> event<span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">return</span> <span class="token boolean">true</span>
+    <span class="token keyword">case</span> <span class="token operator">*</span>errors<span class="token punctuation">.</span>UnexpectedObjectError<span class="token punctuation">:</span>
+    <span class="token keyword">default</span><span class="token punctuation">:</span>
+    <span class="token punctuation">}</span>
+    glog<span class="token punctuation">.</span><span class="token function">Errorf</span><span class="token punctuation">(</span><span class="token string">"Unable to write event: '%v' (may retry after sleeping)"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token boolean">false</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>它根据 <code>eventCorrelator</code> 的结果来决定是新建一个事件还是更新已经存在的事件，并根据请求的结果决定是否需要重试（返回值为 false 说明需要重试，返回值为 true 表明已经操作成功或者忽略请求错误）。<code>sink.Create</code> 和 <code>sink.Patch</code> 是自动生成的 apiserver 的 client，对应的代码在： <code>pkg/client/clientset_generated/internalclientset/typed/core/internalversion/event_expansion.go</code> 。</p>
+<p>到这里，事件总算完成了它的使命，到了目的地。但是我们略过了 <code>EventCorrelator</code> 的部分，它在发送之前对事件做过滤和聚合处理，以免产生大量的事件给 apiserver 和 etcd 带来太大的压力。</p>
+<h3 id="EventCorrelator：事件的预处理"><a href="#EventCorrelator：事件的预处理" class="headerlink" title="EventCorrelator：事件的预处理"></a>EventCorrelator：事件的预处理</h3><p><code>EventCorrelator</code> 的代码在 <code>pkg/client/record/event_cache.go</code> 文件中，从文件名可以猜测出它对事件做了缓存。</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">NewEventCorrelator</span><span class="token punctuation">(</span>clock clock<span class="token punctuation">.</span>Clock<span class="token punctuation">)</span> <span class="token operator">*</span>EventCorrelator <span class="token punctuation">{</span>
+    cacheSize <span class="token operator">:=</span> maxLruCacheEntries
+    <span class="token keyword">return</span> <span class="token operator">&amp;</span>EventCorrelator<span class="token punctuation">{</span>
+        filterFunc<span class="token punctuation">:</span> DefaultEventFilterFunc<span class="token punctuation">,</span>
+        aggregator<span class="token punctuation">:</span> <span class="token function">NewEventAggregator</span><span class="token punctuation">(</span>
+            cacheSize<span class="token punctuation">,</span>
+            EventAggregatorByReasonFunc<span class="token punctuation">,</span>
+            EventAggregatorByReasonMessageFunc<span class="token punctuation">,</span>
+            defaultAggregateMaxEvents<span class="token punctuation">,</span>
+            defaultAggregateIntervalInSeconds<span class="token punctuation">,</span>
+            clock<span class="token punctuation">)</span><span class="token punctuation">,</span>
+        logger<span class="token punctuation">:</span> <span class="token function">newEventLogger</span><span class="token punctuation">(</span>cacheSize<span class="token punctuation">,</span> clock<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// EventCorrelate filters, aggregates, counts, and de-duplicates all incoming events</span>
+<span class="token keyword">func</span> <span class="token punctuation">(</span>c <span class="token operator">*</span>EventCorrelator<span class="token punctuation">)</span> <span class="token function">EventCorrelate</span><span class="token punctuation">(</span>newEvent <span class="token operator">*</span>api<span class="token punctuation">.</span>Event<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token operator">*</span>EventCorrelateResult<span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> c<span class="token punctuation">.</span><span class="token function">filterFunc</span><span class="token punctuation">(</span>newEvent<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token operator">&amp;</span>EventCorrelateResult<span class="token punctuation">{</span>Skip<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token boolean">nil</span>
+    <span class="token punctuation">}</span>
+    aggregateEvent<span class="token punctuation">,</span> err <span class="token operator">:=</span> c<span class="token punctuation">.</span>aggregator<span class="token punctuation">.</span><span class="token function">EventAggregate</span><span class="token punctuation">(</span>newEvent<span class="token punctuation">)</span>
+    <span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token operator">&amp;</span>EventCorrelateResult<span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> err
+    <span class="token punctuation">}</span>
+    observedEvent<span class="token punctuation">,</span> patch<span class="token punctuation">,</span> err <span class="token operator">:=</span> c<span class="token punctuation">.</span>logger<span class="token punctuation">.</span><span class="token function">eventObserve</span><span class="token punctuation">(</span>aggregateEvent<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token operator">&amp;</span>EventCorrelateResult<span class="token punctuation">{</span>Event<span class="token punctuation">:</span> observedEvent<span class="token punctuation">,</span> Patch<span class="token punctuation">:</span> patch<span class="token punctuation">}</span><span class="token punctuation">,</span> err
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>EventCorrelator</code> 内部有三个对象：<code>filterFunc</code>、<code>aggregator</code> 和 <code>logger</code>，它们分别对事件进行过滤、把相似的事件汇聚在一起、把相同的事件记录到一起。使用 <code>NewEventCorrelator</code> 初始化的时候内部会自动创建各个对象的默认值，<code>EventCorrelate</code> 会以此调用三个对象的方法，并返回最终的结果。现在它们的逻辑是这样的：</p>
+<ul>
+<li><code>filterFunc</code>：目前不做过滤，也就是说所有的事件都要经过后续处理，后面可能会做扩展</li>
+<li><code>aggregator</code>：如果在最近 10 分钟出现过 10 个相似的事件（除了 message 和时间戳之外其他关键字段都相同的事件），aggregator 会把它们的 message 设置为 <code>events with common reason combined</code>，这样它们就完全一样了</li>
+<li><code>logger</code>：这个变量的名字有点奇怪，其实它会把相同的事件（除了时间戳之外其他字段都相同）变成同一个事件，通过增加事件的 <code>Count</code> 字段来记录该事件发生了多少次。经过 <code>aggregator</code> 的事件会在这里变成同一个事件</li>
+</ul>
+<p><code>aggregator</code> 和 <code>logger</code> 都会在内部维护一个缓存（默认长度是 4096），事件的相似性和相同性比较是和缓存中的事件进行的，也就是说它并在乎 kubelet 启动之前的事件，而且如果事件超过 4096 的长度，最近没有被访问的事件也会被从缓存中移除。这也是这个文件中带有 <code>cache</code> 的原因。它们的内部实现并不复杂，有兴趣的读者请自行阅读相关源码。</p>
+<h2 id="Event-总结"><a href="#Event-总结" class="headerlink" title="Event 总结"></a>Event 总结</h2><p>通过这篇文章，我们了解到了整个事件机制的来龙去脉。最后，我们再做一个总结，看看事件流动的整个过程：</p>
+<ol>
+<li>kubelet 通过 <code>recorder</code> 对象提供的 <code>Event</code>、<code>Eventf</code> 和 <code>PastEventf</code> 方法产生特性的事件</li>
+<li><code>recorder</code> 根据传递过来的参数新建一个 <code>Event</code> 对象，并把它发送给 <code>EventBroadcaster</code> 的管道</li>
+<li><code>EventBroadcaster</code> 后台运行的 goroutine 从管道中读取事件消息，把它广播给之前注册的 handler 进行处理</li>
+<li>kubelet 有两个 handler，它们分别把事件记录到日志和发送给 apiserver。记录到日志很简单，直接打印就行</li>
+<li>发送给 apiserver 的 handler 叫做 <code>EventSink</code>，它在发送事件给 apiserver 之前会先做预处理</li>
+<li>预处理操作是 <code>EventCorrelator</code> 完成的，它会对事件做过滤、汇聚和去重操作，返回处理后的事件（可能是原来的事件，也可能是新创建的事件）</li>
+<li>最后通过 restclient （eventClient） 调用对应的方法，给 apiserver 发送请求，这个过程如果出错会进行重试</li>
+<li>apiserver 接收到事件的请求把数据更新到 etcd</li>
+</ol>
+<p>事件的产生过程是这样的，那么这些事件都有什么用呢？它一般用于调试，用户可以通过 <code>kubectl</code> 命令获取整个集群或者某个 pod 的事件信息。<code>kubectl get events</code> 可以看到所有的事件，<code>kubectl describe pod PODNAME</code> 能看到关于某个 pod 的事件。对于前者很好理解，kubectl 会直接访问 apiserver 的 event 资源，而对于后者 kubectl 还根据 pod 的名字进行搜索，匹配 InvolvedObject 名称和 pod 名称匹配的事件。</p>
+<p>我们来思考一下事件机制的框架，有哪些我们可以借鉴的设计思想呢？我想最重要的一点是：<strong>需求决定实现</strong>。</p>
+<p>Event 和 kubernetes 中其他的资源不同，它有一个很重要的特性就是它可以丢失。如果某个事件丢了，并不会影响集群的正常工作。事件的重要性远低于集群的稳定性，所以我们看到事件整个流程中如果有错误，会直接忽略这个事件。</p>
+<p>事件的另外一个特性是它的数量很多，相比于 pod 或者 deployment 等资源，事件要比它们多很多，而且每次有事件都要对 etcd 进行写操作。整个集群如果不加管理地往 etcd 中写事件，会对 etcd 造成很大的压力，而 etcd 的可用性是整个集群的基础，所以每个组件在写事件之前，会对事件进行汇聚和去重工作，减少最终的写操作。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://www.kubernetes.org.cn/1195.html" target="_blank" rel="noopener">Kubernetes Events介绍（下）</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/debug-application-cluster/debug-application-introspection/" target="_blank" rel="noopener">Application Introspection and Debugging</a></li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="kubelet scheduler 源码分析：调度器的工作原理" href="/2017/07/19/kubernetes-scheduler-source-code-analysis/">
+        ← kubelet scheduler 源码分析：调度器的工作原理
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="kubernetes 权限管理" href="/2017/06/16/kubernetes-authentication-and-authorization/">
+        kubernetes 权限管理 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#kubelet-事件机制"><span class="toc-text">kubelet 事件机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事件机制源码分析"><span class="toc-text">事件机制源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#谁会发送事件？"><span class="toc-text">谁会发送事件？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EventRecorder-和-EventBroadcaster"><span class="toc-text">EventRecorder 和 EventBroadcaster</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#发送事件的过程"><span class="toc-text">发送事件的过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EventBroadcaster-实现事件的分发"><span class="toc-text">EventBroadcaster 实现事件的分发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#事件的处理过程"><span class="toc-text">事件的处理过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EventCorrelator：事件的预处理"><span class="toc-text">EventCorrelator：事件的预处理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Event-总结"><span class="toc-text">Event 总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">kubelet 源码分析： 事件处理</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

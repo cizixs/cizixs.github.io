@@ -1,0 +1,1981 @@
+<!DOCTYPE html>
+<html CN>
+
+
+ 
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>Archives | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="Container, Microservice, Python, Go, Reading, Life, And Love.">
+
+	
+	<meta name="keywords" content="hexo, casper, ghost, theme">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="blog">
+	<meta property="og:title" content="Archives | Cizixs Write Here">
+	<meta property="og:description" content="Container, Microservice, Python, Go, Reading, Life, And Love.">
+	<meta property="og:url" content="http://cizixs.com/archives/2017/index.html">
+
+	
+
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="tag-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer  b-lazy" data-src="https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg">
+    <div class="inner">
+        
+        
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+        
+        <div class="site-header-content">
+            
+            <h1 class="site-title">
+                Archives
+            </h1>
+            <h2 class="site-description">Total: 114</h2>
+        </div>
+        
+        
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+	<div class="inner">
+		<div class="post-feed">
+			
+			<article class="post-card post ">
+				
+				<a class="post-card-image-link" title="CNCF 云原生容器生态系统概要" href="/2017/12/30/cncf-cloud-native-landscape/">
+					<div class="post-card-image b-lazy" data-src="http://cizixs.u.qiniudn.com/D26137E7-0D2B-4979-87BE-CA28935AB89F.JPG"></div>
+				</a>
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="CNCF 云原生容器生态系统概要" href="/2017/12/30/cncf-cloud-native-landscape/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-12-29T16:00:00.000Z" itemprop="datePublished">
+									2017-12-30
+								</time>
+							</span>
+							<h2 class="post-card-title">CNCF 云原生容器生态系统概要</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								CNCF（Cloud Native Compute Foundation） 是 Linux 基金会旗下的一个组织，旨在推动以容器为中心的云原生系统。从 2016 年 11 月，CNCF 开始维护了一个
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							54
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post ">
+				
+				<a class="post-card-image-link" title="raft 一致性算法" href="/2017/12/04/raft-consensus-algorithm/">
+					<div class="post-card-image b-lazy" data-src="http://cizixs.u.qiniudn.com/7E796EE4-5641-4DA9-97FA-F2EADB48C550.JPG"></div>
+				</a>
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="raft 一致性算法" href="/2017/12/04/raft-consensus-algorithm/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-12-03T16:00:00.000Z" itemprop="datePublished">
+									2017-12-04
+								</time>
+							</span>
+							<h2 class="post-card-title">raft 一致性算法</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								分布式系统和一致性分布式系统有一个很重要的问题要解决，当一台机器出现问题时，我们希望整个集群还是能够正常运行的，以达到高可用的要求。因为系统的数据是不断变化的，所以要保证集群的数据是同步的，不然会出现
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							12
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="etcd go 语言 v2 客户端开发介绍" href="/2017/12/03/etcd-v2-go-client/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-12-02T16:00:00.000Z" itemprop="datePublished">
+									2017-12-03
+								</time>
+							</span>
+							<h2 class="post-card-title">etcd go 语言 v2 客户端开发介绍</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								etcd 介绍很久之前写过一篇 etcd 的介绍文章，主要是讲 etcd 的概念和使用方式，这篇文章介绍如何使用 go 语言进行 etcd 的开发工作。
+etcd 目前最新版 API 是 v3 版本，之前被广泛使用的 API 为 v2 版本。这篇文章会介绍 v2 版本 go 语言客户端的使用，涉及了最常见的增删查改和监听操作。
+v2 版本使用之前的文章 已经对 etcd v2 版本的概念和 API 介绍得很详细了，这里再总结一下。
+
+作为分布式的键值存储，etcd v2 存储
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							14
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="OCI 和 runc：容器标准化和 docker" href="/2017/11/05/oci-and-runc/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-11-04T16:00:00.000Z" itemprop="datePublished">
+									2017-11-05
+								</time>
+							</span>
+							<h2 class="post-card-title">OCI 和 runc：容器标准化和 docker</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								OCI 和容器标准容器技术随着 docker 的出现炙手可热，所有的技术公司都积极拥抱容器，促进了 docker 容器的繁荣发展。容器一词虽然口口相传，但却没有统一的定义，这不仅是个技术概念的问题，也给整个社区带来一个阴影：容器技术的标准到底是什么？由谁来决定？
+很多人可能觉得 docker 已经成为了容器的事实标准，那我们以它作为标准问题就解决了。事情并没有那么简单，首先是否表示容器完全等同于 docker，不允许存在其他的容器运行时（比如 coreOS 推出的 rkt）；
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							46
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="使用 tc netem 模拟网络异常" href="/2017/10/23/tc-netem-for-terrible-network/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-10-22T16:00:00.000Z" itemprop="datePublished">
+									2017-10-23
+								</time>
+							</span>
+							<h2 class="post-card-title">使用 tc netem 模拟网络异常</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								在某些情况下，我们需要模拟网络很差的状态来测试软件能够正常工作，比如网络延迟、丢包、乱序、重复等。linux 系统强大的流量控制工具 tc 能很轻松地完成，tc 命令行是 iproute2 软件包中的软件，可以根据系统版本自行安装。
+流量控制是个系统而复杂的话题，tc 能做的事情很多，除了本文介绍的还有带宽控制、优先级控制等等，这些功能是通过类似的模块组件实现的，这篇文章介绍的功能主要是通过 netem 这个组件实现的。netem 是 Network Emulator 的缩写
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							20
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="docker 容器网络方案：calico 网络模型" href="/2017/10/19/docker-calico-network/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-10-18T16:00:00.000Z" itemprop="datePublished">
+									2017-10-19
+								</time>
+							</span>
+							<h2 class="post-card-title">docker 容器网络方案：calico 网络模型</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								calico 简介calico 是容器网络的又一种解决方案，和其他虚拟网络最大的不同是，它没有采用 overlay 网络做报文的转发，提供了纯 3 层的网络模型。三层通信模型表示每个容器都通过 IP 直接通信，中间通过路由转发找到对方。在这个过程中，容器所在的节点类似于传统的路由器，提供了路由查找的功能。
+要想路由工作能够正常，每个虚拟路由器（容器所在的主机节点）必须有某种方法知道整个集群的路由信息，calico 采用的是 BGP 路由协议，全称是 Border Gatewa
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							40
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post ">
+				
+				<a class="post-card-image-link" title="linux 上实现 vxlan 网络" href="/2017/09/28/linux-vxlan/">
+					<div class="post-card-image b-lazy" data-src="http://cizixs.u.qiniudn.com/B30F37B7-FA20-46AE-814A-79A7A3A853F9.JPG"></div>
+				</a>
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="linux 上实现 vxlan 网络" href="/2017/09/28/linux-vxlan/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-09-27T16:00:00.000Z" itemprop="datePublished">
+									2017-09-28
+								</time>
+							</span>
+							<h2 class="post-card-title">linux 上实现 vxlan 网络</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								linux 上 vxlan 简介vxlan 协议的介绍文章主要介绍了 vxlan 协议的理论知识，从产生的背景到报文的格式等等，和所有的计算机知识一样，理论必须结合实践理解才能更深刻，这篇文章我们就讲
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							30
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="vxlan 协议原理简介" href="/2017/09/25/vxlan-protocol-introduction/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-09-24T16:00:00.000Z" itemprop="datePublished">
+									2017-09-25
+								</time>
+							</span>
+							<h2 class="post-card-title">vxlan 协议原理简介</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								1. vxlan 简介VXLAN 全称是 Virtual eXtensible Local Area Network，虚拟可扩展的局域网。它是一种 overlay 技术，通过三层的网络来搭建虚拟的二层网络。rfc7348 (参考资料1) 上的介绍是这样的：
+
+A framework for overlaying virtualized layer 2 networks over lay 3 networks.
+
+每一个技术出来都有它要解决的问题，VXLAN 也不例外，那么我们
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							15
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="aufs 简介以及在 docker 中的使用" href="/2017/09/13/docker-aufs-storage-driver/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-09-12T16:00:00.000Z" itemprop="datePublished">
+									2017-09-13
+								</time>
+							</span>
+							<h2 class="post-card-title">aufs 简介以及在 docker 中的使用</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								AUFS 简介AUFS 的全称是 Advanced Multi-layered unification filesytem，它的主要功能是：把多个目录结合成一个目录，对外使用。
+把多个目录 mount 成一个，那么读写操作是怎样的呢？
+
+默认情况下，最上层的目录为读写层，只能有一个；下面可以有一个或者多个只读层
+读文件，打开文件的时候使用了 O_RDONLY 选项：从最上面一个开始往下逐层去找，打开第一个找到的文件，读取其中的内容
+写文件，打开文件时用了 O_WRONLY 或
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							21
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post ">
+				
+				<a class="post-card-image-link" title="使用 pprof 和火焰图调试 golang 应用" href="/2017/09/11/profiling-golang-program/">
+					<div class="post-card-image b-lazy" data-src="http://cizixs.u.qiniudn.com/E6F448C3-CA7A-465F-986B-65A07CC38ECF%202.JPG"></div>
+				</a>
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="使用 pprof 和火焰图调试 golang 应用" href="/2017/09/11/profiling-golang-program/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-09-10T16:00:00.000Z" itemprop="datePublished">
+									2017-09-11
+								</time>
+							</span>
+							<h2 class="post-card-title">使用 pprof 和火焰图调试 golang 应用</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								什么是 Profiling?Profiling 这个词比较难翻译，一般译成画像。比如在案件侦破的时候会对嫌疑人做画像，从犯罪现场的种种证据，找到嫌疑人的各种特征，方便对嫌疑人进行排查；还有就是互联网公
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							24
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="docker 容器基础技术：linux namespace 简介" href="/2017/08/29/linux-namespace/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-08-28T16:00:00.000Z" itemprop="datePublished">
+									2017-08-29
+								</time>
+							</span>
+							<h2 class="post-card-title">docker 容器基础技术：linux namespace 简介</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								1. Linux namespace 简介Linux namespace 是一种内核级别的资源隔离机制，用来让运行在同一个操作系统上的进程互相不会干扰。
+namespace 目的就是隔离，要做到的效果是：如果某个 namespace 中有进程在里面运行，它们只能看到该 namespace 的信息，无法看到 namespace 以外的东西。我们来想一下：一个进程在运行的时候，它会知道哪些信息？
+
+看到系统的 hostname
+可用的网络资源（bridge、interface、网
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							56
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="docker 容器基础技术：linux cgroup 简介" href="/2017/08/25/linux-cgroup/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-08-24T16:00:00.000Z" itemprop="datePublished">
+									2017-08-25
+								</time>
+							</span>
+							<h2 class="post-card-title">docker 容器基础技术：linux cgroup 简介</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								Linux cgroups 的全称是 Linux Control Groups，它是 Linux 内核的特性，主要作用是限制、记录和隔离进程组（process groups）使用的物理资源（cpu、memory、IO 等）。
+2006 的时候，Google 的一些工程师（主要是 Paul Menage 和 Rohit Seth）启动了这个项目，最初的名字叫 process containers。因为 container 在内核中名字有歧义，2007 的时候改名为 contro
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							38
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="docker 容器网络下 UDP 协议的一个问题" href="/2017/08/21/docker-udp-issue/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-08-20T16:00:00.000Z" itemprop="datePublished">
+									2017-08-21
+								</time>
+							</span>
+							<h2 class="post-card-title">docker 容器网络下 UDP 协议的一个问题</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								最近在工作中遇到一个 docker 容器下 UDP 协议网络不通的问题，困扰了很久，也比较有意思，所以想写下来和大家分享。
+我们有个应用是 UDP 协议的，部署上去发现无法工作，但是换成 TCP 协议是可以的（应用同时支持 UDP、TCP 协议，切换成 TCP 模式发现一切正常）。虽然换成 TCP 能解决问题，但是我们还是想知道到底 UDP 协议在网络模式下为什么会出现这个问题，以防止后面其他 UDP 应用会有异常。
+这个问题抽象出来是这样的：如果有 UDP 服务运行在主机上
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							22
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="使用 docker 对容器资源进行限制" href="/2017/08/04/docker-resources-limit/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-08-03T16:00:00.000Z" itemprop="datePublished">
+									2017-08-04
+								</time>
+							</span>
+							<h2 class="post-card-title">使用 docker 对容器资源进行限制</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								在使用 docker 运行容器时，一台主机上可能会运行几百个容器，这些容器虽然互相隔离，但是底层却使用着相同的 CPU、内存和磁盘资源。如果不对容器使用的资源进行限制，那么容器之间会互相影响，小的来说会导致容器资源使用不公平；大的来说，可能会导致主机和集群资源耗尽，服务完全不可用。
+docker 作为容器的管理者，自然提供了控制容器资源的功能。正如使用内核的 namespace 来做容器之间的隔离，docker 也是通过内核的 cgroups 来做容器的资源限制。这篇文章就介
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							37
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="ARP 协议解析" href="/2017/07/31/arp-protocol/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-07-30T16:00:00.000Z" itemprop="datePublished">
+									2017-07-31
+								</time>
+							</span>
+							<h2 class="post-card-title">ARP 协议解析</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								ARP 协议简介ARP 的全称是  Address Resolution Protocol，直译过来是 地址解析协议。对应的 RFC 文档是 RFC826。它的作用是把 IP 地址转换为 MAC 地址。为什么需要做这件事呢？
+这是因为 TCP/IP 网络协议栈是分层的，每层负责不同的功能。IP 层（layer 3）负责路由寻路，换句话说，如果目的机器和客户端不在同一个网络，IP 层会穿过错综复杂的中间网络（互联网）找到目的机器所在的网络。
+当报文在某一个网络中传播时（可能源机
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							22
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="【翻译】理解 TCP/IP 网络栈" href="/2017/07/27/understand-tcp-ip-network-stack/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-07-26T16:00:00.000Z" itemprop="datePublished">
+									2017-07-27
+								</time>
+							</span>
+							<h2 class="post-card-title">【翻译】理解 TCP/IP 网络栈</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								TL;DR
+[TOC]
+译者注：很久没有翻译文章了，最近在网络看到这篇介绍网络栈的文章非常详细，正好最近在看这方面的内容，索性翻译过来。因为很多文章比较长，而且很多内容比较专业，翻译过程中难免会有错误，如果读者发现错误，还望不吝指出。文章中 Linux 内核源码摘自哪个版本原文并没有表明，我也没有找到对应的版本，代码的缩进可能会有问题。
+原文地址： cubrid.org/blog/understanding-tcp-ip-network-stack，有删减。
+没有 TCP/I
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							67
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="kubelet scheduler 源码分析：调度器的工作原理" href="/2017/07/19/kubernetes-scheduler-source-code-analysis/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-07-18T16:00:00.000Z" itemprop="datePublished">
+									2017-07-19
+								</time>
+							</span>
+							<h2 class="post-card-title">kubelet scheduler 源码分析：调度器的工作原理</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								TL;DR
+1. kubernetes Scheduler 简介kubernetes Scheduler 运行在 master 节点，它的核心功能是监听 apiserver 来获取 PodSpec.NodeName 为空的 pod，然后为每个这样的 pod 创建一个 binding 指示 pod 应该调度到哪个节点上。
+从哪里读取还没有调度的 pod 呢？当然是 apiserver。怎么知道 pod 没有调度呢？我们在 介绍 APIServer 的文章讲到，可以通过 spec
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							81
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="kubelet 源码分析： 事件处理" href="/2017/06/22/kubelet-source-code-analysis-part4-event/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-06-21T16:00:00.000Z" itemprop="datePublished">
+									2017-06-22
+								</time>
+							</span>
+							<h2 class="post-card-title">kubelet 源码分析： 事件处理</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								前几篇源码分析的文章介绍了 kubelet 提供的各种功能，这篇文章继续介绍 kubelet 的源码部分：事件机制。事件并不是 kubelet 对外提供的功能，但是对于 kubernetes 系统却非常重要。
+kubelet 事件机制我们知道 kubernetes 是分布式的架构，apiserver 是整个集群的交互中心，客户端主要和它打交道，kubelet 是各个节点上的 worker，负责执行具体的任务。对于用户来说，每次创建资源的时候，除了看到它的最终状态（一般是运行态
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							40
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="kubernetes 权限管理" href="/2017/06/16/kubernetes-authentication-and-authorization/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-06-15T16:00:00.000Z" itemprop="datePublished">
+									2017-06-16
+								</time>
+							</span>
+							<h2 class="post-card-title">kubernetes 权限管理</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								kubernetes 主要通过 APIServer 对外提供服务，对于这样的系统集群来说，请求访问的安全性是非常重要的考虑因素。如果不对请求加以限制，那么会导致请求被滥用，甚至被黑客攻击。
+kubernetes 对于访问 API 来说提供了两个步骤的安全措施：认证和授权。认证解决用户是谁的问题，授权解决用户能做什么的问题。通过合理的权限管理，能够保证系统的安全可靠。
+下图是 API 访问要经过的三个步骤，前面两个是认证和授权，第三个是 Admission Control，它也
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							24
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="kubelet 源码分析：statusManager 和 probeManager" href="/2017/06/12/kubelet-source-code-analysis-part4-status-manager/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-06-11T16:00:00.000Z" itemprop="datePublished">
+									2017-06-12
+								</time>
+							</span>
+							<h2 class="post-card-title">kubelet 源码分析：statusManager 和 probeManager</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								简介在 kubelet 初始化的时候，会创建 statusManager 和 probeManager，两者都和 pod 的状态有关系，因此我们放到一起来讲解。
+statusManager 负责维护状态信息，并把 pod 状态更新到 apiserver，但是它并不负责监控 pod 状态的变化，而是提供对应的接口供其他组件调用，比如 probeManager。probeManager 会定时去监控 pod 中容器的健康状况，一旦发现状态发生变化，就调用 statusManage
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							23
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="kubelet 源码分析：Garbage Collect" href="/2017/06/09/kubelet-source-code-analysis-part-3/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-06-08T16:00:00.000Z" itemprop="datePublished">
+									2017-06-09
+								</time>
+							</span>
+							<h2 class="post-card-title">kubelet 源码分析：Garbage Collect</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								kubernetes GC 简介作为 kubernetes 中重要的组件，kubelet 接管了节点上容器相关的所有工作。除了最核心的任务：根据 apiserver 分配的 pod 创建容器之外，它还有其他很多事情要做，其中之一就是 GC（Garbage Collect）。
+在运行一段时候之后，节点上会下载很多镜像，也会有很多因为各种原因退出的容器。为了保证节点能够正常运行，kubelet 要防止镜像太多占满磁盘空间，也要防止退出的容器太多导致系统运行缓慢或者出现错误。
+GC
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							34
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="kubelet 源码分析：pod 新建流程" href="/2017/06/07/kubelet-source-code-analysis-part-2/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-06-06T16:00:00.000Z" itemprop="datePublished">
+									2017-06-07
+								</time>
+							</span>
+							<h2 class="post-card-title">kubelet 源码分析：pod 新建流程</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								在上一篇文章中，我们分析了 kubelet 是怎么从命令行进行解析参数、怎么根据配置初始化各种对象、以及最终怎么创建出来 Kubelet并运行的。这篇文章我们就接着分析，当有新的 pod 分配到该节点的时候，kubelet 是怎么处理的。
+syncLoopsyncLoop 是 kubelet 的主循环方法，它从不同的管道（文件、URL 和 apiserver）监听变化，并把它们汇聚起来。当有新的变化发生时，它会调用对应的处理函数，保证 pod 处于期望的状态。如果 pod 没
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							35
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="kubelet 源码分析：启动流程" href="/2017/06/06/kubelet-source-code-analysis-part-1/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-06-05T16:00:00.000Z" itemprop="datePublished">
+									2017-06-06
+								</time>
+							</span>
+							<h2 class="post-card-title">kubelet 源码分析：启动流程</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								kubelet 简介我在之前的文章介绍过 kubelet 的功能，简言之，kubelet 保证它所在节点的 pod 能够正常工作。它的核心工作是监听 apiserver，一旦发现当前节点的 pod 配置发生变化，就根据最新的配置执行响应的动作，保证运行的 pod 状态和期望的一致。
+kubelet 除了这个最核心的功能之外，还有很多其他特性：
+
+定时汇报当前节点的状态给 apiserver，以供调度的时候使用
+镜像和容器的清理工作，保证节点上镜像不会占满磁盘空间，退出的容器不
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							52
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="CNI：容器网络接口" href="/2017/05/23/container-network-cni/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-05-22T16:00:00.000Z" itemprop="datePublished">
+									2017-05-23
+								</time>
+							</span>
+							<h2 class="post-card-title">CNI：容器网络接口</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								CNI 简介不管是 docker 还是 kubernetes，在网络方面目前都没有一个完美的、终极的、普适性的解决方案，不同的用户和企业因为各种原因会使用不同的网络方案。目前存在网络方案 flannel、calico、openvswitch、weave、ipvlan等，而且以后一定会有其他的网络方案，这些方案接口和使用方法都不相同，而不同的容器平台都需要网络功能，它们之间的适配如果没有统一的标准，会有很大的工作量和重复劳动。
+CNI 就是这样一个标准，它旨在为容器平台提供网络
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							8
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="kubernetes 亲和性调度" href="/2017/05/17/kubernetes-scheulder-affinity/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-05-16T16:00:00.000Z" itemprop="datePublished">
+									2017-05-17
+								</time>
+							</span>
+							<h2 class="post-card-title">kubernetes 亲和性调度</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								kubernetes pod 调度简介除了让 kubernetes 集群调度器自动为 pod 资源选择某个节点（默认调度考虑的是资源足够，并且 load 尽量平均），有些情况我们希望能更多地控制 pod 应该如何调度。比如，集群中有些机器的配置更好（ SSD，更好的内存等），我们希望比较核心的服务（比如说数据库）运行在上面；或者某两个服务的网络传输很频繁，我们希望它们最好在同一台机器上，或者同一个机房。
+这种调度在 kubernetes 中分为两类：node affinity
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							14
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="linux lsof 命令使用指南" href="/2017/05/16/linux-lsof-primer/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-05-15T16:00:00.000Z" itemprop="datePublished">
+									2017-05-16
+								</time>
+							</span>
+							<h2 class="post-card-title">linux lsof 命令使用指南</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								lsof 简介lsof 是 list open files 的简称，正如名字所示，它的作用主要是列出系统中打开的文件。乍看起来，这是个功能非常简单，使用场景不多的命令，不过是 ls 的另一个版本。但是因为 unix 系统的 everything is a file 的哲学，基本上 *nix 系统所有的对象都可以看做对象，再加上这个命令提供的各种参数，使得它其实非常强大，能够轻松地获得很多非常有用的信息，有些用其他工具会非常麻烦。
+lsof 可以知道用户和进程操作了哪些文件，也
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							8
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="使用 sysdig 进行监控和调试 linux 机器" href="/2017/04/27/sysdig-for-linux-system-monitor-and-analysis/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-04-26T16:00:00.000Z" itemprop="datePublished">
+									2017-04-27
+								</time>
+							</span>
+							<h2 class="post-card-title">使用 sysdig 进行监控和调试 linux 机器</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								sysdig 简介sysdig 官网 上对自己的介绍是：
+
+Open Source Universal System Visibility With Native Contaier Support.
+
+它的定位是系统监控、分析和排障的工具，其实在 linux 平台上，已经有很多这方面的工具 strace、tcpdump、htop、iftop、lsof、netstat，它们都能用来分析 linux 系统的运行情况，而且还有很多日志、监控工具。为什么还需要 sysdig 呢？在我
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							21
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="使用 curl 命令分析请求的耗时情况" href="/2017/04/11/use-curl-to-analyze-request/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-04-10T16:00:00.000Z" itemprop="datePublished">
+									2017-04-11
+								</time>
+							</span>
+							<h2 class="post-card-title">使用 curl 命令分析请求的耗时情况</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								最近工作中遇到一个问题，某个请求的响应特别慢，因此我就希望有一种方法能够分析到底请求的哪一步耗时比较长，好进一步找到问题的原因。在网络上搜索了一下，发现了一个非常好用的方法，curl 命令就能帮你分析请求的各个部分耗时。
+curl 命令提供了 -w 参数，这个参数在 manpage 是这样解释的：
+ -w, --write-out &lt;format>
+              Make curl display information on stdout after a
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							7
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="kubernetes 简介：kube-dns 和服务发现" href="/2017/04/11/kubernetes-intro-kube-dns/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-04-10T16:00:00.000Z" itemprop="datePublished">
+									2017-04-11
+								</time>
+							</span>
+							<h2 class="post-card-title">kubernetes 简介：kube-dns 和服务发现</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								服务发现kubernetes 提供了 service 的概念可以通过 VIP 访问 pod 提供的服务，但是在使用的时候还有一个问题：怎么知道某个应用的 VIP？比如我们有两个应用，一个 app，一个 是 db，每个应用使用 rc 进行管理，并通过 service 暴露出端口提供服务。app 需要连接到 db 应用，我们只知道 db 应用的名称，但是并不知道它的 VIP 地址。
+最简单的办法是从 kubernetes 提供的 API 查询。但这是一个糟糕的做法，首先每个应用都
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							20
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+			<article class="post-card post  no-image ">
+				
+				<div class="post-card-content">
+					<a class="post-card-content-link" title="kube-proxy 源码解析" href="/2017/04/07/kube-proxy-source-code-analysis/">
+						<header class="post-card-header">
+							<span class="post-card-tags">
+								
+								
+								blog
+								| 
+								
+								<time datetime="2017-04-06T16:00:00.000Z" itemprop="datePublished">
+									2017-04-07
+								</time>
+							</span>
+							<h2 class="post-card-title">kube-proxy 源码解析</h2>
+						</header>
+						<section class="post-card-excerpt">
+							<p>
+								
+								
+								
+								
+								
+								kube-proxy 功能简介我们在之前的文章中介绍过 kube-proxy 和 service的工作原理，以及它们的使用方法和功能。我们再来总结一下，kube-proxy 运行在 kubernetes 集群中每个 worker 节点上，负责实现 service 这个概念提供的功能。kube-proxy 会把访问 service VIP 的请求转发到运行的 pods 上，实现负载均衡。
+
+当用户创建 service 的时候，endpointController 会根据 ser
+								...
+							</p>
+						</section>
+					</a>
+					<footer class="post-card-meta">
+						<ul class="author-list">
+							<li class="author-list-item">
+								<div class="author-name-tooltip">Cizixs Wu</div>
+								
+								<a href="/about" class="static-avatar">
+									<img class="author-profile-image" src="https://i.loli.net/2018/10/01/5bb1ca3c61985.jpg" alt="Cizixs Wu" />
+								</a>
+								
+							</li>
+						</ul>
+						<span class="reading-time">
+							45
+							 min read
+						</span>
+					</footer>
+				</div>
+			</article>
+			
+		</div>
+	</div>
+	
+<nav class="pagination">
+    
+    
+        <nav class="page-nav">
+            <span class="page-number current">1</span><a class="page-number" href="/archives/2017/page/2/">2</a><a class="extend next" rel="next" href="/archives/2017/page/2/">Next →</a>
+        </nav>
+    
+    
+</nav>
+</main>
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+<script>
+    /*!
+  hey, [be]Lazy.js - v1.8.2 - 2016.10.25
+  A fast, small and dependency free lazy load script (https://github.com/dinbror/blazy)
+  (c) Bjoern Klinggaard - @bklinggaard - http://dinbror.dk/blazy
+*/
+  (function(q,m){"function"===typeof define&&define.amd?define(m):"object"===typeof exports?module.exports=m():q.Blazy=m()})(this,function(){function q(b){var c=b._util;c.elements=E(b.options);c.count=c.elements.length;c.destroyed&&(c.destroyed=!1,b.options.container&&l(b.options.container,function(a){n(a,"scroll",c.validateT)}),n(window,"resize",c.saveViewportOffsetT),n(window,"resize",c.validateT),n(window,"scroll",c.validateT));m(b)}function m(b){for(var c=b._util,a=0;a<c.count;a++){var d=c.elements[a],e;a:{var g=d;e=b.options;var p=g.getBoundingClientRect();if(e.container&&y&&(g=g.closest(e.containerClass))){g=g.getBoundingClientRect();e=r(g,f)?r(p,{top:g.top-e.offset,right:g.right+e.offset,bottom:g.bottom+e.offset,left:g.left-e.offset}):!1;break a}e=r(p,f)}if(e||t(d,b.options.successClass))b.load(d),c.elements.splice(a,1),c.count--,a--}0===c.count&&b.destroy()}function r(b,c){return b.right>=c.left&&b.bottom>=c.top&&b.left<=c.right&&b.top<=c.bottom}function z(b,c,a){if(!t(b,a.successClass)&&(c||a.loadInvisible||0<b.offsetWidth&&0<b.offsetHeight))if(c=b.getAttribute(u)||b.getAttribute(a.src)){c=c.split(a.separator);var d=c[A&&1<c.length?1:0],e=b.getAttribute(a.srcset),g="img"===b.nodeName.toLowerCase(),p=(c=b.parentNode)&&"picture"===c.nodeName.toLowerCase();if(g||void 0===b.src){var h=new Image,w=function(){a.error&&a.error(b,"invalid");v(b,a.errorClass);k(h,"error",w);k(h,"load",f)},f=function(){g?p||B(b,d,e):b.style.backgroundImage='url("'+d+'")';x(b,a);k(h,"load",f);k(h,"error",w)};p&&(h=b,l(c.getElementsByTagName("source"),function(b){var c=a.srcset,e=b.getAttribute(c);e&&(b.setAttribute("srcset",e),b.removeAttribute(c))}));n(h,"error",w);n(h,"load",f);B(h,d,e)}else b.src=d,x(b,a)}else"video"===b.nodeName.toLowerCase()?(l(b.getElementsByTagName("source"),function(b){var c=a.src,e=b.getAttribute(c);e&&(b.setAttribute("src",e),b.removeAttribute(c))}),b.load(),x(b,a)):(a.error&&a.error(b,"missing"),v(b,a.errorClass))}function x(b,c){v(b,c.successClass);c.success&&c.success(b);b.removeAttribute(c.src);b.removeAttribute(c.srcset);l(c.breakpoints,function(a){b.removeAttribute(a.src)})}function B(b,c,a){a&&b.setAttribute("srcset",a);b.src=c}function t(b,c){return-1!==(" "+b.className+" ").indexOf(" "+c+" ")}function v(b,c){t(b,c)||(b.className+=" "+c)}function E(b){var c=[];b=b.root.querySelectorAll(b.selector);for(var a=b.length;a--;c.unshift(b[a]));return c}function C(b){f.bottom=(window.innerHeight||document.documentElement.clientHeight)+b;f.right=(window.innerWidth||document.documentElement.clientWidth)+b}function n(b,c,a){b.attachEvent?b.attachEvent&&b.attachEvent("on"+c,a):b.addEventListener(c,a,{capture:!1,passive:!0})}function k(b,c,a){b.detachEvent?b.detachEvent&&b.detachEvent("on"+c,a):b.removeEventListener(c,a,{capture:!1,passive:!0})}function l(b,c){if(b&&c)for(var a=b.length,d=0;d<a&&!1!==c(b[d],d);d++);}function D(b,c,a){var d=0;return function(){var e=+new Date;e-d<c||(d=e,b.apply(a,arguments))}}var u,f,A,y;return function(b){if(!document.querySelectorAll){var c=document.createStyleSheet();document.querySelectorAll=function(a,b,d,h,f){f=document.all;b=[];a=a.replace(/\[for\b/gi,"[htmlFor").split(",");for(d=a.length;d--;){c.addRule(a[d],"k:v");for(h=f.length;h--;)f[h].currentStyle.k&&b.push(f[h]);c.removeRule(0)}return b}}var a=this,d=a._util={};d.elements=[];d.destroyed=!0;a.options=b||{};a.options.error=a.options.error||!1;a.options.offset=a.options.offset||100;a.options.root=a.options.root||document;a.options.success=a.options.success||!1;a.options.selector=a.options.selector||".b-lazy";a.options.separator=a.options.separator||"|";a.options.containerClass=a.options.container;a.options.container=a.options.containerClass?document.querySelectorAll(a.options.containerClass):!1;a.options.errorClass=a.options.errorClass||"b-error";a.options.breakpoints=a.options.breakpoints||!1;a.options.loadInvisible=a.options.loadInvisible||!1;a.options.successClass=a.options.successClass||"b-loaded";a.options.validateDelay=a.options.validateDelay||25;a.options.saveViewportOffsetDelay=a.options.saveViewportOffsetDelay||50;a.options.srcset=a.options.srcset||"data-srcset";a.options.src=u=a.options.src||"data-src";y=Element.prototype.closest;A=1<window.devicePixelRatio;f={};f.top=0-a.options.offset;f.left=0-a.options.offset;a.revalidate=function(){q(a)};a.load=function(a,b){var c=this.options;void 0===a.length?z(a,b,c):l(a,function(a){z(a,b,c)})};a.destroy=function(){var a=this._util;this.options.container&&l(this.options.container,function(b){k(b,"scroll",a.validateT)});k(window,"scroll",a.validateT);k(window,"resize",a.validateT);k(window,"resize",a.saveViewportOffsetT);a.count=0;a.elements.length=0;a.destroyed=!0};d.validateT=D(function(){m(a)},a.options.validateDelay,a);d.saveViewportOffsetT=D(function(){C(a.options.offset)},a.options.saveViewportOffsetDelay,a);C(a.options.offset);l(a.options.breakpoints,function(a){if(a.width>=window.screen.width)return u=a.src,!1});setTimeout(function(){q(a)})}});
+    ;(function() {var bLazy = new Blazy();})();
+</script>
+
+
+
+    </div>
+</body>
+</html>

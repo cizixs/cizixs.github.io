@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>flask 源码解析：简介 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="flask 源码解析：简介 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2017/01/10/flask-insight-introduction/">
+
+	
+	<meta property="article:published_time" content="2017-01-10T00:01:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2017/01/10/flask-insight-introduction/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2017-01-09T16:00:00.000Z" itemprop="datePublished">
+                    2017-01-10
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">flask 源码解析：简介</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p>这是 flask 源码解析系列文章的其中一篇，本系列所有文章列表：</p>
+<ul>
+<li><a href="http://cizixs.com/2017/01/10/flask-insight-introduction">flask 源码解析：简介</a></li>
+<li><a href="http://cizixs.com/2017/01/11/flask-insight-start-process">flask 源码解析：应用启动流程</a></li>
+<li><a href="http://cizixs.com/2017/01/12/flask-insight-routing">flask 源码解析：路由</a></li>
+<li><a href="http://cizixs.com/2017/01/13/flask-insight-context">flask 源码解析：上下文</a></li>
+<li><a href="http://cizixs.com/2017/01/18/flask-insight-request">flask 源码解析：请求</a></li>
+<li><a href="http://cizixs.com/2017/01/22/flask-insight-response">flask 源码解析：响应</a></li>
+<li><a href="http://cizixs.com/2017/03/08/flask-insight-session">flask 源码解析：session</a></li>
+</ul>
+<h2 id="flask-简介"><a href="#flask-简介" class="headerlink" title="flask 简介"></a>flask 简介</h2><p>Flask 官网上对它的定位是一个“微” python web 开发框架。</p>
+<blockquote>
+<p>Flask is a micro web development framework for Python.</p>
+</blockquote>
+<p>python 语言 web 框架很多：Django、Tornado、webpy、bottle……，flask 的特点是<strong>简单可扩展</strong>。简单有几个方面，比如它只实现 web 框架最核心的功能，保持功能的简洁；还有一个就是代码量少，核心代码 <code>app.py</code> 文件只有 2k+ 行。可扩展就是允许<a href="http://flask.pocoo.org/extensions/" target="_blank" rel="noopener">第三方插件</a>来扩充功能，比如数据库可以使用 <code>Flask-SQLAlchemy</code>，缓存可以使用 <code>Flask-Cache</code> 等等。</p>
+<p>下面这段代码是 flask 官方文档给出的 hello world 版本的 flask 应用：</p>
+<pre class=" language-python"><code class="language-python"><span class="token keyword">from</span> flask <span class="token keyword">import</span> Flask
+app <span class="token operator">=</span> Flask<span class="token punctuation">(</span>__name__<span class="token punctuation">)</span>
+
+@app<span class="token punctuation">.</span>route<span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">hello_world</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> <span class="token string">'Hello, World!'</span>
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    app<span class="token punctuation">.</span>run<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p>要理解 flask 的源码，必须有一定的 python 基础（对 decorator、magic method、iterator、generator 概念比较熟悉），不然的话，会有些吃力。另外一个必须理解的概念是 <a href="https://www.python.org/dev/peps/pep-0333/" target="_blank" rel="noopener">WSGI</a>，简单来说就是一套 web server 和 web 框架/web 应用之间的协议。可以阅读我之前写的 <a href="http://cizixs.com/2014/11/08/understand-wsgi">python wsgi 简介</a> 和翻译的 <a href="http://cizixs.com/2015/09/21/what-is-a-web-framework">什么是 web 框架</a> ，或者自行搜索相关资料，熟悉这部分的内容。</p>
+<p><strong>NOTE</strong>：本系列文章分析的 flask 版本号是 <code>0.12</code>，其他版本可能会有出入。</p>
+<h2 id="两个依赖"><a href="#两个依赖" class="headerlink" title="两个依赖"></a>两个依赖</h2><p>flask 有两个核心依赖库：<code>werkzeug</code> 和 <code>jinja</code>，而 <code>werkzeug</code> 又是两者中更核心的。</p>
+<p><code>werkzeug</code> 负责核心的逻辑模块，比如路由、请求和应答的封装、WSGI 相关的函数等；<code>jinja</code> 负责模板的渲染，主要用来渲染返回给用户的 html 文件内容。</p>
+<p>模板（template）是和 web 框架相对独立的内容，比如 jinja 不是只能用在 web 应用中，而 web 应用也可以不处理模板（比如返回 raw text 或者 json/xml 结构数据，而不是 html 页面）。<code>flask</code> 直接使用 <code>jinja2</code> 而不是把这部分也做成可扩展的看起来有悖它的设计原则，我个人的理解是：flask 是个写网页的 web 框架，不像 <code>flask-restful</code> 可以专门做 <code>json/xml</code> 数据接口，必须提供模板功能，不然用户就无法使用。而如果不绑定一个模板库的话，有三种方法：自己写一个模板引擎、封装一个可扩展的模板层，用户可以自己选择具体的模板引擎、或者让用户自己处理模板。但是这些方法要么增加实现的复杂度，要么增加了使用的复杂度。</p>
+<h3 id="werkzeug"><a href="#werkzeug" class="headerlink" title="werkzeug"></a><a href="http://werkzeug.pocoo.org/" target="_blank" rel="noopener">werkzeug</a></h3><p><code>werkzeug</code> 的定位并不是一个 web 框架，而是 HTTP 和 WSGI 相关的工具集，可以用来编写 web 框架，也可以直接使用它提供的一些帮助函数。</p>
+<blockquote>
+<p>Werkzeug is an HTTP and WSGI utility library for Python.</p>
+</blockquote>
+<p><code>werkzeug</code> 提供了 python web WSGI 开发相关的功能：</p>
+<ul>
+<li>路由处理：怎么根据请求中的 url 找到它的处理函数</li>
+<li>request 和 response 封装：可以更好地读取 request 的数据，也容易生成响应</li>
+<li>一个自带的 WSGI server，可以用来测试环境运行自己的应用</li>
+</ul>
+<p>比如，我们可以使用 <code>werkzeug</code> 编写一个简单的 hello world 的 WSGI app：</p>
+<pre class=" language-python"><code class="language-python"><span class="token keyword">from</span> werkzeug<span class="token punctuation">.</span>wrappers <span class="token keyword">import</span> Request<span class="token punctuation">,</span> Response
+
+<span class="token keyword">def</span> <span class="token function">application</span><span class="token punctuation">(</span>environ<span class="token punctuation">,</span> start_response<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    request <span class="token operator">=</span> Request<span class="token punctuation">(</span>environ<span class="token punctuation">)</span>
+    text <span class="token operator">=</span> <span class="token string">'Hello %s!'</span> <span class="token operator">%</span> request<span class="token punctuation">.</span>args<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'name'</span><span class="token punctuation">,</span> <span class="token string">'World'</span><span class="token punctuation">)</span>
+    response <span class="token operator">=</span> Response<span class="token punctuation">(</span>text<span class="token punctuation">,</span> mimetype<span class="token operator">=</span><span class="token string">'text/plain'</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> response<span class="token punctuation">(</span>environ<span class="token punctuation">,</span> start_response<span class="token punctuation">)</span>
+</code></pre>
+<p>除了和 web WSGI 相关的功能，werkzeug 还实现了很多非常有用的数据结构和函数。比如用来处理一个 key 对应多个值的 <code>MultiDict</code>，不支持修改的字典 <code>ImmutableDict</code> ，可以缓存类属性的 <code>cache_property</code> 等等。如果有机会，可以写篇文章讲讲 <code>werkzeug</code> 的源码（好吧，我又挖坑了）。</p>
+<h3 id="Jinja2"><a href="#Jinja2" class="headerlink" title="Jinja2"></a><a href="http://jinja.pocoo.org/docs/2.9/" target="_blank" rel="noopener">Jinja2</a></h3><p>官网上，对 <code>Jinja</code> 的 介绍已经很清晰，它就是一个 python 实现的模板引擎，功能非常丰富。</p>
+<blockquote>
+<p>Jinja2 is a full featured template engine for Python. It has full unicode support, an optional integrated sandboxed execution environment, widely used and BSD licensed.</p>
+</blockquote>
+<p><code>Jinja</code> 功能比较丰富，支持 unicode 解析、自动 HTML escape 防止 XSS 攻击、继承、变量、过滤器、流程逻辑支持、python 代码逻辑集成等等。具体的功能和使用请参考官网的文档，这里就不介绍了。</p>
+<h2 id="如何读代码"><a href="#如何读代码" class="headerlink" title="如何读代码"></a>如何读代码</h2><p>阅读源代码是件耗时而又没有直接产出的事情，所以必须要事先明确目的，不然会白白浪费时间。对于我来说，一般需要阅读源码有几个可能的原因：</p>
+<ol>
+<li>在学习语言的时候遇到瓶颈，想借鉴和学习优秀项目的风格、思路、经验等。比如在刚学习一门语言的语法之后，会发现自己还是不能很好地使用它。这个时候，我一般会找一个项目来练手，然后阅读一些优秀项目的代码来参考它们的实现</li>
+<li>工作中需要经常用到某个项目。比如你从事 web 开发， 经常使用 flask/Django 框架，熟悉它们的源码可以让你在使用的时候更能得心应手和有的放矢，而且遇到问题之后也能更容易去定位</li>
+<li>自己想深入理解某个领域的知识。对某个领域非常感兴趣，想理解它的内部实现原理，或者干脆自己想造个轮子，那么阅读源码是很好的途径</li>
+</ol>
+<p>知道了自己要阅读代码，那么怎么去读代码呢？</p>
+<ol start="0">
+<li>最重要的是<strong>不要畏惧！</strong>记得我刚开始工作的时候，总觉得那些项目都是非常优秀的人编写的高质量代码，自己可望不可即，还没有深入之前就认为自己肯定看不懂，更不用去修改代码了。但其实，只要是人写的代码就会有 bug，也会有可以改进的地方，要有好的心态：欣赏好的代码设计，但也要学会识别不好的代码</li>
+<li><strong>不要巨细无遗</strong>！阅读代码最怕的是在细节中纠缠不清，不仅拖慢进度也会大挫信心。<strong>所有的代码大概都是树形的结构</strong>，开始最重要的是理清树干的结构，知道这个树大概有几个部分，分别负责什么功能，它们之间的大概关系是啥就够了。万万不可取的是盯着某个小树叶研究半天，或者被藤蔓遮住了视线</li>
+<li><strong>带着问题去阅读！</strong>这个建议不仅适用于代码，也适用于所有的阅读。如果在阅读之前有了明确的目的，比如想知道程序是怎么启动的、某个 bug 是什么时候引入的、某个功能是怎么实现的…… 带着这些问题，目的性强，理解也更快</li>
+<li><strong>简化再简化</strong>！如果代码的量级比较大，要学会简化问题，找到代码的核心。有几种方法：忽略细节，比如你知道某个文件夹是不同的驱动，那么只要理解它们的接口和大致功能就行，把细节当做黑盒；运行最简单的代码，通过一个 hello world 或者 quickstart 提供的例子作为入口和理解单位；找到之前的版本，有了版本控制和网络，很多项目很容易找到历史版本，比如理解 linux 的话很多书会推荐 0.X 的版本，它的核心都在，理解也更方便</li>
+<li><strong>双管齐下！</strong>理解一个很大项目无外乎两种方法——从上到下和从下到上。对于比较复杂的项目，灵活使用这两种方法，从上到下容易找到脉络，但有时候因为多态或者运行时加载的原因很难往下跟踪；从下到上掌握东西更牢固，更有针对性，但会看不清项目的全貌，不容理解整体。两种方法同时使用，直到它们出现交汇，做到融会贯通</li>
+</ol>
+<p>希望说了这么多，能对大家以后读代码和工作有点帮助。那么，从下一篇文章，我们就正式开始 flask 源码之旅了！</p>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="flask 源码解析：应用启动流程" href="/2017/01/11/flask-insight-start-process/">
+        ← flask 源码解析：应用启动流程
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="pxe 自动安装系统流程分析" href="/2017/01/09/pxe-boot-process/">
+        pxe 自动安装系统流程分析 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#flask-简介"><span class="toc-text">flask 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#两个依赖"><span class="toc-text">两个依赖</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#werkzeug"><span class="toc-text">werkzeug</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Jinja2"><span class="toc-text">Jinja2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何读代码"><span class="toc-text">如何读代码</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">flask 源码解析：简介</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

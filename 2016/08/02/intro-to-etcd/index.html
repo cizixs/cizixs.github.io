@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>etcd 使用入门 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="etcd 使用入门 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2016/08/02/intro-to-etcd/">
+
+	
+	<meta property="article:published_time" content="2016-08-02T00:08:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2016/08/02/intro-to-etcd/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2016-08-01T16:00:00.000Z" itemprop="datePublished">
+                    2016-08-2
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">etcd 使用入门</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <h2 id="1-etcd-简介"><a href="#1-etcd-简介" class="headerlink" title="1. etcd 简介"></a>1. etcd 简介</h2><p>coreos 开发的分布式服务系统，内部采用 raft 协议作为一致性算法。作为服务发现系统，有以下的特点：</p>
+<ul>
+<li>简单：安装配置简单，而且提供了 HTTP API 进行交互，使用也很简单</li>
+<li>安全：支持 SSL 证书验证</li>
+<li>快速：根据<a href="https://coreos.com/etcd/docs/latest/benchmarks/etcd-2-2-0-rc-benchmarks.html" target="_blank" rel="noopener">官方提供的 benchmark 数据</a>，单实例支持每秒 2k+ 读操作</li>
+<li>可靠：采用 <a href="https://raft.github.io" target="_blank" rel="noopener">raft 算法</a>，实现分布式系统数据的可用性和一致性</li>
+</ul>
+<p>在这篇文章编写的时候，etcd 已经发布了 <code>3.0.4</code> 版本，被被用在 CoreOS、kubernetes、Cloud Foundry 等项目中。</p>
+<p>etcd 目前默认使用 <code>2379</code> 端口提供 HTTP API 服务，<code>2380</code> 端口和 peer 通信（这两个端口已经被 <a href="https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?search=etcd" target="_blank" rel="noopener">IANA 官方预留给 etcd</a>）；在之前的版本中，可能会分别使用 <code>4001</code> 和 <code>7001</code>，在使用的过程中需要注意这个区别。</p>
+<p>虽然 etcd 也支持单点部署，但是在生产环境中推荐集群方式部署，一般 etcd 节点数会选择 3、5、7。etcd 会保证所有的节点都会保存数据，并保证数据的一致性和正确性。</p>
+<h2 id="2-安装"><a href="#2-安装" class="headerlink" title="2. 安装"></a>2. 安装</h2><p>因为 etcd 是 go 语言编写的，安装只需要下载对应的二进制文件，并放到合适的路径就行。</p>
+<h3 id="单点安装"><a href="#单点安装" class="headerlink" title="单点安装"></a>单点安装</h3><p>如果在测试环境，启动一个单点的 etcd 服务，只需要运行 <code>etcd</code> 命令就行。</p>
+<pre><code>➜  etcd-v3.0.4-darwin-amd64 ./etcd
+2016-08-01 23:33:09.066930 I | etcdmain: etcd Version: 3.0.4
+2016-08-01 23:33:09.067085 I | etcdmain: Git SHA: d53923c
+2016-08-01 23:33:09.067092 I | etcdmain: Go Version: go1.6.3
+2016-08-01 23:33:09.067101 I | etcdmain: Go OS/Arch: darwin/amd64
+2016-08-01 23:33:09.067111 I | etcdmain: setting maximum number of CPUs to 4, total number of available CPUs is 4
+2016-08-01 23:33:09.067120 W | etcdmain: no data-dir provided, using default data-dir ./default.etcd
+2016-08-01 23:33:09.067803 I | etcdmain: listening for peers on http://localhost:2380
+2016-08-01 23:33:09.068123 I | etcdmain: listening for client requests on localhost:2379
+2016-08-01 23:33:09.069442 I | etcdserver: name = default
+2016-08-01 23:33:09.069465 I | etcdserver: data dir = default.etcd
+2016-08-01 23:33:09.069474 I | etcdserver: member dir = default.etcd/member
+2016-08-01 23:33:09.069480 I | etcdserver: heartbeat = 100ms
+2016-08-01 23:33:09.069485 I | etcdserver: election = 1000ms
+2016-08-01 23:33:09.069491 I | etcdserver: snapshot count = 10000
+2016-08-01 23:33:09.069510 I | etcdserver: advertise client URLs = http://localhost:2379
+2016-08-01 23:33:09.069523 I | etcdserver: initial advertise peer URLs = http://localhost:2380
+2016-08-01 23:33:09.069536 I | etcdserver: initial cluster = default=http://localhost:2380
+2016-08-01 23:33:09.258167 I | etcdserver: starting member 8e9e05c52164694d in cluster cdf818194e3a8c32
+2016-08-01 23:33:09.258927 I | raft: 8e9e05c52164694d became follower at term 0
+2016-08-01 23:33:09.259395 I | raft: newRaft 8e9e05c52164694d [peers: [], term: 0, commit: 0, applied: 0, lastindex: 0, lastterm: 0]
+2016-08-01 23:33:09.259594 I | raft: 8e9e05c52164694d became follower at term 1
+2016-08-01 23:33:09.331125 I | etcdserver: starting server... [version: 3.0.4, cluster version: to_be_decided]
+2016-08-01 23:33:09.331800 E | etcdserver: cannot monitor file descriptor usage (cannot get FDUsage on darwin)
+2016-08-01 23:33:09.334611 I | membership: added member 8e9e05c52164694d [http://localhost:2380] to cluster cdf818194e3a8c32
+2016-08-01 23:33:09.499412 I | raft: 8e9e05c52164694d is starting a new election at term 1
+2016-08-01 23:33:09.499450 I | raft: 8e9e05c52164694d became candidate at term 2
+2016-08-01 23:33:09.499462 I | raft: 8e9e05c52164694d received vote from 8e9e05c52164694d at term 2
+2016-08-01 23:33:09.499480 I | raft: 8e9e05c52164694d became leader at term 2
+2016-08-01 23:33:09.499493 I | raft: raft.node: 8e9e05c52164694d elected leader 8e9e05c52164694d at term 2
+2016-08-01 23:33:09.499702 I | etcdserver: setting up the initial cluster version to 3.0
+2016-08-01 23:33:09.507070 N | membership: set the initial cluster version to 3.0
+2016-08-01 23:33:09.507129 I | api: enabled capabilities for version 3.0
+2016-08-01 23:33:09.507211 I | etcdserver: published {Name:default ClientURLs:[http://localhost:2379]} to cluster cdf818194e3a8c32
+2016-08-01 23:33:09.507221 I | etcdmain: ready to serve client requests
+2016-08-01 23:33:09.507811 N | etcdmain: serving insecure client requests on localhost:2379, this is strongly discouraged!
+</code></pre><p>从上面的输出中，我们可以看到很多信息：</p>
+<ul>
+<li>etcd 默认将数据存放到当前路径的  <code>default.etcd/</code> 目录下</li>
+<li>在 <code>http://localhost:2380</code> 和集群中其他节点通信</li>
+<li>在 <code>http://localhost:2379</code> 提供 HTTP API 服务，供客户端交互</li>
+<li>该节点的名称默认为 <code>default</code></li>
+<li>heartbeat 为 100ms，后面会说明这个配置的作用</li>
+<li>election 为 1000ms，后面会说明这个配置的作用</li>
+<li>snapshot count 为 10000，后面会说明这个配置的作用</li>
+<li>集群和每个节点都会生成一个 uuid</li>
+<li>启动的时候，会运行 raft，选举出 leader</li>
+</ul>
+<h3 id="集群安装"><a href="#集群安装" class="headerlink" title="集群安装"></a>集群安装</h3><p>在安装和启动 etcd 服务的时候，各个节点需要知道集群中其他节点的信息（一般是 ip 和 port 信息）。根据你是否可以提前知道每个节点的 ip，有几种不同的启动方案：</p>
+<ul>
+<li>静态配置：在启动 etcd server 的时候，通过 <code>--initial-cluster</code> 参数配置好所有的节点信息</li>
+<li>使用已有的 etcd cluster 来注册和启动，比如官方提供的 <code>discovery.etcd.io</code></li>
+<li>使用 DNS 启动，</li>
+</ul>
+<p><a href="https://coreos.com/etcd/docs/latest/clustering.html" target="_blank" rel="noopener">etcd 的安装文档</a>官网已经给出了，这里不再赘述。当然，你也可以通过 docker 来安装 etcd，具体的文档可以看<a href="https://coreos.com/etcd/docs/latest/docker_guide.html" target="_blank" rel="noopener">这里</a>。</p>
+<p>下面给出可以常用配置的参数和它们的解释，方便理解：</p>
+<ul>
+<li><code>--name</code>：方便理解的节点名称，默认为 <code>default</code>，在集群中应该保持唯一，可以使用 hostname</li>
+<li><code>--data-dir</code>：服务运行数据保存的路径，默认为 <code>${name}.etcd</code></li>
+<li><code>--snapshot-count</code>：指定有多少事务（transaction）被提交时，触发截取快照保存到磁盘</li>
+<li><code>--heartbeat-interval</code>：leader 多久发送一次心跳到 followers。默认值是 100ms</li>
+<li><code>--eletion-timeout</code>：重新投票的超时时间，如果 follow 在该时间间隔没有收到心跳包，会触发重新投票，默认为 1000 ms</li>
+<li><code>--listen-peer-urls</code>：和同伴通信的地址，比如 <code>http://ip:2380</code>，如果有多个，使用逗号分隔。需要所有节点都能够访问，<strong>所以不要使用 localhost！</strong></li>
+<li><code>--listen-client-urls</code>：对外提供服务的地址：比如 <code>http://ip:2379,http://127.0.0.1:2379</code>，客户端会连接到这里和 etcd 交互</li>
+<li><code>--advertise-client-urls</code>：对外公告的该节点客户端监听地址，这个值会告诉集群中其他节点</li>
+<li><code>--initial-advertise-peer-urls</code>：该节点同伴监听地址，这个值会告诉集群中其他节点</li>
+<li><code>--initial-cluster</code>：集群中所有节点的信息，格式为 <code>node1=http://ip1:2380,node2=http://ip2:2380,…</code>。注意：这里的 <code>node1</code> 是节点的 <code>--name</code> 指定的名字；后面的 <code>ip1:2380</code> 是 <code>--initial-advertise-peer-urls</code> 指定的值</li>
+<li><code>--initial-cluster-state</code>：新建集群的时候，这个值为 <code>new</code>；假如已经存在的集群，这个值为 <code>existing</code></li>
+<li><code>--initial-cluster-token</code>：创建集群的 token，这个值每个集群保持唯一。这样的话，如果你要重新创建集群，即使配置和之前一样，也会再次生成新的集群和节点 uuid；否则会导致多个集群之间的冲突，造成未知的错误</li>
+</ul>
+<p>所有以 <code>--init</code> 开头的配置都是在 bootstrap 集群的时候才会用到，后续节点的重启会被忽略。</p>
+<p>NOTE：所有的参数也可以通过环境变量进行设置，<code>--my-flag</code> 对应环境变量的 <code>ETCD_MY_FLAG</code>；但是命令行指定的参数会覆盖环境变量对应的值。</p>
+<p>在后面的文章中，为了简单起见，我们采用了单点的 etcd server，<strong>请在生产环境中配置 etcd 集群，并使用 SSL 安全机制</strong>。</p>
+<h2 id="3-etcd-基础知识"><a href="#3-etcd-基础知识" class="headerlink" title="3. etcd 基础知识"></a>3. etcd 基础知识</h2><p>每个 etcd cluster 都是有若干个 member 组成的，每个 member 是一个独立运行的 etcd 实例，单台机器上可以运行多个 member。</p>
+<p>在正常运行的状态下，集群中会有一个 leader，其余的 member 都是 followers。leader 向 followers 同步日志，保证数据在各个 member 都有副本。leader 还会定时向所有的 member 发送心跳报文，如果在规定的时间里 follower 没有收到心跳，就会重新进行选举。</p>
+<p>客户端所有的请求都会先发送给 leader，leader 向所有的 followers 同步日志，等收到超过半数的确认后就把该日志存储到磁盘，并返回响应客户端。</p>
+<p>每个 etcd 服务有三大主要部分组成：raft 实现、WAL 日志存储、数据的存储和索引。WAL 会在本地磁盘（就是之前提到的 <code>--data-dir</code>）上存储日志内容（wal file）和快照（snapshot）。</p>
+<h2 id="4-API-文档"><a href="#4-API-文档" class="headerlink" title="4. API 文档"></a>4. API 文档</h2><p>etcd 对外通过 HTTP API 对外提供服务，这种方式方便测试（通过 curl 或者其他工具就能和 etcd 交互），也很容易集成到各种语言中（每个语言封装 HTTP API 实现自己的 client 就行）。</p>
+<p>这个部分，我们就介绍 etcd 通过 HTTP API 提供了哪些功能，并使用 <a href="https://github.com/jkbrzt/httpie" target="_blank" rel="noopener"><code>httpie</code> </a>来交互（当然你也可以使用 curl 或者其他工具）。</p>
+<h3 id="获取-etcd-服务的版本信息"><a href="#获取-etcd-服务的版本信息" class="headerlink" title="获取 etcd 服务的版本信息"></a>获取 etcd 服务的版本信息</h3><pre><code>➜  http http://127.0.0.1:2379/version
+HTTP/1.1 200 OK
+Content-Length: 44
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 04:27:32 GMT
+
+{
+    &quot;etcdcluster&quot;: &quot;3.0.0&quot;,
+    &quot;etcdserver&quot;: &quot;3.0.4&quot;
+}
+</code></pre><h3 id="key-的增删查改"><a href="#key-的增删查改" class="headerlink" title="key 的增删查改"></a>key 的增删查改</h3><p>etcd 的数据按照树形的结构组织，类似于 linux 的文件系统，也有目录和文件的区别，不过一般被称为 nodes。数据的 endpoint 都是以 <code>/v2/keys</code> 开头（v2 表示当前 API 的版本），比如 <code>/v2/keys/names/cizixs</code>。</p>
+<p>要创建一个值，只要使用 <code>PUT</code> 方法在对应的 url endpoint 设置就行。如果对应的 key 已经存在， <code>PUT</code> 也会对 key 进行更新。</p>
+<pre><code>➜  http PUT http://127.0.0.1:2379/v2/keys/message value==&quot;hello, etcd&quot;
+HTTP/1.1 201 Created
+Content-Length: 100
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 04:48:04 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 4
+X-Raft-Index: 28429
+X-Raft-Term: 2
+
+{
+    &quot;action&quot;: &quot;set&quot;,
+    &quot;node&quot;: {
+        &quot;createdIndex&quot;: 4,
+        &quot;key&quot;: &quot;/message&quot;,
+        &quot;modifiedIndex&quot;: 4,
+        &quot;value&quot;: &quot;hello, etcd&quot;
+    }
+}
+</code></pre><p>上面这个命令通过 <code>PUT</code> 方法把 <code>/message</code> 设置为 <code>hello, etcd</code>。返回的格式中，各个字段的意义是：</p>
+<ul>
+<li><code>action</code>：请求出发的动作，这里因为是新建一个 key 并设置它的值，所以是 <code>set</code></li>
+<li><code>node.key</code>：key 的 HTTP 路径</li>
+<li><code>node.value</code>：请求处理之后，key 的值</li>
+<li><code>node.createdIndex</code>： createdIndex 是一个递增的值，每次有 key 被创建的时候会增加</li>
+<li><code>node.modifiedIndex</code>：同上，只不过每次有 key 被修改的时候增加</li>
+</ul>
+<p>除返回的 json 体外，上面的情况还包含了一些特殊的  HTTP 头部信息，这些信息说明了 etcd cluster 的一些情况。它们的具体含义如下：</p>
+<ul>
+<li><code>X-Etcd-Index</code>：当前 etcd 集群的 index</li>
+<li><code>X-Raft-Index</code>：raft 集群的 index</li>
+<li><code>X-Raft-Term</code>：raft 集群的任期，每次有 leader 选举的时候，这个值就会增加</li>
+</ul>
+<p>查看信息比较简单，使用 <code>GET</code> 方法，url 指向要查看的值就行：</p>
+<pre><code>➜  http GET http://127.0.0.1:2379/v2/keys/message
+HTTP/1.1 200 OK
+Content-Length: 97
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 05:23:14 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 7
+X-Raft-Index: 30801
+X-Raft-Term: 2
+
+{
+    &quot;action&quot;: &quot;get&quot;,
+    &quot;node&quot;: {
+        &quot;createdIndex&quot;: 7,
+        &quot;key&quot;: &quot;/message&quot;,
+        &quot;modifiedIndex&quot;: 7,
+        &quot;value&quot;: &quot;hello, etcd&quot;
+    }
+}
+</code></pre><p>这里的 <code>action</code> 变成了 <code>get</code>，其他返回的值和上面的含义一样，略过不提。</p>
+<p>NOTE：这两个命令并不是连着执行的，中间我有执行其他操作，因此 <code>index</code> 会出现不连续的情况。</p>
+<p>前面已经提过， <code>PUT</code> 也可用来更新 key 的值我们就来看看例子。</p>
+<pre><code>➜  http PUT http://127.0.0.1:2379/v2/keys/message value==&quot;I&#39;m changed&quot;
+HTTP/1.1 200 OK
+Content-Length: 184
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 05:28:17 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 8
+X-Raft-Index: 31407
+X-Raft-Term: 2
+
+{
+    &quot;action&quot;: &quot;set&quot;,
+    &quot;node&quot;: {
+        &quot;createdIndex&quot;: 8,
+        &quot;key&quot;: &quot;/message&quot;,
+        &quot;modifiedIndex&quot;: 8,
+        &quot;value&quot;: &quot;I&#39;m changed&quot;
+    },
+    &quot;prevNode&quot;: {
+        &quot;createdIndex&quot;: 7,
+        &quot;key&quot;: &quot;/message&quot;,
+        &quot;modifiedIndex&quot;: 7,
+        &quot;value&quot;: &quot;hello, etcd&quot;
+    }
+}
+</code></pre><p>和第一次执行 <code>PUT</code> 命令不同的是，返回中多了一个字段 <code>prevNode</code>，它保存着更新之前该 key 的信息。它的格式和 <code>node</code> 是一样的，如果之前没有这个信息，这个字段会被省略。</p>
+<p>删除 key 可以通过 <code>DELETE</code> 方法，，比如我们要删除上面创建的字段：</p>
+<pre><code>➜  http DELETE http://127.0.0.1:2379/v2/keys/message
+HTTP/1.1 200 OK
+Content-Length: 168
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 05:31:56 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 9
+X-Raft-Index: 31847
+X-Raft-Term: 2
+
+{
+    &quot;action&quot;: &quot;delete&quot;,
+    &quot;node&quot;: {
+        &quot;createdIndex&quot;: 8,
+        &quot;key&quot;: &quot;/message&quot;,
+        &quot;modifiedIndex&quot;: 9
+    },
+    &quot;prevNode&quot;: {
+        &quot;createdIndex&quot;: 8,
+        &quot;key&quot;: &quot;/message&quot;,
+        &quot;modifiedIndex&quot;: 8,
+        &quot;value&quot;: &quot;I&#39;m changed&quot;
+    }
+}
+</code></pre><p>注意，这里的 <code>action</code> 是 <code>delete</code>，并且 <code>modifiedIndex</code> 增加了，但是 <code>createdIndex</code> 没有变化，因为这是一个修改操作，不是新建操作。</p>
+<h3 id="TTL"><a href="#TTL" class="headerlink" title="TTL"></a>TTL</h3><p>etcd 中，key 可以有 TTL 属性，超过这个时间会被自动删除。我们来设置一个看看：</p>
+<pre><code>➜  http PUT http://127.0.0.1:2379/v2/keys/tempkey value==&quot;Gone with wind&quot; ttl==5
+
+HTTP/1.1 201 Created
+Content-Length: 159
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 05:48:17 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 10
+X-Raft-Index: 33810
+X-Raft-Term: 2
+
+{
+    &quot;action&quot;: &quot;set&quot;,
+    &quot;node&quot;: {
+        &quot;createdIndex&quot;: 10,
+        &quot;expiration&quot;: &quot;2016-08-02T05:48:22.618695843Z&quot;,
+        &quot;key&quot;: &quot;/tempkey&quot;,
+        &quot;modifiedIndex&quot;: 10,
+        &quot;ttl&quot;: 5,
+        &quot;value&quot;: &quot;Gone with wind&quot;
+    }
+}
+</code></pre><p>除了一般 key 返回的信息之外，上面多了两个字段：</p>
+<ul>
+<li><code>expiration</code>：代表 key 过期被删除的时间</li>
+<li><code>ttl</code>：表示 key 还要多少秒可以存活（这个值是动态的，会根据你请求的时候和过期时间进行计算）</li>
+</ul>
+<p>如果我们在 5s 之后再去请求查看该 key，会发现报错信息：</p>
+<pre><code>➜  http http://127.0.0.1:2379/v2/keys/tempkey
+HTTP/1.1 404 Not Found
+Content-Length: 74
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 05:48:28 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 11
+
+{
+    &quot;cause&quot;: &quot;/tempkey&quot;,
+    &quot;errorCode&quot;: 100,
+    &quot;index&quot;: 11,
+    &quot;message&quot;: &quot;Key not found&quot;
+}
+</code></pre><p>http 返回为 <code>404</code>，并且返回体中给出了 <code>errorCode</code> 和错误信息。</p>
+<p>TTL 也可通过 <code>PUT</code> 方法进行取消，只要设置空值 <code>ttl=</code> 就行，这样 key 就不会过期被删除。比如：</p>
+<pre><code>➜  http PUT http://127.0.0.1:2379/v2/keys/foo value==bar ttl== prevExist==true
+</code></pre><p>注意：<strong>需要设置 value==bar，不然 key 会变成空值。</strong></p>
+<p>如果只是想更新 TTL，可以添加上  <code>refresh==true</code> 参数：</p>
+<pre><code>➜  etcd-v3.0.4-darwin-amd64 http -v PUT http://127.0.0.1:2379/v2/keys/tempkey
+
+HTTP/1.1 200 OK
+Content-Length: 305
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 06:05:12 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 20
+X-Raft-Index: 35849
+X-Raft-Term: 2
+
+{
+    &quot;action&quot;: &quot;set&quot;,
+    &quot;node&quot;: {
+        &quot;createdIndex&quot;: 20,
+        &quot;expiration&quot;: &quot;2016-08-02T06:13:32.370495212Z&quot;,
+        &quot;key&quot;: &quot;/tempkey&quot;,
+        &quot;modifiedIndex&quot;: 20,
+        &quot;ttl&quot;: 500,
+        &quot;value&quot;: &quot;hello, there&quot;
+    },
+    &quot;prevNode&quot;: {
+        &quot;createdIndex&quot;: 19,
+        &quot;expiration&quot;: &quot;2016-08-02T06:10:05.366042396Z&quot;,
+        &quot;key&quot;: &quot;/tempkey&quot;,
+        &quot;modifiedIndex&quot;: 19,
+        &quot;ttl&quot;: 293,
+        &quot;value&quot;: &quot;hello, there&quot;
+    }
+}
+</code></pre><h3 id="监听变化"><a href="#监听变化" class="headerlink" title="监听变化"></a>监听变化</h3><p>etcd 提供了监听的机制，可以让客户端使用 long pulling 监听某个 key，当发生变化的时候接接收通知因为 etcd 经常被用作服务发现，集群中的信息有更新的时候需要及时被检测，做出对应的处理。因此需要有监听机制，来告诉客户端特定 key 的变化情况。</p>
+<p>监听动作只需要 <code>GET</code> 方法，添加上 <code>wait=true</code> 参数就行.使用 <code>recursive=true</code> 参数，也能监听某个目录。</p>
+<pre><code>➜  http http://127.0.0.1:2379/v2/keys/foo wait==true
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 06:09:47 GMT
+Transfer-Encoding: chunked
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 22
+X-Raft-Index: 36401
+X-Raft-Term: 2
+</code></pre><p>这个时候，客户端会阻塞在这里，如果在另外的 terminal 修改 key 的值，监听的客户端会接收到消息，打印出更新的值：</p>
+<pre><code>{
+    &quot;action&quot;: &quot;set&quot;,
+    &quot;node&quot;: {
+        &quot;createdIndex&quot;: 23,
+        &quot;key&quot;: &quot;/foo&quot;,
+        &quot;modifiedIndex&quot;: 23,
+        &quot;value&quot;: &quot;changed&quot;
+    },
+    &quot;prevNode&quot;: {
+        &quot;createdIndex&quot;: 22,
+        &quot;key&quot;: &quot;/foo&quot;,
+        &quot;modifiedIndex&quot;: 22,
+        &quot;value&quot;: &quot;bar&quot;
+    }
+}
+</code></pre><p>除了这种最简单的监听之外，还可以提供基于 index 的监听。如果通过 <code>waitIndex</code> 指定了 index，那么</p>
+<p> 会返回从 index 开始出现的第一个事件，这包含了两种情况：</p>
+<ul>
+<li>给出的 index 小于等于当前 index ，即事件已经发生，那么监听会立即返回该事件</li>
+<li>给出的 index 大于当前 index，等待 index 之后的事件发生并返回</li>
+</ul>
+<p>目前 etcd 只会保存最近 1000 个事件（整个集群范围内），再早之前的事件会被清理，如果监听被清理的事件会报错。如果出现漏过太多事件（超过 1000）的情况，需要重新获取当然的 index 值（<code>X-Etcd-Index</code>），然后从 <code>X-Etcd-Index+1</code> 开始监听。</p>
+<p>因为监听的时候出现事件就会直接返回，因此需要客户端编写循环逻辑保持监听状态。在两次监听的间隔中出现的事件，很可能被漏过。所以最好把事件处逻辑做成异步的，不要阻塞监听逻辑。</p>
+<p>注意：<strong>监听 key 时会出现因为长时间没有返回导致连接被 close 的情况，客户端需要处理这种错误并自动重试。</strong></p>
+<h3 id="自动创建有序的-keys"><a href="#自动创建有序的-keys" class="headerlink" title="自动创建有序的 keys"></a>自动创建有序的 keys</h3><p>在有些情况下，我们需要 key 是有序的，etcd 提供了这个功能。对某个目录使用 <code>POST</code> 方法，能自动生成有序的 key，这种模式可以用于队列处理等场景。</p>
+<pre><code>➜  http POST http://127.0.0.1:2379/v2/keys/queue value==job1
+HTTP/1.1 201 Created
+Content-Length: 121
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 07:08:38 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 1030
+X-Raft-Index: 44470
+X-Raft-Term: 2
+
+{
+    &quot;action&quot;: &quot;create&quot;,
+    &quot;node&quot;: {
+        &quot;createdIndex&quot;: 1030,
+        &quot;key&quot;: &quot;/queue/00000000000000001030&quot;,
+        &quot;modifiedIndex&quot;: 1030,
+        &quot;value&quot;: &quot;job1&quot;
+    }
+}
+</code></pre><p>创建的 key 会使用 etcd index，只能保证递增，无法保证是连续的（因为两次创建之间可能会有其他发生）。然后用相同的命令创建多个值，在获取值的时候使用 <code>sorted=true</code>参数就会返回已经排序的值：</p>
+<pre><code>➜  http http://127.0.0.1:2379/v2/keys/queue sorted==true
+HTTP/1.1 200 OK
+Content-Length: 385
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 07:11:32 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 1032
+X-Raft-Index: 44819
+X-Raft-Term: 2
+
+{
+    &quot;action&quot;: &quot;get&quot;,
+    &quot;node&quot;: {
+        &quot;createdIndex&quot;: 1030,
+        &quot;dir&quot;: true,
+        &quot;key&quot;: &quot;/queue&quot;,
+        &quot;modifiedIndex&quot;: 1030,
+        &quot;nodes&quot;: [
+            {
+                &quot;createdIndex&quot;: 1030,
+                &quot;key&quot;: &quot;/queue/00000000000000001030&quot;,
+                &quot;modifiedIndex&quot;: 1030,
+                &quot;value&quot;: &quot;job1&quot;
+            },
+            {
+                &quot;createdIndex&quot;: 1031,
+                &quot;key&quot;: &quot;/queue/00000000000000001031&quot;,
+                &quot;modifiedIndex&quot;: 1031,
+                &quot;value&quot;: &quot;job2&quot;
+            },
+            {
+                &quot;createdIndex&quot;: 1032,
+                &quot;key&quot;: &quot;/queue/00000000000000001032&quot;,
+                &quot;modifiedIndex&quot;: 1032,
+                &quot;value&quot;: &quot;job3&quot;
+            }
+        ]
+    }
+}
+</code></pre><h3 id="设置目录的-TTL"><a href="#设置目录的-TTL" class="headerlink" title="设置目录的 TTL"></a>设置目录的 TTL</h3><p>和 key 类似，目录（dir）也可以有过期时间。设置的方法也一样，只不过多了 <code>dir=true</code> 参数来说明这是一个目录。</p>
+<pre><code>➜  http PUT http://127.0.0.1:2379/v2/keys/dir dir==true ttl==5 prevExist==true
+HTTP/1.1 200 OK
+Content-Length: 226
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 07:15:42 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 1033
+X-Raft-Index: 45325
+X-Raft-Term: 2
+
+{
+    &quot;action&quot;: &quot;update&quot;,
+    &quot;node&quot;: {
+        &quot;createdIndex&quot;: 1029,
+        &quot;dir&quot;: true,
+        &quot;expiration&quot;: &quot;2016-08-02T07:15:47.970434032Z&quot;,
+        &quot;key&quot;: &quot;/dir&quot;,
+        &quot;modifiedIndex&quot;: 1033,
+        &quot;ttl&quot;: 5
+    },
+    &quot;prevNode&quot;: {
+        &quot;createdIndex&quot;: 1029,
+        &quot;dir&quot;: true,
+        &quot;key&quot;: &quot;/dir&quot;,
+        &quot;modifiedIndex&quot;: 1029
+    }
+}
+</code></pre><p>目录过期的时候会被自动删除，包括它里面所有的子目录和 key，所有监听这个目录中内容的客户端都会收到对应的事件。</p>
+<h3 id="比较更新的原子操作"><a href="#比较更新的原子操作" class="headerlink" title="比较更新的原子操作"></a>比较更新的原子操作</h3><p>在分布式环境中，我们需要解决多个客户端的竞争问题，etcd 提供了原子操作 <code>CompareAndSwap</code>（CAS），通过这个操作可以很容易实现分布式锁。</p>
+<p>简单来说，这个命令只有在客户端提供的条件成立的情况下才会更新对应的值。目前支持的条件包括：</p>
+<ul>
+<li><code>preValue</code>：检查 key 之前的值是否和客户端提供的一致</li>
+<li><code>prevIndex</code>：检查 key 之前的 <code>modifiedIndex</code> 是否和客户端提供的一致</li>
+<li><code>prevExist</code>：检查 key 是否已经存在。如果存在就执行更新操作，如果不存在，执行 create 操作</li>
+</ul>
+<p>举个栗子，比如目前 <code>/foo</code> 的值为 <code>bar</code>，要把它更新成 <code>changed</code>，可以使用：</p>
+<pre><code>➜  http PUT http://127.0.0.1:2379/v2/keys/foo prevValue==bar value==changed
+HTTP/1.1 200 OK
+Content-Length: 190
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 07:37:05 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 1036
+X-Raft-Index: 47893
+X-Raft-Term: 2
+
+{
+    &quot;action&quot;: &quot;compareAndSwap&quot;,
+    &quot;node&quot;: {
+        &quot;createdIndex&quot;: 1035,
+        &quot;key&quot;: &quot;/foo&quot;,
+        &quot;modifiedIndex&quot;: 1036,
+        &quot;value&quot;: &quot;changed&quot;
+    },
+    &quot;prevNode&quot;: {
+        &quot;createdIndex&quot;: 1035,
+        &quot;key&quot;: &quot;/foo&quot;,
+        &quot;modifiedIndex&quot;: 1035,
+        &quot;value&quot;: &quot;bar&quot;
+    }
+}
+</code></pre><p>如果提供的条件不对，会报 <code>412</code> 错误：</p>
+<pre><code>➜ http PUT http://127.0.0.1:2379/v2/keys/foo prevValue==bar value==new
+HTTP/1.1 412 Precondition Failed
+Content-Length: 85
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 07:37:38 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 1036
+
+{
+    &quot;cause&quot;: &quot;[bar != changed]&quot;,
+    &quot;errorCode&quot;: 101,
+    &quot;index&quot;: 1036,
+    &quot;message&quot;: &quot;Compare failed&quot;
+}
+</code></pre><p>注意：匹配条件是 <code>prevIndex=0</code> 的话，也会通过检查。</p>
+<p>这些条件也可以组合起来使用，只有当都满足的时候，才会执行对应的操作。</p>
+<h3 id="比较删除的原子操作"><a href="#比较删除的原子操作" class="headerlink" title="比较删除的原子操作"></a>比较删除的原子操作</h3><p>和条件更新类似，etcd 也支持条件删除操作：只有在客户端提供的条件成立的情况下，才会执行删除操作。支持 <code>prevValue</code> 和 <code>prevIndex</code> 两种条件检查，没有 <code>prevExist</code>，因为删除不存在的值本身就会报错。</p>
+<p>我们来删除上面例子中更新的 <code>/foo</code> ，先看一下提供的条件不对的情况：</p>
+<pre><code>➜  http DELETE http://127.0.0.1:2379/v2/keys/foo prevValue==bar
+HTTP/1.1 412 Precondition Failed
+Content-Length: 85
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 07:49:13 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 1043
+
+{
+    &quot;cause&quot;: &quot;[bar != changed]&quot;,
+    &quot;errorCode&quot;: 101,
+    &quot;index&quot;: 1043,
+    &quot;message&quot;: &quot;Compare failed&quot;
+}
+</code></pre><p>如果提供的条件成立，对应的 key 就会被删除：</p>
+<pre><code>➜  http DELETE http://127.0.0.1:2379/v2/keys/foo prevValue==changed
+HTTP/1.1 200 OK
+Content-Length: 178
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 07:51:27 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 1044
+X-Raft-Index: 49629
+X-Raft-Term: 2
+
+{
+    &quot;action&quot;: &quot;compareAndDelete&quot;,
+    &quot;node&quot;: {
+        &quot;createdIndex&quot;: 1043,
+        &quot;key&quot;: &quot;/foo&quot;,
+        &quot;modifiedIndex&quot;: 1044
+    },
+    &quot;prevNode&quot;: {
+        &quot;createdIndex&quot;: 1043,
+        &quot;key&quot;: &quot;/foo&quot;,
+        &quot;modifiedIndex&quot;: 1043,
+        &quot;value&quot;: &quot;changed&quot;
+    }
+}
+</code></pre><h3 id="操作目录"><a href="#操作目录" class="headerlink" title="操作目录"></a>操作目录</h3><p>在创建 key 的时候，如果它所在路径的目录不存在，会自动被创建，所以在多数情况下我们不需要关心目录的创建。目录的操作和 key 的操作基本一致，唯一的区别是需要加上 <code>dir=true</code> 参数指明操作的对象是目录。</p>
+<p>比如，如果想要显示地创建目录，可以使用 <code>PUT</code> 方法，并设置 <code>dir=true</code>：</p>
+<pre><code>➜ http PUT http://127.0.0.1:2379/v2/keys/anotherdir dir==true
+HTTP/1.1 201 Created
+Content-Length: 98
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 07:53:48 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 1045
+X-Raft-Index: 49914
+X-Raft-Term: 2
+
+{
+    &quot;action&quot;: &quot;set&quot;,
+    &quot;node&quot;: {
+        &quot;createdIndex&quot;: 1045,
+        &quot;dir&quot;: true,
+        &quot;key&quot;: &quot;/anotherdir&quot;,
+        &quot;modifiedIndex&quot;: 1045
+    }
+}
+</code></pre><p> 创建目录的操作不能重复执行，再次执行上面的命令会报  <code>HTTP 403</code> 错误。</p>
+<p>如果 <code>GET</code> 方法对应的 url 是目录的话，etcd 会列出该目录所有节点的信息（不需要指定 <code>dir=true</code>）。比如要列出根目录下所有的节点：</p>
+<pre><code>➜  http http://127.0.0.1:2379/v2/keys/
+HTTP/1.1 200 OK
+Content-Length: 190
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 07:55:41 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 1045
+X-Raft-Index: 50141
+X-Raft-Term: 2
+
+{
+    &quot;action&quot;: &quot;get&quot;,
+    &quot;node&quot;: {
+        &quot;dir&quot;: true,
+        &quot;nodes&quot;: [
+            {
+                &quot;createdIndex&quot;: 1045,
+                &quot;dir&quot;: true,
+                &quot;key&quot;: &quot;/anotherdir&quot;,
+                &quot;modifiedIndex&quot;: 1045
+            },
+            {
+                &quot;createdIndex&quot;: 1030,
+                &quot;dir&quot;: true,
+                &quot;key&quot;: &quot;/queue&quot;,
+                &quot;modifiedIndex&quot;: 1030
+            }
+        ]
+    }
+}
+</code></pre><p>如果添加上 <code>recursive=true</code> 参数，就会递归地列出所有的值：</p>
+<pre><code>➜  http http://127.0.0.1:2379/v2/keys/\?recursive\=true
+HTTP/1.1 200 OK
+Content-Length: 482
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 07:57:48 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 1045
+X-Raft-Index: 50394
+X-Raft-Term: 2
+
+{
+    &quot;action&quot;: &quot;get&quot;,
+    &quot;node&quot;: {
+        &quot;dir&quot;: true,
+        &quot;nodes&quot;: [
+            {
+                &quot;createdIndex&quot;: 1045,
+                &quot;dir&quot;: true,
+                &quot;key&quot;: &quot;/anotherdir&quot;,
+                &quot;modifiedIndex&quot;: 1045
+            },
+            {
+                &quot;createdIndex&quot;: 1030,
+                &quot;dir&quot;: true,
+                &quot;key&quot;: &quot;/queue&quot;,
+                &quot;modifiedIndex&quot;: 1030,
+                &quot;nodes&quot;: [
+                    {
+                        &quot;createdIndex&quot;: 1031,
+                        &quot;key&quot;: &quot;/queue/00000000000000001031&quot;,
+                        &quot;modifiedIndex&quot;: 1031,
+                        &quot;value&quot;: &quot;job2&quot;
+                    },
+                    {
+                        &quot;createdIndex&quot;: 1032,
+                        &quot;key&quot;: &quot;/queue/00000000000000001032&quot;,
+                        &quot;modifiedIndex&quot;: 1032,
+                        &quot;value&quot;: &quot;job3&quot;
+                    },
+                    {
+                        &quot;createdIndex&quot;: 1030,
+                        &quot;key&quot;: &quot;/queue/00000000000000001030&quot;,
+                        &quot;modifiedIndex&quot;: 1030,
+                        &quot;value&quot;: &quot;job1&quot;
+                    }
+                ]
+            }
+        ]
+    }
+}
+</code></pre><p>和 linux 删除目录的设计一样，要区别空目录和非空目录。删除空目录很简单，使用 <code>DELETE</code> 方法，并添加上 <code>dir=true</code> 参数，类似于 <code>rmdir</code>；而对于非空目录，需要添加上 <code>recursive=true</code>，类似于 <code>rm -rf</code>。</p>
+<pre><code>➜  http DELETE http://127.0.0.1:2379/v2/keys/queue dir==true
+HTTP/1.1 403 Forbidden
+Content-Length: 80
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 08:06:44 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 1045
+
+{
+    &quot;cause&quot;: &quot;/queue&quot;,
+    &quot;errorCode&quot;: 108,
+    &quot;index&quot;: 1045,
+    &quot;message&quot;: &quot;Directory not empty&quot;
+}
+
+➜  http DELETE http://127.0.0.1:2379/v2/keys/queue dir==true recursive==true
+HTTP/1.1 200 OK
+Content-Length: 176
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 08:06:48 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+X-Etcd-Index: 1046
+X-Raft-Index: 51478
+X-Raft-Term: 2
+
+{
+    &quot;action&quot;: &quot;delete&quot;,
+    &quot;node&quot;: {
+        &quot;createdIndex&quot;: 1030,
+        &quot;dir&quot;: true,
+        &quot;key&quot;: &quot;/queue&quot;,
+        &quot;modifiedIndex&quot;: 1046
+    },
+    &quot;prevNode&quot;: {
+        &quot;createdIndex&quot;: 1030,
+        &quot;dir&quot;: true,
+        &quot;key&quot;: &quot;/queue&quot;,
+        &quot;modifiedIndex&quot;: 1030
+    }
+}
+</code></pre><h3 id="隐藏的节点"><a href="#隐藏的节点" class="headerlink" title="隐藏的节点"></a>隐藏的节点</h3><p>etcd 中节点也可以是默认隐藏的，类似于 linux 中以 <code>.</code> 开头的文件或者文件夹，以 <code>_</code> 开头的节点也是默认隐藏的，不会在列出目录的时候显示。只有知道隐藏节点的完整路径，才能够访问它的信息。</p>
+<h3 id="查看集群数据信息"><a href="#查看集群数据信息" class="headerlink" title="查看集群数据信息"></a>查看集群数据信息</h3><p>etcd 还保存了集群的数据信息，包括节点之间的网络信息，操作的统计信息。</p>
+<ul>
+<li><code>/v2/stats/leader</code>会返回集群中 leader 的信息，以及 followers 的基本信息</li>
+<li><code>/v2/stats/self</code> 会返回当前节点的信息</li>
+<li><code>/v2/state/store</code>：会返回各种命令的统计信息</li>
+</ul>
+<h3 id="成员管理"><a href="#成员管理" class="headerlink" title="成员管理"></a>成员管理</h3><p>etcd 在 <code>/v2/members</code> 下保存着集群中各个成员的信息，</p>
+<pre><code>➜  http http://127.0.0.1:2379/v2/members
+HTTP/1.1 200 OK
+Content-Length: 133
+Content-Type: application/json
+Date: Tue, 02 Aug 2016 08:15:56 GMT
+X-Etcd-Cluster-Id: cdf818194e3a8c32
+
+{
+    &quot;members&quot;: [
+        {
+            &quot;clientURLs&quot;: [
+                &quot;http://localhost:2379&quot;
+            ],
+            &quot;id&quot;: &quot;8e9e05c52164694d&quot;,
+            &quot;name&quot;: &quot;default&quot;,
+            &quot;peerURLs&quot;: [
+                &quot;http://localhost:2380&quot;
+            ]
+        }
+    ]
+}
+</code></pre><p>可以通过 <code>POST</code> 方法添加成员：</p>
+<pre><code>curl http://10.0.0.10:2379/v2/members -XPOST \
+-H &quot;Content-Type: application/json&quot; -d &#39;{&quot;peerURLs&quot;:[&quot;http://10.0.0.10:2380&quot;]}&#39;
+</code></pre><p> 也可以通过 <code>DELETE</code> 方法删除成员：</p>
+<pre><code>curl http://10.0.0.10:2379/v2/members/272e204152 -XDELETE
+</code></pre><p>或者通过 PUT 更新成员的 peer url：</p>
+<pre><code>curl http://10.0.0.10:2379/v2/members/272e204152 -XPUT \
+-H &quot;Content-Type: application/json&quot; -d &#39;{&quot;peerURLs&quot;:[&quot;http://10.0.0.10:2380&quot;]}&#39;
+</code></pre><h2 id="5-etcdctl-命令行工具"><a href="#5-etcdctl-命令行工具" class="headerlink" title="5. etcdctl 命令行工具"></a>5. etcdctl 命令行工具</h2><p>除了 HTTP API 外，etcd 还提供了 <code>etcdctl</code> 命令行工具和 etcd 服务交互。这个命令行用 go 语言编写，也是对 HTTP API 的封装，日常使用起来也更容易。</p>
+<p>etcdctl 的安装就不说了，从官网下载二进制文件放到系统的 PATH 路径下就行了。</p>
+<pre><code># 设置一个 key 的值
+➜ ./etcdctl set /message &quot;hello, etcd&quot;
+hello, etcd
+
+# 获取 key 的值
+➜ ./etcdctl get /message
+hello, etcd
+
+# 获取 key 的值，包含更详细的元数据
+➜  ./etcdctl -o extended get /message
+Key: /message
+Created-Index: 1073
+Modified-Index: 1073
+TTL: 0
+Index: 1073
+
+hello, etcd
+
+# 获取不存在 key 的值，会报错
+➜  ./etcdctl get /notexist
+Error:  100: Key not found (/notexist) [1048]
+
+# 设置 key 的 ttl，过期后会被自动删除
+➜  ./etcdctl set /tempkey &quot;gone with wind&quot; --ttl 5
+gone with wind
+➜  ./etcdctl get /tempkey
+gone with wind
+➜  ./etcdctl get /tempkey
+Error:  100: Key not found (/tempkey) [1050]
+
+# 如果 key 的值是 &quot;hello, etcd&quot;，就把它替换为 &quot;goodbye, etcd&quot;
+➜  ./etcdctl set --swap-with-value &quot;hello, world&quot; /message &quot;goodbye, etcd&quot;
+Error:  101: Compare failed ([hello, world != hello, etcd]) [1050]
+➜  ./etcdctl set --swap-with-value &quot;hello, etcd&quot; /message &quot;goodbye, etcd&quot;
+goodbye, etcd
+
+# 仅当 key 不存在的时候创建
+➜  ./etcdctl mk /foo bar
+bar
+➜  ./etcdctl mk /foo bar
+Error:  105: Key already exists (/foo) [1052]
+
+# 自动创建排序的 key
+➜  ./etcdctl mk --in-order /queue job1
+job1
+➜  ./etcdctl mk --in-order /queue job2
+job2
+➜  ./etcdctl ls --sort /queue
+/queue/00000000000000001053
+/queue/00000000000000001054
+
+# 更新 key 的值或者 ttl，只有当 key 已经存在的时候才会生效，否则报错
+➜  ./etcdctl update /message &quot;I&#39;am changed&quot;
+I&#39;am changed
+➜  ./etcdctl get /message
+I&#39;am changed
+➜  ./etcdctl update /notexist &quot;I&#39;am changed&quot;
+Error:  100: Key not found (/notexist) [1055]
+➜  ./etcdctl update --ttl 3 /message &quot;I&#39;am changed&quot;
+I&#39;am changed
+➜  ./etcdctl get /message
+Error:  100: Key not found (/message) [1057]
+
+# 删除某个 key
+➜  ./etcdctl mk /foo bar
+bar
+➜  ./etcdctl rm /foo
+PrevNode.Value: bar
+➜  ./etcdctl get /foo
+Error:  100: Key not found (/foo) [1062]
+
+# 只有当 key 的值匹配的时候，才进行删除
+➜  ./etcdctl mk /foo bar
+bar
+➜  ./etcdctl rm --with-value wrong /foo
+Error:  101: Compare failed ([wrong != bar]) [1063]
+➜  ./etcdctl rm --with-value bar /foo
+
+# 创建一个目录
+➜  ./etcdctl mkdir /dir
+
+# 删除空目录
+➜  ./etcdctl mkdir /dir/subdir/
+➜  ./etcdctl rmdir /dir/subdir/
+
+# 删除非空目录
+➜  ./etcdctl rmdir /dir
+Error:  108: Directory not empty (/dir) [1071]
+➜  ./etcdctl rm --recursive /dir
+
+# 列出目录的内容
+➜  ./etcdctl ls /
+/queue
+/anotherdir
+/message
+
+# 递归列出目录的内容
+➜  ./etcdctl ls --recursive /
+/anotherdir
+/message
+/queue
+/queue/00000000000000001053
+/queue/00000000000000001054
+
+# 监听某个 key，当 key 改变的时候会打印出变化
+➜  ./etcdctl watch /message
+changed
+
+# 监听某个目录，当目录中任何 node 改变的时候，都会打印出来
+➜  ./etcdctl watch --recursive /
+[set] /message
+changed
+
+# 一直监听，除非 `CTL + C` 导致退出监听
+➜  ./etcdctl watch --forever /message
+new value
+chaned again
+Wola
+
+# 监听目录，并在发生变化的时候执行一个命令
+➜  ./etcdctl exec-watch --recursive / -- sh -c &quot;echo change detected.&quot;
+change detected.
+change detected.
+</code></pre><h2 id="6-总结"><a href="#6-总结" class="headerlink" title="6. 总结"></a>6. 总结</h2><p>etcd 默认只保存 1000 个历史事件，所以不适合有大量更新操作的场景，这样会导致数据的丢失。 etcd 典型的应用场景是配置管理和服务发现，这些场景都是读多写少的。</p>
+<p>相比于 zookeeper，etcd 使用起来要简单很多。不过要实现真正的服务发现功能，etcd 还需要和其他工具（比如 registrator、confd 等）一起使用来实现服务的自动注册和更新。</p>
+<p>目前 etcd 还没有图形化的工具。</p>
+<h2 id="7-参考资料"><a href="#7-参考资料" class="headerlink" title="7. 参考资料"></a>7. 参考资料</h2><ul>
+<li><p><a href="http://www.infoq.com/cn/articles/coreos-analyse-etcd" target="_blank" rel="noopener">CoreOS 实战：剖析 etcd</a></p>
+</li>
+<li><p><a href="http://www.csdn.net/article/2015-01-22/2823659" target="_blank" rel="noopener">CoreOS实践指南（五）：分布式数据存储Etcd（上）</a></p>
+</li>
+<li><p><a href="http://www.csdn.net/article/2015-01-28/2823739" target="_blank" rel="noopener">CoreOS实践指南（六）：分布式数据存储Etcd（下）</a></p>
+</li>
+<li><p><a href="https://coreos.com/etcd/docs/latest/api.html" target="_blank" rel="noopener">etcd API document</a></p>
+</li>
+<li><p><a href="https://coreos.com/etcd/docs/latest/members_api.html" target="_blank" rel="noopener">etcd members API document</a></p>
+</li>
+<li><p><a href="https://github.com/coreos/etcd/blob/master/Documentation/op-guide/configuration.md" target="_blank" rel="noopener">etcd configuration</a></p>
+</li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="go http 服务器编程" href="/2016/08/17/golang-http-server-side/">
+        ← go http 服务器编程
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="flannel 源码分析" href="/2016/07/16/flannel-source-code-insight/">
+        flannel 源码分析 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-etcd-简介"><span class="toc-text">1. etcd 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-安装"><span class="toc-text">2. 安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#单点安装"><span class="toc-text">单点安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集群安装"><span class="toc-text">集群安装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-etcd-基础知识"><span class="toc-text">3. etcd 基础知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-API-文档"><span class="toc-text">4. API 文档</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#获取-etcd-服务的版本信息"><span class="toc-text">获取 etcd 服务的版本信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#key-的增删查改"><span class="toc-text">key 的增删查改</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TTL"><span class="toc-text">TTL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#监听变化"><span class="toc-text">监听变化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动创建有序的-keys"><span class="toc-text">自动创建有序的 keys</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置目录的-TTL"><span class="toc-text">设置目录的 TTL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#比较更新的原子操作"><span class="toc-text">比较更新的原子操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#比较删除的原子操作"><span class="toc-text">比较删除的原子操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#操作目录"><span class="toc-text">操作目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#隐藏的节点"><span class="toc-text">隐藏的节点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看集群数据信息"><span class="toc-text">查看集群数据信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#成员管理"><span class="toc-text">成员管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-etcdctl-命令行工具"><span class="toc-text">5. etcdctl 命令行工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-总结"><span class="toc-text">6. 总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-参考资料"><span class="toc-text">7. 参考资料</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">etcd 使用入门</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

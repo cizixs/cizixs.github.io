@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>flannel 源码分析 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="flannel 源码分析 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2016/07/16/flannel-source-code-insight/">
+
+	
+	<meta property="article:published_time" content="2016-07-16T00:07:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2016/07/16/flannel-source-code-insight/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2016-07-15T16:00:00.000Z" itemprop="datePublished">
+                    2016-07-16
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">flannel 源码分析</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><code>flannel</code> 是为了解决容器的跨主机网络问题而出现的项目，可以提供多种类型的网络模型：</p>
+<ul>
+<li>普通网络：udp、vxlan、hostgw</li>
+<li>平台网络：gce、aws</li>
+</ul>
+<p>使用之前，需要在 etcd 中写入要管理网络的配置，比如 ：</p>
+<pre><code>{
+    &quot;Network&quot;: &quot;10.0.0.0/8&quot;,
+    &quot;SubnetLen&quot;: 20,
+    &quot;SubnetMin&quot;: &quot;10.10.0.0&quot;,
+    &quot;SubnetMax&quot;: &quot;10.99.0.0&quot;,
+    &quot;Backend&quot;: {
+        &quot;Type&quot;: &quot;udp&quot;,
+        &quot;Port&quot;: 7890
+    }
+}
+</code></pre><p>这里有三个概念要了解：</p>
+<ul>
+<li>网络（Network）：整个集群中分配给 flannel 要管理的网络地址范围</li>
+<li>子网（Subnet）：flannel 所在的每台主机都会管理 network 中一个子网，子网的掩码和范围是可配置的</li>
+<li>后端（Backend）：使用什么样的后端网络模型，比如默认的 udp，还是 vxlan 等</li>
+</ul>
+<p>flannel 在 <code>etcd</code> 中保存的数据默认保存在 <code>/coreos.com/network</code>，其中</p>
+<ul>
+<li><code>/coreos.com/network/config</code> 保存着上面网络配置数据</li>
+<li><p><code>/coreos.com/network/subnets</code> 是一个目录，保存的是每个主机分配的子网，比如</p>
+<pre><code>{
+    &quot;createdIndex&quot;: 5,
+    &quot;expiration&quot;: &quot;2016-07-15T02:44:46.411907661Z&quot;,
+    &quot;key&quot;: &quot;/coreos.com/network/subnets/10.16.240.0-20&quot;,
+    &quot;modifiedIndex&quot;: 5,
+    &quot;ttl&quot;: 66125,
+    &quot;value&quot;: &quot;{\&quot;PublicIP\&quot;:\&quot;192.168.8.101\&quot;,\&quot;BackendType\&quot;:\&quot;host-gw\&quot;}&quot;
+}
+</code></pre></li>
+</ul>
+<p><code>key</code> 里面保存着子网的网段信息，<code>value</code> 保存着租约信息（lease），<code>expiration</code> 是过期时间。</p>
+<p>更多关于 flannel 的配置和使用，请参考我之前写的 <a href="http://cizixs.com/2016/06/15/flannel-overlay-network">flannel 网络模型</a> 这篇文章，或者阅读官方文档。</p>
+<h2 id="代码结构"><a href="#代码结构" class="headerlink" title="代码结构"></a>代码结构</h2><pre><code>├── Documentation/    # 文档
+├── backend/          # 后端实现，目前支持 udp、vxlan、host-gw 等
+├── dist/
+├── logos/
+├── network/          # 最上层的网络管理逻辑
+├── pkg/              # 抽象出来的功能库，目前只有 `ip`
+├── remote/
+├── subnet/           # 子网管理功能
+├── vendor/
+├── version/
+├── CONTRIBUTING.md
+├── Dockerfile
+├── LICENSE
+├── MAINTAINERS
+├── NOTICE
+├── README.md
+├── build*
+├── cover*
+├── main.go           # 可执行文件的入口
+├── packet-01.png
+└── test*
+</code></pre><h2 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h2><p>flannel 最近有两个新的使用模式：server-client 和 多网络，因为目前还不是稳定阶段，这篇文章会跳过相关的内容，只考虑每个容器/主机只有一个网络的情况。</p>
+<h3 id="network"><a href="#network" class="headerlink" title="network"></a><strong>network</strong></h3><p><code>flannel/network</code> 文件夹有三个文件：</p>
+<ul>
+<li><code>ipmasq.go</code>：负责 iptables masquerade 功能的配置和删除</li>
+<li><code>manager.go</code>：最上层的封装和最终的接口 API</li>
+<li><code>network.go</code>：网络的主要逻辑，也是 loop 循环逻辑所在的地方</li>
+</ul>
+<p><code>main.go</code> 是 flannel 代码的入口，这个文件只做了一件事情：创建 NetworkManager，并执行它的 <code>Run</code> 函数。精简后的代码逻辑是这样的：</p>
+<pre><code># 创建 subnetManager，作为参数城传递给 NetworkManager
+sm, err := newSubnetManager()
+nm, err := network.NewNetworkManager(ctx, sm)
+
+# 运行 NetworkManager 的 run 函数，并等待它结束
+wg := sync.WaitGroup{}
+wg.Add(1)
+go func() {
+      nm.Run(ctx)
+    wg.Done()
+}()
+
+&lt;-sigs
+// unregister to get default OS nuke behaviour in case we don&#39;t exit cleanly
+signal.Stop(sigs)
+
+log.Info(&quot;Exiting...&quot;)
+cancel()
+
+wg.Wait()
+</code></pre><p>这段代码虽然简单，但是也带来了更多的疑惑：</p>
+<ul>
+<li><code>NetworkManager</code> 是什么？有什么作用？</li>
+<li><code>SubnetManager</code> 又是什么？为什么要作为参数传给 <code>NetworkManager</code>？</li>
+<li><code>NetworkManager.Run(ctx)</code> 函数主要做了哪些事情呢？</li>
+</ul>
+<p>下面所有的内容就是为了回答这些问题，我们先看一下 <code>NetworkManager</code> ，它定义在 <code>flannel/network/manager.go</code> 文件中，结构是这样的：</p>
+<pre><code>type Manager struct {
+    ctx             context.Context        // 请求的上下文
+    sm              subnet.Manager         // 子网管理，每台 flannel 节点都是一个子网
+    bm              backend.Manager        // 后端管理，比如常用的 udp、xvlan、host-gw
+    allowedNetworks map[string]bool        // 多网络模式会用到
+    mux             sync.Mutex           
+    networks        map[string]*Network    // 多网络模式下，要管理的网络列表
+    watch           bool
+    ipMasq          bool                   
+    extIface        *backend.ExternalInterface  // 和外部节点通信的网络接口，比如 eth0
+}
+</code></pre><p>而上面的 <code>NewNetworkManager</code> 就是为了创建这样一个对象，创建的时候只传入了 <code>ctx</code> 和 <code>sm</code> 两个值，其他的值会自动创建，其中比较重要的是 <code>backend.Manager</code>，负责管理后端支持的插件。</p>
+<p><code>NetworkManager</code> 是外层的抽象，根据 etcd 中的网络配置主机的网络信息。我们看一下 <code>Manager.Run</code> 就知道啦：</p>
+<pre><code>func (m *Manager) Run(ctx context.Context) {
+    wg := sync.WaitGroup{}
+    # 添加要管理的网络
+    m.networks[&quot;&quot;] = NewNetwork(ctx, m.sm, m.bm, &quot;&quot;, m.ipMasq)
+
+    // 对于每一个网络，调用 `runNetwork`
+    m.forEachNetwork(func(n *Network) {
+        wg.Add(1)
+        go func(n *Network) {
+            m.runNetwork(n)
+            wg.Done()
+        }(n)
+    })
+
+    wg.Wait()
+    m.bm.Wait()
+}
+</code></pre><p>这里的内容也不多，无非是添加要管理的网络，并调用 <code>runNetwork</code> 函数。<code>runNetwork</code> 函数会完成实际的工作：</p>
+<pre><code>func (m *Manager) runNetwork(n *Network) {
+    n.Run(m.extIface, func(bn backend.Network) {
+        log.Infof(&quot;Lease acquired: %v&quot;, bn.Lease().Subnet)
+
+        if err := writeSubnetFile(opts.subnetFile, n.Config.Network, m.ipMasq, bn); err != nil {
+            log.Warningf(&quot;%v failed to write subnet file: %s&quot;, n.Name, err)
+            return
+        }
+        daemon.SdNotify(&quot;READY=1&quot;)
+    })
+
+    m.delNetwork(n)
+}
+</code></pre><p>调用 <code>network.Run</code>，第一个参数是网络接口，第二个参数是一个初始化的函数（这个函数的工作就是根据网络内容，把配置写到本地的文件）。</p>
+<p>还记得这个 <code>Network</code> 变量是怎么生成的吗？看一下上面 <code>m.networks[&quot;&quot;] = NewNetwork(ctx, m.sm, m.bm, &quot;&quot;, m.ipMasq)</code> 这句，这个对象的代码在 <code>flannel/network/network.go</code> 这个文件中。<code>Network</code> 的结构是这样的：</p>
+<pre><code>type Network struct {
+    Name   string
+    Config *subnet.Config
+
+    ctx        context.Context
+    cancelFunc context.CancelFunc
+    sm         subnet.Manager
+    bm         backend.Manager
+    ipMasq     bool
+    bn         backend.Network
+}
+</code></pre><p><code>network.Run</code> 就是循环调用 <code>runOnce</code> 的逻辑，那么我们看看 <code>runOnce</code> 这个函数，这部分的代码比较长，也是 <code>flannel/network</code> 文件夹中最核心的内容。我在关键部分已经添加了中文注释：</p>
+<pre><code>func (n *Network) runOnce(extIface *backend.ExternalInterface, inited func(bn backend.Network)) error {
+    # retryInit 做一下初始化的工作，主要是从 etcd 中获取网络的配置，根据里面的数据
+    # 获取对应的 backend、从管理的网络中分配一个子网、把分配的子网保存到 backend 的数据结构中。
+    # 分配网络的工作 `subnet/` 文件下的代码实现的，后面会详细说明
+    if err := n.retryInit(); err != nil {
+        return errCanceled
+    }
+
+    # 运行传进来的初始化工作函数，就是上面提到的在本地创建 subnet.env 文件的函数
+    inited(n.bn)
+
+    ctx, interruptFunc := context.WithCancel(n.ctx)
+
+    wg := sync.WaitGroup{}
+
+    # 调用 backend.network 的 Run 函数，在后台运行；
+    # 每个 backend 的运行逻辑不同，但思路都是：监听 etcd 的变化，并根据变化后的内容执行命令
+    wg.Add(1)
+    go func() {
+        n.bn.Run(ctx)
+        wg.Done()
+    }()
+
+    evts := make(chan subnet.Event)
+
+    # 监听子网所在 etcd 的变化，如果
+    wg.Add(1)
+    go func() {
+        subnet.WatchLease(ctx, n.sm, n.Name, n.bn.Lease().Subnet, evts)
+        wg.Done()
+    }()
+
+    # 在运行结束的时候，拆除设置的 ipmasq
+    defer func() {
+        if n.ipMasq {
+            if err := teardownIPMasq(n.Config.Network); err != nil {
+                log.Errorf(&quot;Failed to tear down IP Masquerade for network %v: %v&quot;, n.Name, err)
+            }
+        }
+    }()
+
+    defer wg.Wait()
+
+
+    dur := n.bn.Lease().Expiration.Sub(time.Now()) - renewMargin
+    for {
+        select {
+        # 超时，要进行续租
+        case &lt;-time.After(dur):
+            err := n.sm.RenewLease(n.ctx, n.Name, n.bn.Lease())
+            if err != nil {
+                log.Error(&quot;Error renewing lease (trying again in 1 min): &quot;, err)
+                dur = time.Minute
+                continue
+            }
+
+            log.Info(&quot;Lease renewed, new expiration: &quot;, n.bn.Lease().Expiration)
+            dur = n.bn.Lease().Expiration.Sub(time.Now()) - renewMargin
+
+        # 收到监听的事件，进行处理。目前只有两种事件：子网添加，和子网删除
+        case e := &lt;-evts:
+            switch e.Type {
+            case subnet.EventAdded:
+                n.bn.Lease().Expiration = e.Lease.Expiration
+                dur = n.bn.Lease().Expiration.Sub(time.Now()) - renewMargin
+
+            case subnet.EventRemoved:
+                log.Warning(&quot;Lease has been revoked&quot;)
+                interruptFunc()
+                return errInterrupted
+            }
+
+        case &lt;-n.ctx.Done():
+            return errCanceled
+        }
+    }
+}
+</code></pre><p>总结起来也比较简单：</p>
+<ul>
+<li>读取 etcd 中的值，根据获得的值做一些初始化的工作</li>
+<li>调用 backend 的 Run 函数，让 backend 在后台运行</li>
+<li>监听子网在 etcd 中的变化，执行对应的操作</li>
+</ul>
+<h3 id="subnet"><a href="#subnet" class="headerlink" title="subnet"></a>subnet</h3><p>在前一部分，network 最后初始化的步骤（<code>n.retryInit()</code>）中，可能很多人和我一样，比较关心每个主机分配的子网是怎么决定的，这个秘密在 <code>subnet/local_manager.go:allocateSubnet()</code> 函数里：</p>
+<pre><code>var bag []ip.IP4
+sn := ip.IP4Net{IP: config.SubnetMin, PrefixLen: config.SubnetLen}
+
+# 没错，我也看到这个位置标识符了，能看到它为什么存在吗？
+# 这个东西其实很容器被处理掉，能想到好的方法吗？
+OuterLoop:
+    # 从低到高，依次列举所有可以分配的子网(上限是 100)，找到那些和已分配的网络没有冲突的，放到
+    # 数组中备选
+    for ; sn.IP &lt;= config.SubnetMax &amp;&amp; len(bag) &lt; 100; sn = sn.Next() {
+        for _, l := range leases {
+            if sn.Overlaps(l.Subnet) {
+                continue OuterLoop
+            }
+        }
+        bag = append(bag, sn.IP)
+    }
+
+    # 从可用的子网中随机选择一个返回，如果没有可用的，报错。
+    if len(bag) == 0 {
+        return ip.IP4Net{}, errors.New(&quot;out of subnets&quot;)
+    } else {
+        i := randInt(0, len(bag))
+        return ip.IP4Net{IP: bag[i], PrefixLen: config.SubnetLen}, nil
+    }
+</code></pre><p><code>subnet</code> 目录所有子网管理的文件，负责子网的创建、更新、添加、删除、监听等，主要和 <code>etcd</code> 打交道：</p>
+<pre><code>subnet
+├── clock.go
+├── config.go         # 把 etcd 中获取的结果转换为程序的数据结构
+├── config_test.go
+├── local_manager.go  # subnet manager， 获取子网的分配、续约、监听租约等
+├── mock_etcd.go      # etcd mock 对象，用于测试和本地开发
+├── mock_etcd_test.go
+├── mock_registry.go  # registry mock 对象
+├── mock_subnet.go    # subnet mock 对象，实现了子网的管理功能
+├── rand.go           # 帮助函数，实现了一个随机函数，用于申请子网时的随机过程
+├── registry.go       # etcd 的封装对象，实现网络数据在 etcd 中的 CRUD 等操作
+├── registry_test.go
+├── subnet.go         # 子网的隔离功能
+├── subnet_test.go
+└── watch.go          # 监听 etcd 的数据结构功能，包括网络监听、租期监听等
+</code></pre><h3 id="backend"><a href="#backend" class="headerlink" title="backend"></a>backend</h3><p><code>backend</code> 文件夹汇集了不同的后端实现， <code>flannel</code> 在运行的时候回根据 etcd 中的配置来选择对应的后端，并执行它的 <code>Run</code> 函数。backend 的接口比较简单，只有两个函数：</p>
+<pre><code>type Backend interface {
+    // Called first to start the necessary event loops and such
+    Run(ctx context.Context)
+    // Called when the backend should create or begin managing a new network
+    RegisterNetwork(ctx context.Context, network string, config *subnet.Config) (Network, error)
+}
+</code></pre><ul>
+<li><code>Run</code> 函数是 backend 初始化的时候被调用的，用来启动 event loop，接受关闭信号，以便做一些清理工作</li>
+<li><code>RegisterNetwork</code> 函数在需要后端要管理某个网络的时候被调用，目标就是注册要管理的网络信息到自己的数据结构中，以便后面使用</li>
+</ul>
+<p>具体的工作在每个 backend 的 network 中执行，<code>backend/network</code> 的接口如下：</p>
+<pre><code>type Network interface {
+    Lease() *subnet.Lease
+    MTU() int
+    Run(ctx context.Context)
+}
+</code></pre><ul>
+<li><code>Lease</code> 返回后端管理的子网租期信息</li>
+<li><code>MTU</code> 返回后端锁管理网络的 MTU（Maximum Transmission Unit）</li>
+<li><code>Run</code> 执行后端的核心逻辑</li>
+</ul>
+<p>我们以 <code>hostgw</code> 后端为例（它比较简单，因此容易理解）重点看一下 <code>Network.Run</code> 函数。<code>hostgw</code> 模式下，每台主机上的 flannel 只负责路由表的维护就行了，当发现 etcd 中有节点信息变化的时候就随时更新自己主机的路由表项。我们来看一下它的代码：</p>
+<pre><code>func (n *network) Run(ctx context.Context) {
+    wg := sync.WaitGroup{}
+
+    # 创建一个 Event 的 channel，用来存储监听过程中出现的事件
+    log.Info(&quot;Watching for new subnet leases&quot;)
+    evts := make(chan []subnet.Event)
+    wg.Add(1)
+
+    # 调用 goroutine 在后台监听子网租期的变化，把结果放到 evts 里面传回来
+    go func() {
+        subnet.WatchLeases(ctx, n.sm, n.name, n.lease, evts)
+        wg.Done()
+    }()
+
+    # 另外一个后台程序，用来保证主机上的路由表和 etcd 中数据保持一致
+    # 注意：这个程序只负责添加，不负责删除。如果管理的路由表项被手动删除了，或者重启失效，会自动添加上去
+    n.rl = make([]netlink.Route, 0, 10)
+    wg.Add(1)
+    go func() {
+        n.routeCheck(ctx)
+        wg.Done()
+    }()
+
+    defer wg.Wait()
+
+    # event loop：处理监听到的事件，程序退出的时候返回
+    for {
+        select {
+        case evtBatch := &lt;-evts:
+            n.handleSubnetEvents(evtBatch)
+
+        case &lt;-ctx.Done():
+            return
+        }
+    }
+}
+</code></pre><p>做的事情一句话就能总结出来：监听 etcd 中的子网信息，有事件发生的时候调用对应的处理函数。处理函数只有负责两种时间：子网被添加和子网被删除。</p>
+<pre><code>func (n *network) handleSubnetEvents(batch []subnet.Event) {
+    for _, evt := range batch {
+        switch evt.Type {
+        # 添加子网事件发生时的处理步骤：
+        # 检查参数是否正常，根据参数构建路由表项，把路由表项添加到主机，把路由表项添加到自己的数据结构中
+        case subnet.EventAdded:
+            log.Infof(&quot;Subnet added: %v via %v&quot;, evt.Lease.Subnet, evt.Lease.Attrs.PublicIP)
+
+            if evt.Lease.Attrs.BackendType != &quot;host-gw&quot; {
+                log.Warningf(&quot;Ignoring non-host-gw subnet: type=%v&quot;, evt.Lease.Attrs.BackendType)
+                continue
+            }
+
+            route := netlink.Route{
+                Dst:       evt.Lease.Subnet.ToIPNet(),
+                Gw:        evt.Lease.Attrs.PublicIP.ToIP(),
+                LinkIndex: n.linkIndex,
+            }
+            if err := netlink.RouteAdd(&amp;route); err != nil {
+                log.Errorf(&quot;Error adding route to %v via %v: %v&quot;, evt.Lease.Subnet, evt.Lease.Attrs.PublicIP, err)
+                continue
+            }
+            n.addToRouteList(route)
+
+        # 删除子网事件发生时的处理步骤：
+        # 检查参数是否正常，根据参数构建路由表项，把路由表项从主机删除，把路由表项从管理的数据结构中删除
+        case subnet.EventRemoved:
+            log.Info(&quot;Subnet removed: &quot;, evt.Lease.Subnet)
+
+            if evt.Lease.Attrs.BackendType != &quot;host-gw&quot; {
+                log.Warningf(&quot;Ignoring non-host-gw subnet: type=%v&quot;, evt.Lease.Attrs.BackendType)
+                continue
+            }
+
+            route := netlink.Route{
+                Dst:       evt.Lease.Subnet.ToIPNet(),
+                Gw:        evt.Lease.Attrs.PublicIP.ToIP(),
+                LinkIndex: n.linkIndex,
+            }
+            if err := netlink.RouteDel(&amp;route); err != nil {
+                log.Errorf(&quot;Error deleting route to %v: %v&quot;, evt.Lease.Subnet, err)
+                continue
+            }
+            n.removeFromRouteList(route)
+
+        default:
+            log.Error(&quot;Internal error: unknown event type: &quot;, int(evt.Type))
+        }
+    }
+}
+</code></pre><p>需要注意的是：为了容错（fault tolerance），添加和删除路由出错的时候只是记一条 log，然后就跳过。在极端的情况下，会出现本地的路由表项和 etcd 中数据不一致的情况！</p>
+<p>其他后端虽然实际上做的事情不同，但是思路都是一样的。这里就不一一说明了，有兴趣的可以自己去读源码。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>最后，我们来总结讲的内容，对最开始提出的问题给出答案。<code>flannel</code> 代码重要的有三个概念：network、subnet 和 backend。</p>
+<ul>
+<li>network 负责网络的管理（以后的方向是多网络模型），根据每个网络的配置调用 subnet；</li>
+<li>subnet 负责和 etcd 交互，把 etcd 中的信息转换为 flannel 的子网数据结构，并对 etcd 进行子网和网络的监听；</li>
+<li>backend 接受 subnet 的监听事件，并做出对应的处理。</li>
+</ul>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><a href="https://github.com/coreos/flannel" target="_blank" rel="noopener">flannel github 官方源码</a></li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="etcd 使用入门" href="/2016/08/02/intro-to-etcd/">
+        ← etcd 使用入门
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="kubernetes 简介：kubernetes 架构介绍" href="/2016/07/12/kubernetes-intro/">
+        kubernetes 简介：kubernetes 架构介绍 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码结构"><span class="toc-text">代码结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码分析"><span class="toc-text">代码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#network"><span class="toc-text">network</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#subnet"><span class="toc-text">subnet</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#backend"><span class="toc-text">backend</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文档"><span class="toc-text">参考文档</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">flannel 源码分析</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>docker 容器基础技术：linux cgroup 简介 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="docker 容器基础技术：linux cgroup 简介 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2017/08/25/linux-cgroup/">
+
+	
+	<meta property="article:published_time" content="2017-08-25T00:08:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2017/08/25/linux-cgroup/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2017-08-24T16:00:00.000Z" itemprop="datePublished">
+                    2017-08-25
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">docker 容器基础技术：linux cgroup 简介</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p>Linux cgroups 的全称是 Linux Control Groups，它是 Linux 内核的特性，主要作用是<strong>限制、记录和隔离进程组（process groups）使用的物理资源（cpu、memory、IO 等）</strong>。</p>
+<p>2006 的时候，Google 的一些工程师（主要是 Paul Menage 和 Rohit Seth）启动了这个项目，最初的名字叫 <strong>process containers</strong>。因为 <strong>container</strong> 在内核中名字有歧义，2007 的时候改名为 <strong>control groups</strong>，并合并到 2008 年发布的 2.6.24 内核版本。</p>
+<p>最初 cgroups 的版本被称为 v1，这个版本的 cgroups 设计并不友好，理解起来非常困难。后续的开发工作由 Tejun Heo 接管，他重新设计并重写了 cgroups，新版本被称为 v2，并首次出现在 kernel 4.5 版本。</p>
+<p>cgroups 从设计之初使命就很明确，为进程提供资源控制，它主要的功能包括：</p>
+<ul>
+<li><strong>资源限制</strong>：限制进程使用的资源上限，比如最大内存、文件系统缓存使用限制</li>
+<li><strong>优先级控制</strong>：不同的组可以有不同的优先级，比如 CPU 使用和磁盘 IO 吞吐</li>
+<li><strong>审计</strong>：计算 group 的资源使用情况，可以用来计费</li>
+<li><strong>控制</strong>：挂起一组进程，或者重启一组进程</li>
+</ul>
+<p>目前 cgroups 已经成为很多技术的基础，比如 LXC、docker、systemd等。</p>
+<p><strong>NOTE：</strong>资源限制是这篇文章的重点，也是 docker 等容器技术的基础。其他特性可以参考内核 cgroups 文档。</p>
+<h2 id="cgroups-核心概念"><a href="#cgroups-核心概念" class="headerlink" title="cgroups 核心概念"></a>cgroups 核心概念</h2><p>前面说过，cgroups 是用来对进程进行资源管理的，因此 cgroup 需要考虑如何抽象这两种概念：进程和资源，同时如何组织自己的结构。cgroups 中有几个非常重要的概念：</p>
+<ul>
+<li><strong>task</strong>：任务，对应于系统中运行的一个实体，一般是指进程</li>
+<li><strong>subsystem</strong>：子系统，具体的资源控制器（resource class 或者 resource controller），控制某个特定的资源使用。比如 CPU 子系统可以控制 CPU 时间，memory 子系统可以控制内存使用量</li>
+<li><strong>cgroup</strong>：控制组，一组任务和子系统的关联关系，表示对这些任务进行怎样的资源管理策略</li>
+<li><strong>hierarchy</strong>：层级树，一系列 cgroup 组成的树形结构。每个节点都是一个 cgroup，cgroup 可以有多个子节点，子节点默认会继承父节点的属性。系统中可以有多个 hierarchy</li>
+</ul>
+<p>虽然 cgroups 支持 hierarchy，允许不同的子资源挂到不同的目录，但是多个树之间有各种限制，增加了理解和维护的复杂性。在实际使用中，所有的子资源都会统一放到某个路径下（比如 ubuntu16.04 的 <code>/sys/fs/cgroup/</code>），因此本文并不详细介绍多个树的情况，感兴趣的可以参考 <a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Resource_Management_Guide/sec-Relationships_Between_Subsystems_Hierarchies_Control_Groups_and_Tasks.html" target="_blank" rel="noopener">RedHat 的这篇文档。</a></p>
+<h3 id="子资源系统（Resource-Classes-or-SubSystem）"><a href="#子资源系统（Resource-Classes-or-SubSystem）" class="headerlink" title="子资源系统（Resource Classes or SubSystem）"></a>子资源系统（Resource Classes or SubSystem）</h3><p>目前有下面这些资源子系统：</p>
+<ul>
+<li>Block IO（<code>blkio</code>)：限制块设备（磁盘、SSD、USB 等）的 IO 速率</li>
+<li>CPU Set(<code>cpuset</code>)：限制任务能运行在哪些 CPU 核上</li>
+<li>CPU Accounting(<code>cpuacct</code>)：生成 cgroup 中任务使用 CPU 的报告</li>
+<li>CPU (<code>CPU</code>)：限制调度器分配的 CPU 时间</li>
+<li>Devices (<code>devices</code>)：允许或者拒绝 cgroup 中任务对设备的访问</li>
+<li>Freezer (<code>freezer</code>)：挂起或者重启 cgroup 中的任务</li>
+<li>Memory (<code>memory</code>)：限制 cgroup 中任务使用内存的量，并生成任务当前内存的使用情况报告</li>
+<li>Network Classifier(<code>net_cls</code>)：为 cgroup 中的报文设置上特定的 classid 标志，这样 tc 等工具就能根据标记对网络进行配置</li>
+<li>Network Priority (<code>net_prio</code>)：对每个网络接口设置报文的优先级</li>
+<li><code>perf_event</code>：识别任务的 cgroup 成员，可以用来做性能分析</li>
+</ul>
+<h3 id="Hierarchy"><a href="#Hierarchy" class="headerlink" title="Hierarchy"></a>Hierarchy</h3><p>Linux 进程之间组成一棵树的结构，每个进程（除了 <code>init</code> 根进程之外）都有一个父进程，子进程创建之后会继承父进程的一些属性（比如环境变量，打开的文件描述符等）。</p>
+<p>和进程模型类似，只不过 cgroups 是一个森林结构。</p>
+<h2 id="使用-cgroups"><a href="#使用-cgroups" class="headerlink" title="使用 cgroups"></a>使用 cgroups</h2><p>cgroup 内核功能比较有趣的地方是它没有提供任何的系统调用接口，而是对 linux vfs 的一个实现，因此可以用类似文件系统的方式进行操作。</p>
+<p>使用 cgroups 的方式有几种：</p>
+<ul>
+<li>使用 cgroups 提供的虚拟文件系统，直接通过创建、读写和删除目录、文件来控制 cgroups</li>
+<li>使用命令行工具，比如 libcgroup 包提供的 cgcreate、cgexec、cgclassify 命令</li>
+<li>使用 <code>rules engine daemon</code> 提供的配置文件</li>
+<li>当然，systemd、lxc、docker 这些封装了 cgroups 的软件也能让你通过它们定义的接口控制 cgroups 的内容</li>
+</ul>
+<h3 id="直接操作-cgroup-文件系统"><a href="#直接操作-cgroup-文件系统" class="headerlink" title="直接操作 cgroup 文件系统"></a>直接操作 cgroup 文件系统</h3><h4 id="查看-cgroups-挂载信息"><a href="#查看-cgroups-挂载信息" class="headerlink" title="查看 cgroups 挂载信息"></a>查看 cgroups 挂载信息</h4><p>在 ubuntu 16.04 的机器上，cgroups 已经挂载到文件系统上了，可以通过  <code>mount</code> 命令查看：</p>
+<pre><code>➜  ~ mount -t cgroup
+cgroup on /sys/fs/cgroup/systemd type cgroup (rw,nosuid,nodev,noexec,relatime,xattr,release_agent=/lib/systemd/systemd-cgroups-agent,name=systemd)
+cgroup on /sys/fs/cgroup/net_cls,net_prio type cgroup (rw,nosuid,nodev,noexec,relatime,net_cls,net_prio)
+cgroup on /sys/fs/cgroup/cpu,cpuacct type cgroup (rw,nosuid,nodev,noexec,relatime,cpu,cpuacct)
+cgroup on /sys/fs/cgroup/hugetlb type cgroup (rw,nosuid,nodev,noexec,relatime,hugetlb,release_agent=/run/cgmanager/agents/cgm-release-agent.hugetlb)
+cgroup on /sys/fs/cgroup/cpuset type cgroup (rw,nosuid,nodev,noexec,relatime,cpuset,clone_children)
+cgroup on /sys/fs/cgroup/freezer type cgroup (rw,nosuid,nodev,noexec,relatime,freezer)
+cgroup on /sys/fs/cgroup/perf_event type cgroup (rw,nosuid,nodev,noexec,relatime,perf_event,release_agent=/run/cgmanager/agents/cgm-release-agent.perf_event)
+cgroup on /sys/fs/cgroup/pids type cgroup (rw,nosuid,nodev,noexec,relatime,pids,release_agent=/run/cgmanager/agents/cgm-release-agent.pids)
+cgroup on /sys/fs/cgroup/devices type cgroup (rw,nosuid,nodev,noexec,relatime,devices)
+cgroup on /sys/fs/cgroup/blkio type cgroup (rw,nosuid,nodev,noexec,relatime,blkio)
+cgroup on /sys/fs/cgroup/memory type cgroup (rw,nosuid,nodev,noexec,relatime,memory)
+</code></pre><p>如果没有的话，也可以通过以下命令来把想要的 subsystem mount 到系统中：</p>
+<pre><code>$ mount -t cgroup -o cpu,cpuset,memory cpu_and_mem /cgroup/cpu_and_mem
+</code></pre><p>上述命令表示把 cpu、cpuset、memory 三个子资源 mount 到 <code>/cgroup/cpu_and_mem</code> 目录下。</p>
+<p>每个 cgroup 目录下面都会有描述该 cgroup 的文件，除了每个 cgroup 独特的资源控制文件，还有一些通用的文件：</p>
+<ul>
+<li><code>tasks</code>：当前 cgroup 包含的任务（task）pid 列表，把某个进程的 pid 添加到这个文件中就等于把进程移到该 cgroup</li>
+<li><code>cgroup.procs</code>：当前 cgroup 中包含的 thread group 列表，使用逻辑和 <code>tasks</code> 相同</li>
+<li><code>notify_on_release</code>：0 或者 1，是否在 cgroup 销毁的时候执行 notify。如果为 1，那么当这个 cgroup 最后一个任务离开时（退出或者迁移到其他 cgroup），并且最后一个子 cgroup 被删除时，系统会执行 <code>release_agent</code> 中指定的命令</li>
+<li><code>release_agent</code>：需要执行的命令</li>
+</ul>
+<h4 id="创建-cgroup"><a href="#创建-cgroup" class="headerlink" title="创建 cgroup"></a>创建 cgroup</h4><p>创建 cgroup，可以直接用 <code>mkdir</code> 在对应的子资源中创建一个目录：</p>
+<pre><code>➜  ~ mkdir /sys/fs/cgroup/cpu/mycgroup
+➜  ~ ls /sys/fs/cgroup/cpu/mycgroup
+cgroup.clone_children  cpuacct.stat   cpuacct.usage_percpu  cpu.cfs_quota_us  cpu.stat           tasks
+cgroup.procs           cpuacct.usage  cpu.cfs_period_us     cpu.shares        notify_on_release
+</code></pre><p>上面命令在 cpu 子资源中创建了 <code>mycgroup</code>，创建 cgroup 之后，目录中会自动创建需要的文件。我们后面会详细讲解这些文件的含义，目前只需要知道它们能够控制对应子资源就行。</p>
+<h4 id="删除-cgroup"><a href="#删除-cgroup" class="headerlink" title="删除 cgroup"></a>删除 cgroup</h4><p>删除子资源，就是删除对应的目录：</p>
+<pre><code>$ rmdir /sys/fs/cgroup/cpu/mycgroup/
+</code></pre><p>删除之后，如果 tasks 文件中有进程，它们会自动迁移到父 cgroup 中。</p>
+<h4 id="设置-cgroup-参数"><a href="#设置-cgroup-参数" class="headerlink" title="设置 cgroup 参数"></a>设置 cgroup 参数</h4><p>设置 group 的参数就是直接往特定的文件中写入特定格式的内容，比如要限制 cgroup 能够使用的 CPU 核数：</p>
+<pre><code>$ echo 0-1 &gt; /sys/fs/cgroup/cpuset/mycgroup/cpuset.cpus
+</code></pre><h4 id="把进程加入到-cgroup"><a href="#把进程加入到-cgroup" class="headerlink" title="把进程加入到 cgroup"></a>把进程加入到 cgroup</h4><p>要把某个已经运行的进程加入到 cgroup，可以直接往需要的 cgroup tasks 文件中写入进程的 PID：</p>
+<pre><code>$ echo 2358 &gt; /sys/fs/cgroup/memory/mycgroup/tasks
+</code></pre><h4 id="在-cgroup-中运行进程"><a href="#在-cgroup-中运行进程" class="headerlink" title="在 cgroup 中运行进程"></a>在 cgroup 中运行进程</h4><p>如果想直接把进程运行在某个 cgroup，但是运行前还不知道进程的 Pid 应该怎么办呢？</p>
+<p>我们可以利用 cgroup 的继承方式来实现，因为子进程会继承父进程的  cgroup，因此我们可以把当前 shell 加入到要想的 cgroup：</p>
+<pre><code>echo $$ &gt; /sys/fs/cgroup/cpu/mycgroup/tasks
+</code></pre><p>上面的方案有个缺陷，运行完之后原来的 shell 还在 cgroup 中。如果希望进程运行完不影响当前使用的 shell，可以另起一个临时的 shell：</p>
+<pre><code>sh -c &quot;echo \$$ &gt; /sys/fs/cgroup/memory/mycgroup/tasks &amp; &amp; stress -m 1&quot;
+</code></pre><h4 id="把进程移动到-cgroup"><a href="#把进程移动到-cgroup" class="headerlink" title="把进程移动到 cgroup"></a>把进程移动到 cgroup</h4><p>如果想要把进程移动到另外一个 cgroup，只要使用 <code>echo</code> 把进程 PID 写入到 cgroup tasks 文件中即可，原来 cgroup tasks 文件会自动删除该进程。</p>
+<h3 id="cgroup-tools"><a href="#cgroup-tools" class="headerlink" title="cgroup-tools"></a>cgroup-tools</h3><p><code>cgroup-tools</code> 软件包提供了一系列命令可以操作和管理 cgroup，ubuntu 系统中可以通过下面的命令安装：</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> -y cgroup-tools
+</code></pre>
+<h4 id="列出-cgroup-mount-信息"><a href="#列出-cgroup-mount-信息" class="headerlink" title="列出 cgroup mount 信息"></a>列出 cgroup mount 信息</h4><p>最简单的，<code>lssubsys</code> 可以查看系统中存在的 subsystems：</p>
+<pre><code>➜  ~ lssubsys -am
+cpuset /sys/fs/cgroup/cpuset
+cpu,cpuacct /sys/fs/cgroup/cpu,cpuacct
+blkio /sys/fs/cgroup/blkio
+memory /sys/fs/cgroup/memory
+devices /sys/fs/cgroup/devices
+freezer /sys/fs/cgroup/freezer
+net_cls,net_prio /sys/fs/cgroup/net_cls,net_prio
+perf_event /sys/fs/cgroup/perf_event
+hugetlb /sys/fs/cgroup/hugetlb
+pids /sys/fs/cgroup/pids
+</code></pre><h4 id="创建-cgroup-1"><a href="#创建-cgroup-1" class="headerlink" title="创建 cgroup"></a>创建 cgroup</h4><p><code>cgcreate</code> 可以用来为用户创建指定的 cgroups：</p>
+<pre><code>➜  sudo cgcreate -a cizixs -t cizixs -g cpu,memory:test1 
+➜  ls cpu/test1 
+cgroup.clone_children  cpuacct.stat   cpuacct.usage_all     cpuacct.usage_percpu_sys   cpuacct.usage_sys   cpu.cfs_period_us  cpu.shares  notify_on_release
+cgroup.procs           cpuacct.usage  cpuacct.usage_percpu  cpuacct.usage_percpu_user  cpuacct.usage_user  cpu.cfs_quota_us   cpu.stat    tasks
+</code></pre><p>上面的命令表示在 <code>/sys/fs/cgroup/cpu</code> 和 <code>/sys/fs/cgroup/memory</code> 目录下面分别创建 <code>test1</code> 目录，也就是为 cpu 和 memory 子资源创建对应的 cgroup。</p>
+<ul>
+<li>选项 <code>-t</code> 指定 <code>tasks</code> 文件的用户和组，也就是指定哪些人可以把任务添加到 cgroup 中，默认是从父 cgroup 继承</li>
+<li><code>-a</code> 指定除了 <code>tasks</code> 之外所有文件（资源控制文件）的用户和组，也就是哪些人可以管理资源参数</li>
+<li><code>-g</code> 指定要添加的 cgroup，冒号前是逗号分割的子资源类型，冒号后面是 cgroup 的路径（这个路径会添加到对应资源 mount 到的目录后面）。也就是说在特定目录下面添加指定的子资源</li>
+</ul>
+<h4 id="删除-cgroup-1"><a href="#删除-cgroup-1" class="headerlink" title="删除 cgroup"></a>删除 cgroup</h4><p>知道怎么创建，也要知道怎么删除。不然系统中保留着太多用不到的 cgroup 浪费系统资源，也会让管理很麻烦。</p>
+<p><code>cgdelete</code> 可以删除对应的 cgroups，它和 <code>cgcreate</code> 命令类似，可以用 <code>-g</code> 指定要删除的 cgroup：</p>
+<pre><code>➜  cgroup sudo cgdelete -g cpu,memory:test1
+</code></pre><p><code>cgdelete</code> 也提供了 <code>-r</code> 参数可以递归地删除某个 cgroup 以及它所有的子 cgroup。</p>
+<p>如果被删除的 cgroup 中有任务，这些任务会自动移到父 cgroup 中。</p>
+<h4 id="设置-cgroup-的参数"><a href="#设置-cgroup-的参数" class="headerlink" title="设置 cgroup 的参数"></a>设置 cgroup 的参数</h4><p><code>cgset</code> 命令可以设置某个子资源的参数，比如如果要限制某个 cgroup 中任务能使用的 CPU 核数：</p>
+<pre><code>$ cgset -r cpuset.cpus=0-1 /mycgroup
+</code></pre><p><code>-r</code> 后面跟着参数的键值对，每个子资源能够配置的键值对都有自己的规定，我们会在后面详细解释。</p>
+<p><code>cgset</code> 还能够把一个 cgroup 的参数拷贝到另外一个 cgroup 中：</p>
+<pre><code>$ cgset --copy-from group1/ group2/
+</code></pre><p><strong>NOTE</strong>: cgset 如果设置没有成功也不会报错，请一定要注意。</p>
+<h4 id="在某个-cgroup-中运行进程"><a href="#在某个-cgroup-中运行进程" class="headerlink" title="在某个 cgroup 中运行进程"></a>在某个 cgroup 中运行进程</h4><p><code>cgexec</code> 执行某个程序，并把程序添加到对应的 cgroups 中：</p>
+<pre><code>➜  cgroup cgexec -g memory,cpu:cizixs bash
+</code></pre><p>cgroups 是可以有层级结构的，因此可以直接创建具有层级关系的 cgroup，然后运行在该 cgroup 中：</p>
+<pre><code>$ cgcreate -g memory,cpu:groupname/foo
+$ cgexec -g memory,cpu:groupname/foo bash
+</code></pre><h4 id="把已经运行的进程移动到某个-cgroup"><a href="#把已经运行的进程移动到某个-cgroup" class="headerlink" title="把已经运行的进程移动到某个 cgroup"></a>把已经运行的进程移动到某个 cgroup</h4><p>要把某个已经存在的程序（能够知道它的 pid）移到某个 cgroup，可以使用 <code>cgclassify</code> 命令:</p>
+<p>比如把当前 bash shell 移入到特定的 cgroup 中</p>
+<pre><code>$ cgclassify -g memory,cpu:/mycgroup $$
+</code></pre><p><code>$$</code> 表示当前进程的 pid 号，上面命令可以方便地测试一些耗费内存或者 CPU 的进程，如果 /mycgroup 对 CPU 和 memory 做了限制。</p>
+<p>这个命令也可以同时移动多个进程，它们 pid 之间用空格隔开：</p>
+<pre><code>$ cgclassify -g cpu,memory:group1 1701 1138
+</code></pre><h2 id="cgroup-子资源参数详解"><a href="#cgroup-子资源参数详解" class="headerlink" title="cgroup 子资源参数详解"></a>cgroup 子资源参数详解</h2><p>每个 subssytem 负责系统的一部分资源管理，又分别提供多个参数可以控制，每个参数对应一个文件，往文件中写入特定格式的内容就能控制该资源。</p>
+<h3 id="blkio：限制设备-IO-访问"><a href="#blkio：限制设备-IO-访问" class="headerlink" title="blkio：限制设备 IO 访问"></a>blkio：限制设备 IO 访问</h3><p>限制磁盘 IO 有两种方式：权重（weight）和上限（limit）。权重是给不同的应用（或者 cgroup）一个权重值，各个应用按照百分比来使用 IO 资源；上限是直接写死应用读写速率的最大值。</p>
+<p><strong>设置 cgroup 访问设备的权重</strong>：</p>
+<p>设置的权重并不能保证什么，当只有某个应用在读写磁盘时，不管它权重多少，都能使用磁盘。只有当多个应用同时读写磁盘时，才会根据权重为应用分配读写的速率。</p>
+<ul>
+<li><code>blkio.weight</code>：设置 cgroup 读写设备的权重，取值范围在 100-1000</li>
+<li><code>blkio.weight_device</code>：设置 cgroup 使用某个设备的权重。当访问该设备时，它会使用当前值，覆盖 <code>blkio.weight</code> 的值。内容的格式为 <code>major:minor weight</code>，前面是设备的 major 和 minor 编号，用来唯一表示一个设备，后面是 100-1000 之间的整数值。设备号的分配可以参考：<a href="https://www.kernel.org/doc/html/v4.11/admin-guide/devices.html" target="_blank" rel="noopener">https://www.kernel.org/doc/html/v4.11/admin-guide/devices.html</a></li>
+</ul>
+<p><strong>设置 cgroup 访问设备的限制</strong>：</p>
+<p>除了设置权重之外，还能设置 cgroup 磁盘的使用上限，保证 cgroup 中的进程读写磁盘的速率不会超过某个值。</p>
+<ul>
+<li><code>blkio.throttle.read_bps_device</code>：最多每秒钟从设备读取多少字节</li>
+<li><code>blkio.throttle.read_iops_device</code>：最多每秒钟从设备中执行多少次读操作</li>
+<li><code>blkio.throttle.write_bps_device</code>：最多每秒钟可以往设备写入多少字节</li>
+<li><code>blkio.throttle.write_iops_device</code>：最多每秒钟可以往设备执行多少次写操作</li>
+</ul>
+<p>读写字节数的限制格式一样 <code>major:minor bytes_per_second</code>，前面两个数字代表某个设备，后面跟着一个整数，代表每秒读写的字节数，单位为比特，如果需要其他单位（KB、MB等）需要自行转换。比如要限制 <code>/dev/sda</code> 读速率上线为 10 Mbps，可以运行：</p>
+<pre><code>$ echo &quot;8:0 10485760&quot; &gt;
+/sys/fs/cgroup/blkio/mygroup/blkio.throttle.read_bps_device
+</code></pre><p><code>iops</code> 代表 IO per second，是每秒钟执行读写的次数，格式为 <code>major:minor operations_per_second</code>。比如，要限制每秒只能写 10 次，可以运行：</p>
+<pre><code>$ echo &quot;8:0 10&quot; &gt;
+/sys/fs/cgroup/blkio/mygroup/blkio.throttle.write_iops_device
+</code></pre><p>除了限制磁盘使用之外，blkio 还提供了 throttle 规则下磁盘使用的统计数据。</p>
+<ul>
+<li><code>blkio.throttle.io_serviced</code>：cgroup 中进程读写磁盘的次数，文件中内容格式为 <code>major:minor operation number</code>，表示对磁盘进行某种操作（read、write、sync、async、total）的次数</li>
+<li><code>blkio.throttle.io_service_bytes</code>：和上面类似，不过这里保存的是操作传输的字节数</li>
+<li><code>blkio.reset_stats</code>：重置统计数据，往该文件中写入一个整数值即可</li>
+<li><code>blkio.time</code>：统计 cgroup 对各个设备的访问时间，格式为 <code>major:minor milliseconds</code></li>
+<li><code>blkio.io_serviced</code>：CFQ 调度器下，cgroup 对设备的各种操作次数，和 <code>blkio.throttle.io_serviced</code> 刚好相反，所有不是 throttle 下的请求</li>
+<li><code>blkio.io_services_bytes</code>：CFQ 调度器下，cgroup 对各种设备的操作字节数</li>
+<li><code>blkio.sectors</code>：cgroup 中传输的扇区次数，格式为 <code>major:minor sector_count</code></li>
+<li><code>blkio.queued</code>：cgroup IO 请求进队列的次数，格式为 <code>number operation</code></li>
+<li><code>blkio.dequeue</code>：cgroup 的 IO 请求被设备出队列的次数，格式为 <code>major:minor number</code></li>
+<li><code>blkio.avg_queue_size</code>：</li>
+<li><code>blkio.merged</code>：cgroup 把 BIOS 请求合并到 IO 操作请求的次数，格式为 <code>number operation</code></li>
+<li><code>blkio.io_wait_time</code>：cgroup 等待队列服务的时间</li>
+<li><code>blkio.io_service_time</code>：CFQ 调度器下，cgroup 处理请求的时间（从请求开始调度，到 IO 操作完成）</li>
+</ul>
+<h3 id="cpu：限制进程组-CPU-使用"><a href="#cpu：限制进程组-CPU-使用" class="headerlink" title="cpu：限制进程组 CPU 使用"></a>cpu：限制进程组 CPU 使用</h3><p>CPU 子资源可以管理 cgroup 中任务使用 CPU 的行为，任务使用 CPU 资源有两种调度方式：完全公平调度（CFS，Completely Fair Scheduler）和 实时调度（RT，Real-Time Scheduler）。前者可以根据权重为任务分配响应的 CPU 时间片，后者能够限制使用 CPU 的核数。</p>
+<p><strong>CFS 调优参数：</strong></p>
+<p>CFS 调度下，每个 cgroup 都会分配一个权重，但是这个权重并不能保证任务使用 CPU 的具体数据。如果只有一个进程在运行（理论上，现实中机器上不太可能只有一个进程），不管它所在 cgroup 对应的 CPU 权重是多少，都能使用所有的 CPU 资源；在 CPU 资源紧张的情况，内核会根据 cgroup 的权重按照比例分配个给任务各自使用 CPU 的时间片。</p>
+<p>CFS 调度模式下，也可以给 cgroup 分配一个使用上限，限制任务能使用 CPU 的核数。</p>
+<p>设置 CPU 数字的单位都是微秒（microsecond），用 us 表示。</p>
+<ul>
+<li><code>cpu.cfs_quota_us</code>：每个周期 cgroup 中所有任务能使用的 CPU 时间，默认为 <code>-1</code>，表示不限制 CPU 使用。需要配合 <code>cpu.cfs_period_us</code> 一起使用，一般设置为 <code>100000</code>（docker 中设置的值）</li>
+<li><code>cpu.cfs_period_us</code>：每个周期中 cgroup 任务可以使用的时间周期，如果想要限制 cgroup 任务每秒钟使用 0.5 秒 CPU，可以在 <code>cpu.cfs_quota_us</code> 为 <code>100000</code> 的情况下把它设置为 <code>50000</code>。如果它的值比 <code>cfs_quota_us</code> 大，表明进程可以使用多个核 CPU，比如 <code>200000</code> 表示进程能够使用 <code>2.0</code> 核</li>
+<li><code>cpu.stat</code>：CPU 使用的统计数据，<code>nr_periods</code> 表示已经过去的时间周期；<code>nr_throttled</code> 表示 cgroup 中任务被限制使用 CPU 的次数（因为超过了规定的上限）；<code>throttled_time</code> 表示被限制的总时间</li>
+<li><code>cpu.shares</code>：cgroup 使用 CPU 时间的权重值。如果两个 cgroup 的权重都设置为 100，那么它们里面的任务同时运行时，使用 CPU 的时间应该是一样的；如果把其中一个权重改为 200，那么它能使用的 CPU 时间将是对方的两倍。</li>
+</ul>
+<p><strong>RT 调度模式下的参数：</strong></p>
+<p>RT 调度模式下和 CFS 中上限设置类似，区别是它只是限制实时任务的 CPU。</p>
+<ul>
+<li><code>cpu.rt_period_us</code>：设置一个周期时间，表示多久 cgroup 能够重新分配 CPU 资源</li>
+<li><code>cpu.rt_runtime_us</code>：设置运行时间，表示在周期时间内 cgroup 中任务能访问 CPU 的时间。这个限制是针对单个 CPU 核数的，如果是多核，需要乘以对应的核数</li>
+</ul>
+<h3 id="cpuacct：-任务使用-CPU-情况统计"><a href="#cpuacct：-任务使用-CPU-情况统计" class="headerlink" title="cpuacct： 任务使用 CPU 情况统计"></a>cpuacct： 任务使用 CPU 情况统计</h3><p>cpuacct 不做任何资源限制，它的功能是资源统计，自动地统计 cgroup 中任务对 CPU 资源的使用情况，统计数据也包括子 cgroup 中的任务。</p>
+<ul>
+<li><code>cpuacct.usage</code>：该 cgroup 中所有任务（包括子 cgroup 中的任务，下同）总共使用 CPU 的时间，单位是纳秒（ns）。往文件中写入 <code>0</code> 可以重置统计数据</li>
+<li><code>cpuacct.stat</code>：该 cgroup 中所有任务使用 CPU 的user 和 system 时间，也就是用户态 CPU 时间和内核态 CPU 时间</li>
+<li><code>cpuacct.usage_percpu</code>：该 cgroup 中所有任务使用各个 CPU 核数的时间，单位为纳秒（ns）</li>
+</ul>
+<h3 id="cpuset-cpu-绑定"><a href="#cpuset-cpu-绑定" class="headerlink" title="cpuset: cpu 绑定"></a>cpuset: cpu 绑定</h3><p>除了限制 CPU 的使用量，cgroup 还能把任务绑定到特定的 CPU，让它们只运行在这些 CPU 上，这就是 <code>cpuset</code> 子资源的功能。除了 CPU 之外，还能绑定内存节点（memory node）。</p>
+<p><strong>NOTE：</strong>在把任务加入到 cpuset 的 task 文件之前，用户必须设置 <code>cpuset.cpus</code> 和 <code>cpuset.mems</code> 参数。</p>
+<ul>
+<li><code>cpuset.cpus</code>：设置 cgroup 中任务能使用的 CPU，格式为逗号（<code>,</code>）隔开的列表，减号（<code>-</code>）可以表示范围。比如，<code>0-2,7</code> 表示 CPU 第 0，1，2，和 7 核。</li>
+<li><code>cpuset.mems</code>：设置 cgroup 中任务能使用的内存节点，和 <code>cpuset.cpus</code> 格式一样</li>
+</ul>
+<p>上面两个是最常用的参数，<code>cpuset</code> 中有很多其他参数，需要对 CPU 调度机制有深入的了解，很少用到，而且我也不懂，所以就不写了，具体可以参考参考文档中 RedHat 网站。</p>
+<h3 id="memory：限制内存使用"><a href="#memory：限制内存使用" class="headerlink" title="memory：限制内存使用"></a>memory：限制内存使用</h3><p>memory 子资源系统能限制 cgroup 中任务对内存的使用，也能生成它们使用数据的报告。</p>
+<p><strong>控制内存使用：</strong></p>
+<ul>
+<li><code>memory.limit_in_bytes</code>：cgroup 能使用的内存上限值，默认为字节；也可以添加 <code>k/K</code>、<code>m/M</code> 和 <code>g/G</code> 单位后缀。往文件中写入 <code>-1</code> 来移除设置的上限，表示不对内存做限制</li>
+<li><code>memory.memsw.limit_in_bytes</code>：cgroup 能使用的内存加 swap 上限，用法和上面一样。写入 <code>-1</code> 来移除上限</li>
+<li><code>memory.failcnt</code>：任务使用内存量达到 <code>limit_in_bytes</code> 上限的次数</li>
+<li><code>memory.memsw.failcnt</code>：任务使用内存加 swap 量达到 <code>memsw.limit_in_bytes</code> 上限的次数</li>
+<li><code>memory.soft_limit_in_bytes</code>：设置内存软上限。如果内存充足， cgroup 中的任务可以用到 <code>memory.limit_in_bytes</code> 设定的内存上限；当时当内存资源不足时，内核会让任务使用的内存不超过 <code>soft_limit_in_bytes</code> 中的值。文件内容的格式和 <code>limit_in_bytes</code> 一样</li>
+<li><code>memory.swappiness</code>：设置内核 swap out 进程内存（而不是从 page cache 中回收页） 的倾向。默认值为 60，低于 60 表示降低倾向，高于 60 表示增加倾向；如果值高于 100，表示允许内核 swap out 进程地址空间的页。如果值为 0 表示倾向很低，而不是禁止该行为。</li>
+</ul>
+<p><strong>OOM 操作：</strong></p>
+<p>OOM 是 out of memory 的缩写，可以翻译成内存用光。cgroup 可以控制内存用完之后应该怎么处理进程，默认情况下，用光内存的进程会被杀死。</p>
+<p><code>memory.oom_control</code>：是否启动 OOM killer，如果启动（值为 0，是默认情况）超过内存限制的进程会被杀死；如果不启动（值为 1），使用超过限定内存的进程不会被杀死，而是被暂停，直到它释放了内存能够被继续使用。</p>
+<p><strong>统计内存使用情况：</strong></p>
+<ul>
+<li><code>memory.stat</code>：汇报内存的使用情况，里面的数据包括：<ul>
+<li><code>cache</code>：页缓存（page cache）字节数，包括 tmpfs（shmem）</li>
+<li><code>rss</code>：匿名和 swap cache 字节数，不包括 tmpfs</li>
+<li><code>mapped_file</code>：内存映射（memory-mapped）的文件大小，包括 tmpfs，单位是字节</li>
+<li><code>pgpgin</code>: paged into 内存的页数</li>
+<li><code>pgpgout</code>：paged out 内存的页数</li>
+<li><code>swap</code>：使用的 swap 字节数</li>
+<li><code>active_anon</code>：活跃的 LRU 列表中匿名和 swap 缓存的字节数，包括 tmpfs</li>
+<li><code>inactive_anon</code>：不活跃的 LRU 列表中匿名和 swap 缓存的字节数，包括 tmpfs</li>
+<li><code>active_file</code>：活跃 LRU 列表中文件支持的（file-backed）的内存字节数</li>
+<li><code>inactive_file</code>：不活跃列表中文件支持的（file-backed）的内存字节数</li>
+<li><code>unevictable</code>：不可以回收的内存字节数</li>
+</ul>
+</li>
+<li><code>memory.usage_in_bytes</code>：cgroup 中进程当前使用的总内存字节数</li>
+<li><code>memory.memsw.usage_in_bytes</code>：cgroup 中进程当前使用的总内存加上总 swap 字节数</li>
+<li><code>memory.max_usage_in_bytes</code>：cgroup 中进程使用的最大内存字节数</li>
+<li><code>memory.memsw.max_usage_in_bytes</code>：cgroup 中进程使用的最大内存加 swap 字节数</li>
+</ul>
+<h3 id="net-cls：为网络报文分类"><a href="#net-cls：为网络报文分类" class="headerlink" title="net_cls：为网络报文分类"></a>net_cls：为网络报文分类</h3><p><code>net_cls</code> 子资源能够给网络报文打上一个标记（classid），这样内核的 tc（traffic control）模块就能根据这个标记做流量控制。</p>
+<p><code>net_cls.classid</code>：包含一个整数值。从文件中读取是的十进制，写入的时候需要是十六进制。比如，<code>0x100001</code> 写入到文件中，读取的将是 <code>1048577</code>， <code>ip</code> 命令操作的形式为 <code>10:1</code>。</p>
+<p>这个值的格式为 <code>0xAAAABBBB</code>，一共 32 位，分成前后两个部分，前置的 0 可以忽略，因此 <code>0x10001</code> 和 <code>0x00010001</code> 一样，表示为 <code>1:1</code>。</p>
+<h3 id="net-prio：网络报文优先级"><a href="#net-prio：网络报文优先级" class="headerlink" title="net_prio：网络报文优先级"></a>net_prio：网络报文优先级</h3><p><code>net_prio</code>（Network Priority）子资源能够动态设置 cgroup 中应用在网络接口的优先级。网络优先级是报文的一个属性值，<code>tc</code>可以设置网络的优先级，socket 也可以通过 <code>SO_PRIORITY</code> 选项设置它（但是很少应用会这么做）。</p>
+<ul>
+<li><code>net_prio.prioidx</code>：只读文件，里面包含了一个整数值，内核用来标识这个 cgroup</li>
+<li><code>net_prio.ifpriomap</code>：网络接口的优先级，里面可以包含很多行，用来为从网络接口中发出去的报文设置优先级。每行的格式为 <code>network_interface priority</code>，比如 <code>echo &quot;eth0 5&quot; &gt; /sys/fs/cgroup/net_prio/mycgroup/net_prio.ifpriomap</code></li>
+</ul>
+<h3 id="devices：设备黑白名单"><a href="#devices：设备黑白名单" class="headerlink" title="devices：设备黑白名单"></a>devices：设备黑白名单</h3><p>device 子资源可以允许或者阻止 cgroup 中的任务访问某个设备，也就是黑名单和白名单的作用。</p>
+<ul>
+<li><code>devices.allow</code>：cgroup 中的任务能够访问的设备列表，格式为 <code>type major:minor access</code>，<ul>
+<li><code>type</code> 表示类型,可以为 <code>a</code>(all), <code>c</code>(char), <code>b</code>(block）</li>
+<li><code>major:minor</code> 代表设备编号，两个标号都可以用<code>*</code> 代替表示所有，比如 <code>*:*</code> 代表所有的设备</li>
+<li><code>accss</code> 表示访问方式，可以为 <code>r</code>(read),<code>w</code>(write), <code>m</code>(mknod) 的组合</li>
+</ul>
+</li>
+<li><code>devices.deny</code>：cgroup 中任务不能访问的设备，和上面的格式相同</li>
+<li><code>devices.list</code>：列出 cgroup 中设备的黑名单和白名单</li>
+</ul>
+<h3 id="freezer"><a href="#freezer" class="headerlink" title="freezer"></a>freezer</h3><p><code>freezer</code> 子资源比较特殊，它并不和任何系统资源相关，而是能暂停和恢复 cgroup 中的任务。</p>
+<ul>
+<li><code>freezer.state</code>：这个文件值存在于非根 cgroup 中（因为所有的任务默认都在根 cgroup 中，停止所有的任务显然是错误的行为），里面的值表示 cgroup 中进程的状态：<ul>
+<li><code>FROZEN</code>：cgroup 中任务都被挂起（暂停）</li>
+<li><code>FREEZING</code>：cgroup 中任务正在被挂起的过程中</li>
+<li><code>THAWED</code>：cgroup 中的任务已经正常恢复</li>
+</ul>
+</li>
+</ul>
+<p>要想挂起某个进程，需要先把它移动到某个有 freezer 的 cgroup 中，然后 Freeze 这个 cgroup。</p>
+<p><strong>NOTE:</strong>如果某个 cgroup 处于挂起状态，不能往里面添加任务。用户可以写入 <code>FROZEN</code> 和 <code>THAWED</code> 来控制进程挂起和恢复，<code>FREEZING</code> 不受用户控制。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>cgroup 提供了强大的功能，能够让我们控制应用的资源使用情况，也能统计资源使用数据，是容器技术的基础。但是 cgroup 整个系统也很复杂，甚至显得有些混乱，目前 cgroup 整个在被重写，新的版本被称为 cgroup V2，而之前的版本也就被称为了 V1。</p>
+<p>cgroup 本身并不提供对网络资源的使用控制，只能添加简单的标记和优先级，具体的控制需要借助 linux 的 TC 模块来实现。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="http://events.linuxfoundation.org/sites/events/files/slides/cgroups_0.pdf" target="_blank" rel="noopener">An introduction to cgroups and cgroupspy</a></li>
+<li><a href="http://www.novell.com/feeds/nih/wp-content/uploads/2012/05/SUS15_lec.pdf" target="_blank" rel="noopener">LXC, Cgroups and Advanced Linux Container Technology Lecture</a></li>
+<li><a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Resource_Management_Guide/ch-Subsystems_and_Tunable_Parameters.html" target="_blank" rel="noopener">redhat doc:Subsystems and Tunable Parameters</a></li>
+<li><a href="http://www.infoq.com/cn/articles/docker-kernel-knowledge-cgroups-resource-isolation" target="_blank" rel="noopener">Docker背后的内核知识——cgroups资源限制</a></li>
+<li><a href="http://www.infoq.com/cn/articles/docker-resource-management-cgroups" target="_blank" rel="noopener">Docker资源管理探秘：Docker背后的内核Cgroups机制</a></li>
+<li><a href="https://www.kernel.org/doc/Documentation/cgroup-v1/cgroups.txt" target="_blank" rel="noopener">Linux 内核 cgroups 简介</a></li>
+<li><a href="http://files.cnblogs.com/files/lisperl/cgroups%E4%BB%8B%E7%BB%8D.pdf" target="_blank" rel="noopener">王喆锋： Linux Cgroups 详解</a></li>
+<li><a href="http://events.linuxfoundation.org/sites/events/files/slides/2014-KLF.pdf" target="_blank" rel="noopener">Linux Cgroups V2 设计</a></li>
+<li><a href="https://lwn.net/Articles/679786/" target="_blank" rel="noopener">Understanding the new control groups API</a></li>
+<li><a href="http://www.haifux.org/lectures/299/netLec7.pdf" target="_blank" rel="noopener">Resource Management: Linux Kernel Namespaces and cgroups – Rami Rosen</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Cgroups" target="_blank" rel="noopener">wikipedia cgroups page</a></li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="docker 容器基础技术：linux namespace 简介" href="/2017/08/29/linux-namespace/">
+        ← docker 容器基础技术：linux namespace 简介
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="docker 容器网络下 UDP 协议的一个问题" href="/2017/08/21/docker-udp-issue/">
+        docker 容器网络下 UDP 协议的一个问题 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#cgroups-核心概念"><span class="toc-text">cgroups 核心概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#子资源系统（Resource-Classes-or-SubSystem）"><span class="toc-text">子资源系统（Resource Classes or SubSystem）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hierarchy"><span class="toc-text">Hierarchy</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用-cgroups"><span class="toc-text">使用 cgroups</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#直接操作-cgroup-文件系统"><span class="toc-text">直接操作 cgroup 文件系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#查看-cgroups-挂载信息"><span class="toc-text">查看 cgroups 挂载信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建-cgroup"><span class="toc-text">创建 cgroup</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#删除-cgroup"><span class="toc-text">删除 cgroup</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#设置-cgroup-参数"><span class="toc-text">设置 cgroup 参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#把进程加入到-cgroup"><span class="toc-text">把进程加入到 cgroup</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在-cgroup-中运行进程"><span class="toc-text">在 cgroup 中运行进程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#把进程移动到-cgroup"><span class="toc-text">把进程移动到 cgroup</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cgroup-tools"><span class="toc-text">cgroup-tools</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#列出-cgroup-mount-信息"><span class="toc-text">列出 cgroup mount 信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建-cgroup-1"><span class="toc-text">创建 cgroup</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#删除-cgroup-1"><span class="toc-text">删除 cgroup</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#设置-cgroup-的参数"><span class="toc-text">设置 cgroup 的参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在某个-cgroup-中运行进程"><span class="toc-text">在某个 cgroup 中运行进程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#把已经运行的进程移动到某个-cgroup"><span class="toc-text">把已经运行的进程移动到某个 cgroup</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cgroup-子资源参数详解"><span class="toc-text">cgroup 子资源参数详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#blkio：限制设备-IO-访问"><span class="toc-text">blkio：限制设备 IO 访问</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cpu：限制进程组-CPU-使用"><span class="toc-text">cpu：限制进程组 CPU 使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cpuacct：-任务使用-CPU-情况统计"><span class="toc-text">cpuacct： 任务使用 CPU 情况统计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cpuset-cpu-绑定"><span class="toc-text">cpuset: cpu 绑定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#memory：限制内存使用"><span class="toc-text">memory：限制内存使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#net-cls：为网络报文分类"><span class="toc-text">net_cls：为网络报文分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#net-prio：网络报文优先级"><span class="toc-text">net_prio：网络报文优先级</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#devices：设备黑白名单"><span class="toc-text">devices：设备黑白名单</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#freezer"><span class="toc-text">freezer</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">docker 容器基础技术：linux cgroup 简介</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

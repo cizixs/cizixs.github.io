@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>docker 容器网络下 UDP 协议的一个问题 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="docker 容器网络下 UDP 协议的一个问题 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2017/08/21/docker-udp-issue/">
+
+	
+	<meta property="article:published_time" content="2017-08-21T00:08:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2017/08/21/docker-udp-issue/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2017-08-20T16:00:00.000Z" itemprop="datePublished">
+                    2017-08-21
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">docker 容器网络下 UDP 协议的一个问题</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p>最近在工作中遇到一个 docker 容器下 UDP 协议网络不通的问题，困扰了很久，也比较有意思，所以想写下来和大家分享。</p>
+<p>我们有个应用是 UDP 协议的，部署上去发现无法工作，但是换成 TCP 协议是可以的（应用同时支持 UDP、TCP 协议，切换成 TCP 模式发现一切正常）。虽然换成 TCP 能解决问题，但是我们还是想知道到底 UDP 协议在网络模式下为什么会出现这个问题，以防止后面其他 UDP 应用会有异常。</p>
+<p>这个问题抽象出来是这样的：如果有 UDP 服务运行在主机上（或者运行在网络模型为 Host 的容器里），并且监听在 <code>0.0.0.0</code> 地址（也就是所有的 ip 地址），从运行在 docker bridge 网络的容器运行客户端访问服务，两者通信有问题。</p>
+<p>注意以上的的限制条件，通过测试，我们发现下来几种情况都是正常的：</p>
+<ul>
+<li>使用 TCP 协议没有这个问题，这个已经说过了</li>
+<li>如果 UDP 服务器监听在 eth0 IP 地址上也不会出现这个问题</li>
+<li>并不是所有的应用都有这个问题，我们的 DNS（dnsmasq + kubeDNS） 也是同样的部署方式，但是功能都正常</li>
+</ul>
+<p>这个问题在 docker 上也有 issue 记录：<a href="https://github.com/moby/moby/issues/15127，但是目前并没有合理的解决方案。" target="_blank" rel="noopener">https://github.com/moby/moby/issues/15127，但是目前并没有合理的解决方案。</a></p>
+<p>这篇文章就分析一下出现这个问题的原因，希望给同样遇到这个问题的读者提供些帮助。</p>
+<h2 id="问题重现"><a href="#问题重现" class="headerlink" title="问题重现"></a>问题重现</h2><p>这个问题很容易重现，我的实验是在 ubuntu16.04 下用 <code>netcat</code> 命令完成的，其他系统应该类似。在主机上通过 nc 监听 56789 端口，然后在容器里使用 <code>nc</code> 发数据。第一个报文是能发送出去的，但是以后的报文虽然在网络上能看到，但是对方无法接收。</p>
+<p>在主机上运行 nc UDP 服务器（<code>-u</code> 表示 UDP 协议，<code>-l</code> 表示监听的端口）</p>
+<pre><code>$ nc -ul 56789
+</code></pre><p>然后启动一个容器，运行客户端：</p>
+<pre><code>$ docker run -it apline sh
+/ # nc -u 172.16.13.13 56789
+</code></pre><p>nc 的通信是双方的，不管对方输入什么字符，回车后对方就能立即收到。但是在这个模式下，客户端第一次输入对方能够收到，后续的报文对方都收不到。</p>
+<p>在这个实验中，容器使用的是 docker 的默认网络，容器的 ip 是 172.17.0.3，通过 veth pair（图中没有显示）连接到虚拟网桥 docker0（ip 地址为 172.17.0.1），主机本身的网络为 eth0，其 ip 地址为 172.16.13.13。</p>
+<pre><code> 172.17.0.3
++----------+
+|   eth0   |
++----+-----+
+     |
+     |
+     |
+     |
++----+-----+          +----------+
+| docker0  |          |  eth0    |
++----------+          +----------+
+172.17.0.1            172.16.13.13
+
+</code></pre><h2 id="tcpdump-抓包"><a href="#tcpdump-抓包" class="headerlink" title="tcpdump 抓包"></a>tcpdump 抓包</h2><p>遇到这种疑难杂症，第一个想到的抓包，我们需要在 docker0 上抓包，因为这是报文必经过的地方。通过过滤容器的 ip 地址，很容器找到感兴趣的报文：</p>
+<pre><code>$ tcpdump -i docker0 -nn host 172.17.0.3
+</code></pre><p>为了模拟多数应用一问一答的通信方式，我们一共发送三个报文，并用 tcpdump 抓取 docker0 接口上的报文：</p>
+<ol>
+<li>客户端先向服务器端发送 <code>hello</code> 字符串</li>
+<li>服务器端回复 <code>world</code> </li>
+<li>客户端继续发送 <code>hi</code> 消息</li>
+</ol>
+<p>抓包的结果如下，可以发现第一个报文发送出去没有任何问题（因为 UDP 是没有 ACK 报文的，所以客户端无法知道对方有没有收到，这里说的没有问题是值没有对应的 ICMP 报文），但是第二个报文从服务端发送的报文，对方会返回一个 <code>ICMP</code> 告诉端口 38908 不可达；第三个报文从客户端发送的报文也是如此。以后的报文情况类似，双方再也无法进行通信了。</p>
+<pre><code>11:20:43.973286 IP 172.17.0.3.38908 &gt; 172.16.13.13.56789: UDP, length 6
+11:20:50.102018 IP 172.17.0.1.56789 &gt; 172.17.0.3.38908: UDP, length 6
+11:20:50.102129 IP 172.17.0.3 &gt; 172.17.0.1: ICMP 172.17.0.3 udp port 38908 unreachable, length 42
+11:20:54.503198 IP 172.17.0.3.38908 &gt; 172.16.13.13.56789: UDP, length 3
+11:20:54.503242 IP 172.16.13.13 &gt; 172.17.0.3: ICMP 172.16.13.13 udp port 56789 unreachable, length 39
+</code></pre><p>而此时主机上 UDP nc 服务器并没有退出，使用 <code>lsof -i :56789</code> 可能看到它仍然在监听着该端口。</p>
+<h2 id="问题原因"><a href="#问题原因" class="headerlink" title="问题原因"></a>问题原因</h2><p>从网络报文的分析中可以看到服务端返回的报文源地址不是我们预想的 eth0 地址，而是 docker0 的地址，而客户端直接认为该报文是非法的，返回了 ICMP 的报文给对方。</p>
+<p>那么问题的原因也可以分为两个部分：</p>
+<ol>
+<li>为什么应答报文源地址是<strong>错误的</strong>？</li>
+<li>既然 UDP 是无状态的，内核怎么判断源地址不正确呢？</li>
+</ol>
+<h3 id="主机多网络接口-UDP-源地址选择问题"><a href="#主机多网络接口-UDP-源地址选择问题" class="headerlink" title="主机多网络接口 UDP 源地址选择问题"></a>主机多网络接口 UDP 源地址选择问题</h3><p>第一个问题的关键词是：UDP 和多网络接口。因为如果主机上只有一个网络接口，发出去的报文源地址一定不会有错；而我们也测试过 TCP 协议是能够处理这个问题的。</p>
+<p>通过搜索，发现这确实是个已知的问题。在 UNP（） 这本书中，已经描述过这个问题，下面是对应的内容：</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tKfTcgy1fiqmdohed0j31kw1je1kl.jpg" alt=""></p>
+<p>这个问题可以归结为一句话：UDP 在多网卡的情况下，可能会发生服务器端源地址不对的情况，这是内核选路的结果。<br>为什么 UDP 和 TCP 有不同的选路逻辑呢？因为 UDP 是无状态的协议，内核不会保存连接双方的信息，因此每次发送的报文都认为是独立的，socket 层每次发送报文默认情况不会指明要使用的源地址，只是说明对方地址。因此，内核会为要发出去的报文选择一个 ip，这通常都是报文路由要经过的设备 ip 地址。</p>
+<p>有了这个原因，还要解释一下问题：<strong>为什么 dnsmasq 服务没有这个问题呢</strong>？因此我使用 <code>strace</code> 工具抓取了 dnsmasq 和出问题应用的网络 socket 系统调用，来查看它们两个到底有什么区别。</p>
+<p>dnsmasq 在启动阶段监听了 UDP 和 TCP 的 54 端口（因为是在本地机器上测试的，为了防止和本地 DNS 监听的<br>DNS端口冲突，我选择了 54 而不是标准的 53 端口）：</p>
+<pre><code>socket(PF_INET, SOCK_DGRAM, IPPROTO_IP) = 4
+setsockopt(4, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+bind(4, {sa_family=AF_INET, sin_port=htons(54), sin_addr=inet_addr(&quot;0.0.0.0&quot;)}, 16) = 0
+setsockopt(4, SOL_IP, IP_PKTINFO, [1], 4) = 0
+
+socket(PF_INET, SOCK_STREAM, IPPROTO_IP) = 5
+setsockopt(5, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+bind(5, {sa_family=AF_INET, sin_port=htons(54), sin_addr=inet_addr(&quot;0.0.0.0&quot;)}, 16) = 0
+listen(5, 5)                            = 0
+</code></pre><p>比起 TCP，UDP 部分少了 <code>listen</code>，但是多个 <code>setsockopt(4, SOL_IP, IP_PKTINFO, [1], 4)</code> 这句。到底这两点和我们的问题是否有关，先暂时放着，继续看传输报文的部分。</p>
+<p>dnsmasq 收包和发包的系统调用，直接使用 <code>recvmsg</code> 和 <code>sendmsg</code> 系统调用：</p>
+<pre><code>recvmsg(4, {msg_name(16)={sa_family=AF_INET, sin_port=htons(52072), sin_addr=inet_addr(&quot;10.111.59.4&quot;)}, msg_iov(1)=[{&quot;\315\n\1 \0\1\0\0\0\0\0\1\fterminal19-0\5u5016\3&quot;..., 4096}], msg_controllen=32, {cmsg_len=28, cmsg_level=SOL_IP, cmsg_type=, ...}, msg_flags=0}, 0) = 67
+
+sendmsg(4, {msg_name(16)={sa_family=AF_INET, sin_port=htons(52072), sin_addr=inet_addr(&quot;10.111.59.4&quot;)}, msg_iov(1)=[{&quot;\315\n\201\200\0\1\0\1\0\0\0\1\fterminal19-0\5u5016\3&quot;..., 83}], msg_controllen=28, {cmsg_len=28, cmsg_level=SOL_IP, cmsg_type=, ...}, msg_flags=0}, 0) = 83
+</code></pre><p>而出问题的应用 <code>strace</code> 结果如下：</p>
+<pre><code>[pid   477] socket(PF_INET6, SOCK_DGRAM, IPPROTO_IP) = 124
+[pid   477] setsockopt(124, SOL_IPV6, IPV6_V6ONLY, [0], 4) = 0
+[pid   477] setsockopt(124, SOL_IPV6, IPV6_MULTICAST_HOPS, [1], 4) = 0
+[pid   477] bind(124, {sa_family=AF_INET6, sin6_port=htons(6088), inet_pton(AF_INET6, &quot;::&quot;, &amp;sin6_addr), sin6_flowinfo=0, sin6_scope_id=0}, 28) = 0
+
+[pid   477] getsockname(124, {sa_family=AF_INET6, sin6_port=htons(6088), inet_pton(AF_INET6, &quot;::&quot;, &amp;sin6_addr), sin6_flowinfo=0, sin6_scope_id=0}, [28]) = 0
+[pid   477] getsockname(124, {sa_family=AF_INET6, sin6_port=htons(6088), inet_pton(AF_INET6, &quot;::&quot;, &amp;sin6_addr), sin6_flowinfo=0, sin6_scope_id=0}, [28]) = 0
+
+[pid   477] recvfrom(124, &quot;j\201\2450\201\242\241\3\2\1\5\242\3\2\1\n\243\0160\f0\n\241\4\2\2\0\225\242\2\4\0&quot;..., 2048, 0, {sa_family=AF_INET6, sin6_port=htons(38790), inet_pton(AF_INET6, &quot;::ffff:172.17.0.3&quot;, &amp;sin6_addr), sin6_flowinfo=0, sin6_scope_id=0}, [28]) = 168
+
+[pid   477] sendto(124, &quot;k\202\2\0210\202\2\r\240\3\2\1\5\241\3\2\1\v\243\5\33\3TDH\244\0220\20\240\3\2&quot;..., 533, 0, {sa_family=AF_INET6, sin6_port=htons(38790), inet_pton(AF_INET6, &quot;::ffff:172.17.0.3&quot;, &amp;sin6_addr), sin6_flowinfo=0, sin6_scope_id=0}, 28) = 533
+</code></pre><p>其对应的逻辑是这样的：使用 ipv6 绑定在 <code>0.0.0.0</code> 和 6088 端口，调用 <code>getsockname</code> 获取当前 socket 绑定的端口信息，数据传输过程使用的是 <code>recvfrom</code> 和 <code>sendto</code>。</p>
+<p>对比下来，两者的不同有几点：</p>
+<ul>
+<li>后者使用的是 ipv6，而前者是 ipv4</li>
+<li>后者使用 <code>recvfrom</code> 和 <code>sendto</code> 传输数据，而前者是 <code>sendmsg</code> 和 <code>recvmsg</code></li>
+<li>前者有调用 <code>setsockopt</code> 设置 <code>IP_PKTINFO</code> 的值，而后者没有</li>
+</ul>
+<p>因为是在传输数据的时候出错的，因此第一个疑点是 <code>sendmsg</code>  和 <code>sendto</code> 的某些区别导致选择源地址有不同，通过 <code>man sendto</code> 可以知道 <code>sendmsg</code> 包含了更多的控制信息在 <code>msghdr</code>。一个合理的猜测是 <code>msghdr</code> 中包含了内核选择源地址的信息！</p>
+<p>通过查找，发现 <code>IP_PKTINFO</code> 这个选项就是让内核在 socket 中保存 IP 报文的信息，当然也包括了报文的源地址和目的地址。<code>IP_PKTINFO</code> 和 <code>msghdr</code> 的关系可以在这个 stackoverflow 中找到：<a href="https://stackoverflow.com/questions/3062205/setting-the-source-ip-for-a-udp-socket。" target="_blank" rel="noopener">https://stackoverflow.com/questions/3062205/setting-the-source-ip-for-a-udp-socket。</a></p>
+<p>而 <code>man 7 ip</code> 文档中也说明了 <code>IP_PKTINFO</code> 是怎么控制源地址选择的：</p>
+<pre><code>IP_PKTINFO (since Linux 2.2)
+              Pass  an  IP_PKTINFO  ancillary message that contains a pktinfo structure that supplies some information about the incoming packet.  This only works for datagram ori‐
+              ented sockets.  The argument is a flag that tells the socket whether the IP_PKTINFO message should be passed or not.  The message itself can only be sent/retrieved as
+              control message with a packet using recvmsg(2) or sendmsg(2).
+
+                  struct in_pktinfo {
+                      unsigned int   ipi_ifindex;  /* Interface index */
+                      struct in_addr ipi_spec_dst; /* Local address */
+                      struct in_addr ipi_addr;     /* Header Destination
+                                                      address */
+                  };
+
+              ipi_ifindex  is the unique index of the interface the packet was received on.  ipi_spec_dst is the local address of the packet and ipi_addr is the destination address
+              in the packet header.  If IP_PKTINFO is passed to sendmsg(2) and ipi_spec_dst is not zero, then it is used as the local source address for the  routing  table  lookup
+              and  for  setting up IP source route options.  When ipi_ifindex is not zero, the primary local address of the interface specified by the index overwrites ipi_spec_dst
+              for the routing table lookup.
+</code></pre><p>如果 <code>ipi_spec_dst</code> 和 <code>ipi_ifindex</code> 不为空，它们都能作为源地址选择的依据，而不是让内核通过路由决定。</p>
+<p>也就是说，通过设置 <code>IP_PKTINFO</code> socket 选项为 1，然后使用 <code>recvmsg</code> 和 <code>sendmsg</code> 传输数据就能保证源地址选择符合我们的期望。这也是 dnsmasq 使用的方案，而出问题的应用是因为使用了默认的 <code>recvfrom</code> 和 <code>sendto</code>。</p>
+<h3 id="关于-UDP-连接的疑惑"><a href="#关于-UDP-连接的疑惑" class="headerlink" title="关于 UDP 连接的疑惑"></a>关于 UDP 连接的疑惑</h3><p>另外一个疑惑是：为什么内核会把源地址和之前不同的报文丢弃？认为它是非法的？因为我们前面已经说过，UDP 协议是无连接的，默认情况下 socket 也不会保存双方连接的信息。即使服务端发送报文的源地址有误，只要对方能正常接收并处理，也不会导致网络不通。</p>
+<p>因为 conntrack，内核的 netfilter 模块会保存连接的状态，并作为防火墙设置的依据。它保存的 UDP 连接，只是简单记录了主机上本地 ip 和端口，和对端 ip 和端口，并不会保存更多的内容。</p>
+<p>可以参考 intables info 网站的文章：<a href="http://www.iptables.info/en/connection-state.html#UDPCONNECTIONS。" target="_blank" rel="noopener">http://www.iptables.info/en/connection-state.html#UDPCONNECTIONS。</a></p>
+<p>在找到根源之前，我们曾经尝试过用 SNAT 来修改服务端应答报文的源地址，期望能够修复该问题。但是却发现这种方法行不通，为什么呢？</p>
+<p>因为 SNAT 是在 netfilter 最后做的，在之前 netfilter 的 conntrack 因为不认识该 connection，直接丢弃了，所以即使添加了 SNAT 也是无法工作的。</p>
+<p>那能不能把 conntrack 功能去掉呢？比如解决方案：</p>
+<pre><code>iptables -I OUTPUT -t raw -p udp --sport 5060 -j CT --notrack
+iptables -I PREROUTING -t raw -p udp --dport 5060 -j CT --notrack
+</code></pre><p>答案也是否定的，因为 NAT 需要 conntrack 来做翻译工作，如果去掉 conntrack 等于 SNAT 完全没用。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>知道了问题的原因，解决方案也就很容易找到。</p>
+<h3 id="使用-TCP-协议"><a href="#使用-TCP-协议" class="headerlink" title="使用 TCP 协议"></a>使用 TCP 协议</h3><p>如果服务端和客户端使用 TCP 协议进行通信，它们之间的网络是正常的。</p>
+<pre><code>$ nc -l 56789
+</code></pre><h3 id="监听在特定端口"><a href="#监听在特定端口" class="headerlink" title="监听在特定端口"></a>监听在特定端口</h3><p>使用 nc 启动一个 udp 服务器，监听在 eth0 上：</p>
+<pre><code>➜  ~ nc -ul 172.16.13.13 56789
+</code></pre><p><code>nc</code> 可以跟两个参数，分别代表 ip 和 端口，表示服务端监听在某个特定 ip 上。如果接收到的报文目的地址不是 172.16.13.13，也会被内核直接丢弃。</p>
+<p>这种情况下，服务端和客户端也能正常通信。</p>
+<h3 id="改动应用程序实现"><a href="#改动应用程序实现" class="headerlink" title="改动应用程序实现"></a>改动应用程序实现</h3><p>修改应用程序的逻辑，在 UDP socket 上设置 <code>IP_PKTIFO</code>，并通过 <code>recvmsg</code> 和 <code>sendmsg</code> 函数传输数据。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="http://etherealmind.com/ipv6-which-address-multiple-ipv6-address-default-address-selection/" target="_blank" rel="noopener">IPv6:Which Source Address is used when you have many IPv6 addresses ? Default Address Selection</a></li>
+<li><a href="https://blog.powerdns.com/2012/10/08/on-binding-datagram-udp-sockets-to-the-any-addresses/" target="_blank" rel="noopener">powerDNS blog: on binding datagram udp sockets to the any address</a></li>
+<li><a href="https://www.ietf.org/rfc/rfc3542.txt" target="_blank" rel="noopener">RFC3542: IPV6 source address selection</a></li>
+<li><a href="https://stackoverflow.com/questions/23859164/linux-udp-socket-sendto-operation-not-permitted" target="_blank" rel="noopener">linux udp socket sendto operation not permitted</a></li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="docker 容器基础技术：linux cgroup 简介" href="/2017/08/25/linux-cgroup/">
+        ← docker 容器基础技术：linux cgroup 简介
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="使用 docker 对容器资源进行限制" href="/2017/08/04/docker-resources-limit/">
+        使用 docker 对容器资源进行限制 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题重现"><span class="toc-text">问题重现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tcpdump-抓包"><span class="toc-text">tcpdump 抓包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#问题原因"><span class="toc-text">问题原因</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#主机多网络接口-UDP-源地址选择问题"><span class="toc-text">主机多网络接口 UDP 源地址选择问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关于-UDP-连接的疑惑"><span class="toc-text">关于 UDP 连接的疑惑</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决方案"><span class="toc-text">解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用-TCP-协议"><span class="toc-text">使用 TCP 协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#监听在特定端口"><span class="toc-text">监听在特定端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#改动应用程序实现"><span class="toc-text">改动应用程序实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">docker 容器网络下 UDP 协议的一个问题</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

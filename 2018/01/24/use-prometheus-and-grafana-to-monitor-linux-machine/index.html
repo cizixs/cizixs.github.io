@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>使用 promethues 和 grafana 监控自己的 linux 机器 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="使用 promethues 和 grafana 监控自己的 linux 机器 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">
+
+	
+	<meta property="article:published_time" content="2018-01-24T00:01:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2018-01-23T16:00:00.000Z" itemprop="datePublished">
+                    2018-01-24
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">使用 promethues 和 grafana 监控自己的 linux 机器</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p>最近在研究如何给应用添加合适的 metrics，用来分析应用的使用情况以及调试，整体思路是使用 promethues 收集数据，grafana 进行数据的展示。过程中发现了 node-exporter 项目，觉得可以直接拿来监控自己平时使用的 linux 机器，就有了这篇文章。</p>
+<p>整个系统使用了三个组件：</p>
+<ul>
+<li>node-exporter：运行在主机上收集操作系统上各种数据的 agent，promethues 中称为 exporter</li>
+<li>prometheus：开源的时序数据库，作为数据存储和分析的中心</li>
+<li>grafana：数据展示分析界面，提供各种强大的 dashboard，可以从多个数据源读取数据，其中就包括 promethues</li>
+</ul>
+<p>NOTE：所有的服务都是通过 docker 启动的，需要安装 docker 和 docker-compose，并熟悉它们的使用。</p>
+<h2 id="安装配置-promethues"><a href="#安装配置-promethues" class="headerlink" title="安装配置 promethues"></a>安装配置 promethues</h2><p>promethues 最早是 soundcloud 开发的一款时序数据库，用来作为 metrics 数据收集和存储，目前已经成为 CNCF 基金会下面的一个项目，也是 kubernets 官方推荐的 metrics 收集和监控工具。</p>
+<p>首先，我们创建一个 <code>docker-compose.yml</code> 文件，里面只包含 promethues 一个服务：</p>
+<pre><code>version: &#39;2&#39;
+services:
+  prometheus:
+    image: prom/prometheus:v2.0.0
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - &#39;--config.file=/etc/prometheus/prometheus.yml&#39;
+    ports:
+      - &#39;9090:9090&#39;
+</code></pre><p>如果对 docker 和 docker-compose 熟悉的话，上面的内容容易理解：</p>
+<ul>
+<li>image 后面指定了使用的 promethues 容器镜像，该文件使用的是 v2.0.0 版本</li>
+<li>volumes 把当前目录下面的 <code>prometheus.yml</code> 文件挂载到容器里，这样是因为后面会一直修改这个文件，利用 volume 挂载的方式比较灵活</li>
+<li>command 指定了 promethues 运行的命令行参数，这里只指定配置文件的位置，更多参数可以使用 <code>--help</code> 来查看</li>
+<li>ports 把 promethues 服务监听的端口映射到主机上，这样可以直接访问主机端口使用它</li>
+</ul>
+<p>其中比较重要的是 <code>prometheus.yml</code> 文件，它的内容如下：</p>
+<pre><code>global:
+    scrape_interval: 5s
+    external_labels:
+        monitor: &#39;my-monitor&#39;
+scrape_configs:
+    - job_name: &#39;prometheus&#39;
+      static_configs:
+          - targets: [&#39;localhost:9090&#39;]
+</code></pre><p>这个配置文件一共分为两个部分：<code>global</code> 和 <code>scrape_configs</code>，前者是全局的配置，如果后面的任务没有对特定配置项进行覆盖，这里的选项会生效。这里有两个配置项，<code>scrape_interval</code> 表示 promethues server 抓取的周期，如果太频繁会导致 promethues 压力比较大，如果太久，可能会导致某些关键数据漏掉，推荐根据每个任务的重要性和集群规模分别进行配置。</p>
+<p><code>scrape_configs</code> 配置了每个抓取任务，因此是一个列表，这里我们只有一个任务，那就是抓取 promethues 本身的 metrics。配置里面最重要的是 <code>static_configs.targets</code>，表示要抓取任务的 HTTP 地址，默认会在 <code>/metrics</code> url 出进行抓取，比如这里就是 <code>http://localhost:9090/</code>。 这是 prometheus 本身提供的监控数据，可以在浏览器中直接查看。</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fn9hdcuslmj30rd0l27b4.jpg" alt=""></p>
+<p>每个数据都是有一个名字和一系列称为 label 的键值对组成的，prometheus 在抓取数据的时候还会自动添加上 <code>instance</code>（节点的 host:port 标识） 和 <code>job</code>（任务名称） 两个 label 作为任务之间的区分。</p>
+<p>这些数据本身没有时间信息，当 promethues 抓取的时候会自动添加上当时的时间戳。此外这些数据在客户端会分成四种不同的类型：counter、gauge、histogram 和 summary。更多关于 promethues metrics 数据类型的说明请查阅官方文档。</p>
+<p>运行 <code>docker-compose up -d</code> 启动服务，然后在浏览器中打开 <code>http://server-ip:9090/status</code> 查看 promethues 运行的状态信息：</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fn9h9plxmtj30rd0l2tb2.jpg" alt=""></p>
+<p>整个 promethues 体系的工作原理如下所示：</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fnacyud8n5j30ko0e5jso.jpg" alt=""></p>
+<ul>
+<li>promethues server 位于中心，负责时序数据的收集、存储和查询</li>
+<li>左边是数据来源，promethues 统一采用拉取的模式（pull mode）从兼容的 HTTP 接口处获取数据，数据源可以分为三种<ol>
+<li>本身就暴露 promethues 可读取 metrics 数据的或者专门为某个组件编写的 exporter，称为 Jobs 或者 Exporters，比如 node exporter，HAProxy、Nginx、MySQL 等服务的 exporter</li>
+<li>通过 push gateway 可以把原来 push 类型的数据转换成 pull 类型 </li>
+<li>其他 promethues server</li>
+</ol>
+</li>
+<li>上面是目标自动发现机制。对于生产的很多情况，手动配置所有的 metrics 来源可能会非常繁琐，所以 promethues 支持 DNS、kubernetes、Consul 等服务发现机制来动态地获取目标源进行数据抓取</li>
+<li>右下方是数据输出，一般是用来进行 UI 展示，可以使用 grafana 等开源方案，也可以直接读取 promethues 的接口进行自主开发</li>
+<li>右上方是告警部分，用户需要配置告警规则，一旦 alertManager 发现监控数据匹配告警规则，就把告警信息通过邮件、社交账号发送出去</li>
+</ul>
+<h2 id="使用-node-exporter-收集监控数据"><a href="#使用-node-exporter-收集监控数据" class="headerlink" title="使用 node exporter 收集监控数据"></a>使用 node exporter 收集监控数据</h2><p>虽然监控 promethues 服务自身是件有趣而且有用的事情，但是我们的目标是监控 linux 主机。因为 promethues 只能从 HTTP 接口的某个地址来拉取监控数据，因此需要一个工具把 linux 提供的系统数据以 HTTP 服务的形式暴露出来。庆幸的是，promethues 官方社区有很多 exporter，它们负责把某个组件或者系统的 而监控数据以 promethues 能理解的方式暴露出来，其中 <a href="https://github.com/prometheus/node_exporter" target="_blank" rel="noopener">node exporter</a> 就是导出 unix/linux 系统监控数据的工具。</p>
+<p>grafana 主要是从 <code>/proc</code> 中读取 linux 提供的各种数据，修改 docker-compose.yml 文件，添加上 node-exporter 相关的内容，node-exporter 默认会监听在 9100 端口：</p>
+<pre><code>version: &#39;2&#39;
+services:
+  prometheus:
+    image: prom/prometheus:v2.0.0
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - &#39;--config.file=/etc/prometheus/prometheus.yml&#39;
+    ports:
+      - &#39;9090:9090&#39;
+  node-exporter:
+    image: prom/node-exporter:v0.15.2
+    ports:
+      - &#39;9100:9100&#39;
+</code></pre><p>为了让 promethues 收集 node-exporter 的内容，我们需要在配置文件中加上一个单独的任务：</p>
+<pre><code>global:
+    scrape_interval: 5s
+    external_labels:
+        monitor: &#39;my-monitor&#39;
+scrape_configs:
+    - job_name: &#39;prometheus&#39;
+      static_configs:
+          - targets: [&#39;localhost:9090&#39;]
+    - job_name: &#39;node resources&#39;
+      scrape_interval: 10s
+      static_configs:
+        - targets:
+          - &#39;node-exporter:9100&#39;
+</code></pre><p>因为 docker-compose 会自动做服务到 IP 地址的解析，因此这里可以直接使用 <code>node-exporter:9100</code> 作为地址。</p>
+<p>再次运行，确认 promethues 中 targets 列表中有 node-exporter。</p>
+<h2 id="安装配置-grafana"><a href="#安装配置-grafana" class="headerlink" title="安装配置 grafana"></a>安装配置 grafana</h2><p>prometheus 自带的 web 界面可以用来查询配置内容、监控节点是否运行正常，也可以用来查询某个 metric 的数值，以及提供简单的图形化功能。但是它的图形化功能比较单一， 当有很多数据要同时进行展示时，就需要借助更强大的 dashboard 工具，比如这里要介绍的 grafana。</p>
+<p>grafana 是一款强大的 dashboard 工具，界面设计很好看，功能强大，可配置性非常灵活。</p>
+<p>同样，在 docker-compose.yml 文件中加入 grafana 服务：</p>
+<pre><code>version: &#39;2&#39;
+services:
+  prometheus:
+    image: prom/prometheus:v2.0.0
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - &#39;--config.file=/etc/prometheus/prometheus.yml&#39;
+    ports:
+      - &#39;9090:9090&#39;
+  node-exporter:
+    image: prom/node-exporter:v0.15.2
+    ports:
+      - &#39;9100:9100&#39;
+  grafana:
+    image: grafana/grafana:4.6.2
+    volumes:
+        - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=pass
+    depends_on:
+      - prometheus
+    ports:
+      - &#39;3000:3000&#39;
+volumes:
+  grafana_data: {}
+  prometheus_data: {}
+</code></pre><p>这里使用 docker 的 volumes 来保存 grafana 和 promethues 运行过程中产生的数据来保证持久化，而且使用 <code>GF_SECURITY_ADMIN_PASSWORD=pass</code> 环境变量设置 admin 的密码。</p>
+<p>docker-compose 运行之后，grafana 会运行在 <code>http://host-ip:3000</code> 地址，使用浏览器打开会出现登陆页面，输入用户名和刚才配置的密码进入服务。</p>
+<p>grafana 本身只是一个 dashboard，它可以从多个数据源（时序数据库）中获取数据进行展示，比如我们这里使用的 promethues。所以在正式配置界面之前，需要先添加数据源，点击 grafana 左上角按钮找到 <code>Data Sources</code> 页面或者直接输入 <code>http://host-ip:3000/datasources</code> 地址，会进入对应页面。按照下面的内容进行填写，主要是 Type 要选择 <code>prometheus</code>，URL 添加 grafana 服务能访问的 promethues 地址（因为它们都是通过 docker-compose 运行的，所以这里可以直接使用名字来标识）；Name 字段随便填写一个用来标记来源的名字即可。</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fnhfgtpz5yj310j0s2adm.jpg" alt=""></p>
+<p>然后创建一个 dashboard，并里面添加 graph（为了简单，我用了 test dashboard 这个名字），在 graph 中添加一个 panel，我们用这个 panel 展示系统的 load 数据。编辑 panel 数据，选择 data source 为之前添加的 promethues，然后填写 query，系统 node 比较简单，一共是 <code>node_load1</code>、<code>node_load5</code> 和 <code>node_load15</code>，分别是系统最近一分钟、五分钟和十五分钟的 load 数值。输入完成后点击输入框之外，grafana 会自动更新上面的图表：</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1fnhhktp3i4j313a0ut43t.jpg" alt=""></p>
+<p>类似的，可以添加其他的 panel，展示系统方方面的监控数据，比如 CPU、memory、IO、网络等。grafana 更多配置可以参考<a href="http://docs.grafana.org/features/panels/graph/" target="_blank" rel="noopener">官方文档</a>，选择合适的图表来展示想要的结果。</p>
+<p>手动通过界面对 grafana 可以很灵活地创建出很强大的图表，但是这无疑会耗费很多时间（想想，每次搭建 grafana 都要重新做一遍），而且 node exporter 这种监控数据是通用的，如果所有人都手动创建一遍无疑是很多重复工作。为此，grafana 支持导入和导出配置，并且提供<a href="https://grafana.com/dashboards" target="_blank" rel="noopener">官方社区</a>供大家分享 dashboard 配置。</p>
+<p>每个 dashboard 都有一个编号，比如<a href="https://grafana.com/dashboards/22" target="_blank" rel="noopener">编号 22 的 dashboard</a> 就是专门为 node-exporter 设计的展示图表。在 grafana 中点击导入 dashboard，添加编号选择数据源，就能得到已经配置完整的图表：</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tKfTcgy1fnii0bgqqzj313v0utdl9.jpg" alt=""></p>
+<p>如果对 dashboard 有什么不满，可以直接在页面进行添加和编辑，然后可以导出 json 文件，以便重复使用。</p>
+<h2 id="配置告警"><a href="#配置告警" class="headerlink" title="配置告警"></a>配置告警</h2><p>通过 grafana 图表我们可以知道系统各种指标随着时间的变化，方便轻松判断系统某个资源是否异常。但是我们不能一直盯着 dashboard，还需要系统发生异常的时候能立即通过邮件或者其他方式通知我们，这就是告警的功能。</p>
+<p>promethues 提供用户可以自己配置的告警规则，在处理 metrics 数据的时候，如果发现某个规则被触发，就执行对应的告警动作，通过发邮件或者其他方式通知用户。</p>
+<p>对于我们的单节点主机来说，可以定义两个简单的告警规则：当主机 download 掉，或者 CPU load 持续过高一段时间就发送告警。对此，需要新建一个 <code>alert.rules</code> 文件，用来保存告警规则，按照需求对应的内容如下：</p>
+<pre><code>➜  monitor git:(master) ✗ cat alert.rules
+groups:
+- name: node-alert
+  rules:
+  - alert: service_down
+    expr: up == 0
+    for: 2m
+  - alert: high_load
+    expr: node_load1 &gt; 0.5
+    for: 5m
+</code></pre><p>在启动 promethues 服务的时候把告警规则文件 mount 到 pod 中，如下添加一个 volume：</p>
+<pre><code>➜  monitor git:(master) ✗ cat docker-compose.yml
+version: &#39;2&#39;
+services:
+  prometheus:
+    image: prom/prometheus:v2.0.0
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./alert.rules:/etc/prometheus/alert.rules
+ ......
+</code></pre><p>然后，告知 promethues 加载这些规则：</p>
+<pre><code>➜  monitor git:(master) ✗ cat prometheus.yml
+......
+rule_files:
+  - &#39;alert.rules&#39;
+</code></pre><p>为了验证告警规则是否生效，可以把 <code>node-exporter</code> 服务停掉：</p>
+<pre><code>docker-compose stop node-exporter
+</code></pre><p>在 promethues 的告警页面(alert) 查看告警：</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fniiqnn2oij310r0ma0uw.jpg" alt=""></p>
+<p>类似地，可以运行一些消耗 CPU 资源的服务来触发系统 load 过高的告警规则，比如运行下面这个 docker 容器（一直 while 循环霸占 CPU 资源可以轻松把 CPU load 提到很高）：</p>
+<pre><code>docker run --rm -it busybox sh -c &quot;while true; do :; done&quot;
+</code></pre><p>promethues 还提供了 alertmanager 可以自动化根据告警规则触发对应的动作，一般是各种方式通知用户和管理员，这里就不再介绍了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文中使用的完整配置文件放到了 <a href="https://github.com/cizixs/node-prometheus-monitor" target="_blank" rel="noopener">github 上</a>，可以作为参考。</p>
+<p>需要注意的是，这只是一个本地的 test 环境，不能直接在生产上使用。首先我们没有配置安全访问，所有的服务都是 HTTP；其次 docker-compose 运行的话，所有的服务都是在同一台机器上，无法做到分布式监控和高可用。</p>
+<p>如果想在生产中使用 promethues 和 grafana，请参考官方文档。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://fritshoogland.wordpress.com/2017/07/31/installation-overview-of-node_exporter-prometheus-and-grafana/" target="_blank" rel="noopener">Installation overview of node_exporter, prometheus and grafana</a></li>
+<li><a href="https://finestructure.co/blog/2016/5/16/monitoring-with-prometheus-grafana-docker-part-1" target="_blank" rel="noopener">Monitoring with Prometheus, Grafana &amp; Docker Part 1</a></li>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-add-a-prometheus-dashboard-to-grafana" target="_blank" rel="noopener"> How To Add a Prometheus Dashboard to Grafana</a></li>
+<li><a href="https://resin.io/blog/monitoring-linux-stats-with-prometheus-io/" target="_blank" rel="noopener">Monitoring linux stats with Prometheus.io</a></li>
+<li><a href="https://stefanprodan.com/2016/a-monitoring-solution-for-docker-hosts-containers-and-containerized-services/" target="_blank" rel="noopener">a monitoring solution for docker and containerized services</a></li>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-query-prometheus-on-ubuntu-14-04-part-1" target="_blank" rel="noopener">How To Query Prometheus on Ubuntu 14.04</a></li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="kubernetes 资源管理概述" href="/2018/06/25/kubernetes-resource-management/">
+        ← kubernetes 资源管理概述
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="linux 系统 UDP 丢包问题分析思路" href="/2018/01/13/linux-udp-packet-drop-debug/">
+        linux 系统 UDP 丢包问题分析思路 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装配置-promethues"><span class="toc-text">安装配置 promethues</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用-node-exporter-收集监控数据"><span class="toc-text">使用 node exporter 收集监控数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装配置-grafana"><span class="toc-text">安装配置 grafana</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置告警"><span class="toc-text">配置告警</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">使用 promethues 和 grafana 监控自己的 linux 机器</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

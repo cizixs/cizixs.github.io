@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>什么是 istio | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="什么是 istio | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2018/08/26/what-is-istio/">
+
+	
+	<meta property="article:published_time" content="2018-08-26T00:08:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2018/08/26/what-is-istio/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2018-08-25T16:00:00.000Z" itemprop="datePublished">
+                    2018-08-26
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">什么是 istio</h1>
+        </header>
+        <article class="post-full ">
+            
+            <figure class="post-full-image b-lazy" data-src="https://i.loli.net/2018/10/01/5bb1caab80eaa.jpg">
+            </figure>
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p>如果你比较关注新兴技术的话，那么很可能在不同的地方听说过 istio，并且知道它和 service mesh 有着牵扯。这篇文章是我之前在公司内部做过的分享，可以作为了解 istio  的入门介绍，了解什么是 istio，istio 为什么最近这么火，以及 istio 能够我们带来什么好处。</p>
+<h2 id="什么是-istio？"><a href="#什么是-istio？" class="headerlink" title="什么是 istio？"></a>什么是 istio？</h2><p>官方对 istio 的介绍浓缩成了一句话：</p>
+<blockquote>
+<p>An open platform to connect,  secure, control and observe services.</p>
+</blockquote>
+<p>翻译过来，就是”连接、安全加固、控制和观察服务的开放平台“。开放平台就是指它本身是开源的，服务对应的是微服务，也可以粗略地理解为单个应用。<br>中间的四个动词就是 istio 的主要功能，官方也各有一句话的说明。这里再阐释一下：</p>
+<ul>
+<li>连接（Connect）：智能控制服务之间的调用流量，能够实现灰度升级、AB 测试和红黑部署等功能</li>
+<li>安全加固（Secure）：自动为服务之间的调用提供认证、授权和加密</li>
+<li>控制（Control）：应用用户定义的 policy，保证资源在消费者中公平分配</li>
+<li>观察（Observe）：查看服务运行期间的各种数据，比如日志、监控和 tracing，了解服务的运行情况</li>
+</ul>
+<p><img src="https://ws1.sinaimg.cn/large/006tNbRwgy1fumckfqh4ej31kw0sb4c7.jpg" alt="what is istio"></p>
+<p>虽然听起来非常高级，功能非常强大，但是一股脑出现这么多名词，还都是非常虚的概念，说了跟没说一样。要想理解上面这几句话的含义，我们还是从头说起，先聊聊 service mesh。</p>
+<p>NOTE：其实 istio 的源头是微服务，但这又是一个比较大的话题，目前可以参考网络上各种文章。如果有机会，我们再来聊聊微服务。</p>
+<h2 id="什么是-service-mesh"><a href="#什么是-service-mesh" class="headerlink" title="什么是 service mesh"></a>什么是 service mesh</h2><p>一般介绍 service mesh 的文章都会从网络层的又一个抽象说起，把 service mesh 看做建立在 TCP 层之上的微服务层。我这次换个思路，从 service mesh 的技术根基——网络代理来分析。</p>
+<p>说起网络代理，我们会想到翻墙，如果对软件架构比较熟悉的会想到 Nginx 等反向代理软件。其实网络代理的范围比较广，可以肯定的说，有网络访问的地方就会有代理的存在。</p>
+<p>Wikipedia 对代理的定义如下：</p>
+<blockquote>
+<p>In computer networks, a proxy server is a server (a computer system or an application) that acts as an intermediary for requests from clients seeking resources from other servers.</p>
+</blockquote>
+<p><strong>NOTE</strong>：代理可以是嵌套的，也就是说通信双方 A、B 中间可以多多层代理，而这些代理的存在有可能对  A、B 是透明的。</p>
+<p>简单来说，网络代理可以简单类比成现实生活中的中介，本来需要通信的双方因为各种原因在中间再加上一道关卡。本来双方就能完成的通信，为何非要多此一举呢？那是因为代理可以为整个通信带来更多的功能，比如：</p>
+<ul>
+<li>拦截：代理可以选择性拦截传输的网络流量，比如一些公司限制员工在上班的时候不能访问某些游戏或者电商网站，再比如把我们和世界隔离开来的 GFW，还有在数据中心中拒绝恶意访问的网关</li>
+<li>统计：既然所有的流量都经过代理，那么代理也可以用来统计网络中的数据信息，比如了解哪些人在访问哪些网站，通信的应答延迟等</li>
+<li>缓存：如果通信双方比较”远“，访问比较慢，那么代理可以把最近访问的数据缓存在本地，后面的访问不用访问后端来做到加速。CDN 就是这个功能的典型场景</li>
+<li>分发：如果某个通信方有多个服务器后端，代理可以根据某些规则来选择如何把流量发送给多个服务器，也就是我们常说的负载均衡功能。比如著名的 Nginx 软件</li>
+<li>跳板：如果 A、B 双方因为某些原因不能直接访问，而代理可以和双方通信，那么通过代理，双方可以绕过原来的限制进行通信。这应该广大中国网民比较熟悉的场景</li>
+<li>注入：既然代理可以看到流量，那么它也可以修改网络流量，可以自动在收到的流量中添加一些数据，比如有些宽带提供商的弹窗广告</li>
+<li>……</li>
+</ul>
+<p><img src="https://ws4.sinaimg.cn/large/006tNbRwgy1fume2oh274j30vg0glgmg.jpg" alt="what is proxy"></p>
+<p>不是要讲 service mesh 吗？为什么扯了一堆代理的事情？因为 service mesh 可以看做是传统代理的升级版，用来解决现在微服务框架中出现的问题，可以把 service mesh 看做是<strong>分布式</strong>的<strong>微服务</strong>代理。</p>
+<p>在传统模式下，代理一般是集中式的单独的服务器，所有的请求都要先通过代理，然后再流入转发到实际的后端。而在 service mesh 中，代理变成了分布式的，它常驻在了应用的身边（最常见的就是 kubernetes sidecar 模式，每一个应用的 pod 中都运行着一个代理，负责流量相关的事情）。这样的话，应用所有的流量都被代理接管，那么这个代理就能做到上面提到的所有可能的事情，从而带来无限的想象力。</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNbRwgy1fumf6f3ighj30vu0gjt95.jpg" alt="side car proxy"></p>
+<p>此外，原来的代理都是基于网络流量的，一般都是工作在 IP 或者 TCP 层，很少关心具体的应用逻辑。但是 service mesh 中，代理会知道整个集群的所有应用信息，并且额外添加了热更新、注入服务发现、降级熔断、认证授权、超时重试、日志监控等功能，让这些通用的功能不必每个应用都自己实现，放在代理中即可。换句话说，service mesh 中的代理对微服务中的应用做了定制化的改进！</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNbRwgy1fumeg2zckgj30vc0gf761.jpg" alt="distributed micro-service proxy"></p>
+<p>就这样，借着微服务和容器化的东风，传统的代理摇身一变，成了如今炙手可热的 service mesh。应用微服务之后，每个单独的微服务都会有很多副本，而且可能会有多个版本，这么多微服务之间的相互调用和管理非常复杂，但是有了 service mesh，我们可以把这块内容统一在代理层。</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNbRwgy1fumdcd3gp1g31hc0teb2a.gif" alt="service mesh architecture"></p>
+<p>有了看起来四通八达的分布式代理，我们还需要对这些代理进行统一的管理。手动更新每个代理的配置，对代理进行升级或者维护是个不可持续的事情，在前面的基础上，在加上一个控制中心，一个完整的 service mesh 就成了。管理员只需要根据控制中心的 API 来配置整个集群的应用流量、安全规则即可，代理会自动和控制中心打交道根据用户的期望改变自己的行为。</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNbRwgy1fumf44jsmwj30w40i1djt.jpg" alt="service mesh with control plane"></p>
+<p><strong>NOTE</strong>：所以你也可以理解 service mesh 中的代理会抢了 Nginx 的生意，这也是为了 Nginx 也要开始做 NginMesh 的原因。</p>
+<h2 id="再来看-istio"><a href="#再来看-istio" class="headerlink" title="再来看 istio"></a>再来看 istio</h2><p>了解了 service mesh 的概念，我们再来看 istio ，也许就会清楚很多。首先来看 istio 官方给出的架构图：</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNbRwgy1fumf8ajs4oj30s90g7did.jpg" alt="istio architecture"></p>
+<p>可以看到，istio 就是我们上述提到的 service mesh 架构的一种实现，服务之间的通信（比如这里的 Service A 访问 Service B）会通过代理（默认是 envoy）来进行，而且中间的网络协议支持 HTTP/1.1，HTTP/2，gRPC 或者 TCP，可以说覆盖了主流的通信协议。控制中心做了进一步的系分，分成了 Pilot、Mixer、和 Citadel，它们的各自功能如下：</p>
+<ul>
+<li>Pilot：为  envoy 提供了服务发现，流量管理和智能路由（AB测试、金丝雀发布等），以及错误处理（超时、重试、熔断）功能。用户通过 pilot 的 API 管理网络相关的资源对象，pilot 会根据用户的配置和服务的信息把网络流量管理变成 envoy 能识别的格式分发到各个 sidecar 代理中。</li>
+<li>Mixer：为整个集群执行访问控制（哪些用户可以访问哪些服务）和 policy 管理（rate limit，quota 等），并且收集代理观察到的服务之间的流量统计数据</li>
+<li>Citadel：为服务之间提供认证和证书管理，可以让服务自动升级成 TLS 协议</li>
+</ul>
+<p>代理会和控制中心通信，一方面可以获取需要的服务之间的信息，另一方面也可以汇报服务调用的 metrics 数据。知道 istio 的核心架构，再来看看它的功能描述就非常容易理解了。</p>
+<ul>
+<li>连接：控制中心可以从集群中获取所有服务的信息，并分发给代理，这样代理就能根据用户的期望来完成服务之间的通信（自动地服务发现、负载均衡、流量控制等）</li>
+<li>安全加固：因为所有的流量都是通过代理的，那么代理接收到不加密的网络流量之后，可以自动做一次封装，把它升级成安全的加密流量</li>
+<li>控制：用户可以配置各种规则（比如 RBAC 授权、白名单、rate limit 或者 quota 等），当代理发现服务之间的访问不符合这些规则，就直接拒绝掉</li>
+<li>观察：所有的流量都经过代理，因此代理对整个集群的访问情况知道得一清二楚，它把这些数据上报到控制中心，那么管理员就能观察到整个集群的流量情况了</li>
+</ul>
+<h2 id="istio-解决什么问题"><a href="#istio-解决什么问题" class="headerlink" title="istio 解决什么问题"></a>istio 解决什么问题</h2><p>虽然看起来非常炫酷，功能也很强大，但是一个架构和产品出来都是要解决具体的问题。所以这部分我们来看看微服务架构中的难题以及 istio 给出的答案。</p>
+<p>首先，原来的单个应用拆分成了许多分散的微服务，它们之间相互调用才能完成一个任务，而一旦某个过程出错（组件越多，出错的概率也就越大），就非常难以排查。</p>
+<p>用户请求出现问题无外乎两个问题：错误和响应慢。如果请求错误，那么我们需要知道那个步骤出错了，这么多的微服务之间的调用怎么确定哪个有调用成功？哪个没有调用成功呢？如果是请求响应太慢，我们就需要知道到底哪些地方比较慢？整个链路的调用各阶段耗时是多少？哪些调用是并发执行的，哪些是串行的？这些问题需要我们能非常清楚整个集群的调用以及流量情况。</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNbRwgy1fundnum6cwj31510m375v.jpg" alt="微服务故障排查困难"></p>
+<p>此外，微服务拆分成这么多组件，如果单个组件出错的概率不变，那么整体有地方出错的概率就会增大。服务调用的时候如果没有错误处理机制，那么会导致非常多的问题。比如如果应用没有配置超时参数，或者配置的超时参数不对，则会导致请求的调用链超时叠加，对于用户来说就是请求卡住了；如果没有重试机制，那么因为各种原因导致的偶发故障也会导致直接返回错误给用户，造成不好的用户体验；此外，如果某些节点异常（比如网络中断，或者负载很高），也会导致应用整体的响应时间变成，集群服务应该能自动避开这些节点上的应用；最后，应用也是会出现 bug 的，各种 bug 会导致某些应用不可访问。这些问题需要每个应用能及时发现问题，并做好对应的处理措施。</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNbRwgy1fundt2q5alj31kw0sh7cx.jpg" alt="应用容错性"></p>
+<p>应用数量的增多，对于日常的应用发布来说也是个难题。应用的发布需要非常谨慎，如果应用都是一次性升级的，出现错误会导致整个线上应用不可用，影响范围太大；而且，很多情况我们需要同时存在不同的版本，使用 AB 测试验证哪个版本更好；如果版本升级改动了 API，并且互相有依赖，那么我们还希望能自动地控制发布期间不同版本访问不同的地址。这些问题都需要智能的流量控制机制。</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNbRwgy1fune76uq2wj31550jb0uc.jpg" alt="应用发布困难"></p>
+<p>为了保证整个系统的安全性，每个应用都需要实现一套相似的认证、授权、HTTPS、限流等功能。一方面大多数的程序员都安全相关的功能并不擅长或者感兴趣，另外这些完全相似的内容每次都要实现一遍是非常冗余的。这个问题需要一个能自动管理安全相关内容的系统。</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNbRwgy1funelzxf46j31kw0qu79g.jpg" alt="应用安全"></p>
+<p>上面提到的这些问题是不是非常熟悉？它们就是 istio 尝试解决的问题，如果把上面的问题和 istio 提供的功能做个映射，你会发现它们是非常匹配，毕竟 istio 就是为了解决微服务的这些问题才出现的。</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNbRwgy1funghiputng31hc0te7ip.gif" alt="istio solves microservice issues"></p>
+<h2 id="用什么姿势接入-istio？"><a href="#用什么姿势接入-istio？" class="headerlink" title="用什么姿势接入 istio？"></a>用什么姿势接入 istio？</h2><p>虽然 istio 能解决那么多的问题，但是引入 istio 并不是没有代价的。最大的问题是 istio 的复杂性，强大的功能也意味着 istio 的概念和组件非常多，要想理解和掌握 istio ，并成功在生产环境中部署需要非常详细的规划。一般情况下，集群管理团队需要对 kubernetes 非常熟悉，了解常用的使用模式，然后采用逐步演进的方式把 istio 的功能分批掌控下来。</p>
+<p>第一步，自然是在测试环境搭建一套 istio 的集群，理解所有的核心概念和组件。了解 istio 提供的接口和资源，知道它们的用处，思考如何应用到自己的场景中，然后是熟悉 istio 的源代码，跟进社区的 issues，了解目前还存在的 issues 和 bug，思考如何规避或者修复。这一步是基础，需要积累到 istio 安装部署、核心概念、功能和缺陷相关的知识，为后面做好准备。</p>
+<p>第二步，可以考虑接入 istio 的观察性功能，包括 logging、tracing、metrics 数据。应用部署到集群中，选择性地（一般是流量比较小，影响范围不大的应用）为一些应用开启 istio 自动注入功能，接管应用的流量，并安装 prometheus 和 zipkin 等监控组件，收集系统所有的监控数据。这一步可以试探性地了解 istio 对应用的性能影响，同时建立服务的性能测试基准，发现服务的性能瓶颈，帮助快速定位应用可能出现的问题。此时，这些功能可以是对应用开发者透明的，只需要集群管理员感知，这样可以减少可能带来的风险。</p>
+<p>第三步，为应用配置 timeout 超时参数、自动重试、熔断和降级等功能，增加服务的容错性。这样可以避免某些应用错误进行这些配置导致问题的出现，这一步完成后需要通知所有的应用开发者删除掉在应用代码中对应的处理逻辑。这一步需要开发者和集群管理员同时参与。</p>
+<p>第四步，和 ingress、helm、应用上架等相关组件和流程对接，使用 istio 接管应用的升级发布流程。让开发者可以配置应用灰度发布升级的策略，支持应用的蓝绿发布、金丝雀发布以及 AB 测试。</p>
+<p>第五步，接入安全功能。配置应用的 TLS 互信，添加 RBAC 授权，设置应用的流量限制，提升整个集群的安全性。因为安全的问题配置比较繁琐，而且优先级一般会比功能性相关的特性要低，所以这里放在了最后。</p>
+<p>当然这个步骤只是一个参考，每个公司需要根据自己的情况、人力、时间和节奏来调整，找到适合自己的方案。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Istio 的架构在数据中心和集群管理中非常常见，每个 agent 分布在各个节点上（可以是服务器、虚拟机、pod、容器）负责接收指令并执行，以及汇报信息；控制中心负责汇聚整个集群的信息，并提供 API 让用户对集群进行管理。kubernetes 也是类似的架构，SDN（Software Defined Network） 也是如此。相信以后会有更多类似架构的出现，这是因为数据中心要管理的节点越来越多，我们需要把任务执行分布到各节点（agent 负责的功能），同时也需要对整个集群进行管理和控制（control plane 的功能），完全去中心化的架构是无法满足后面这个要求的。</p>
+<p>Istio 的出现为负责的微服务架构减轻了很多的负担，开发者不用关心服务调用的超时、重试、rate limit 的实现，服务之间的安全、授权也自动得到了保证；集群管理员也能够很方便地发布应用（AB 测试和灰度发布），并且能清楚看到整个集群的运行情况。</p>
+<p>但是这并不表明有了 istio 就可以高枕无忧了，istio 只是把原来分散在应用内部的复杂性统一抽象出来放到了统一的地方，并没有让原来的复杂消失不见。因此我们需要维护 istio 整个集群，而 istio 的架构比较复杂，尤其是它一般还需要架在 kubernetes 之上，这两个系统都比较复杂，而且它们的稳定性和性能会影响到整个集群。因此再采用 isito 之前，必须做好清楚的规划，权衡它带来的好处是否远大于额外维护它的花费，需要有相关的人才对整个网络、kubernetes 和 istio 都比较了解才行。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://istio.io/docs/concepts/what-is-istio/" target="_blank" rel="noopener">Istio / What is Istio?</a>：istio 官网上对 istio 进行介绍的文档</li>
+<li><a href="http://philcalcado.com/2017/08/03/pattern_service_mesh.html" target="_blank" rel="noopener">Pattern: Service Mesh</a>：service mesh pattern 详解的文章</li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="serverless 平台 knative 简介" href="/2018/08/25/knative-serverless-platform/">
+        serverless 平台 knative 简介 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是-istio？"><span class="toc-text">什么是 istio？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是-service-mesh"><span class="toc-text">什么是 service mesh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#再来看-istio"><span class="toc-text">再来看 istio</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#istio-解决什么问题"><span class="toc-text">istio 解决什么问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用什么姿势接入-istio？"><span class="toc-text">用什么姿势接入 istio？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">什么是 istio</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

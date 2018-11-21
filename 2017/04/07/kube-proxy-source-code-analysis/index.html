@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>kube-proxy 源码解析 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="kube-proxy 源码解析 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2017/04/07/kube-proxy-source-code-analysis/">
+
+	
+	<meta property="article:published_time" content="2017-04-07T00:04:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2017/04/07/kube-proxy-source-code-analysis/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2017-04-06T16:00:00.000Z" itemprop="datePublished">
+                    2017-04-7
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">kube-proxy 源码解析</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <h2 id="kube-proxy-功能简介"><a href="#kube-proxy-功能简介" class="headerlink" title="kube-proxy 功能简介"></a>kube-proxy 功能简介</h2><p>我们在之前的文章中<a href="http://cizixs.com/2017/03/30/kubernetes-introduction-service-and-kube-proxy">介绍过 kube-proxy 和 service</a>的工作原理，以及它们的使用方法和功能。我们再来总结一下，<code>kube-proxy</code> 运行在 kubernetes 集群中每个 worker 节点上，负责实现 service 这个概念提供的功能。<code>kube-proxy</code> 会把访问 service VIP 的请求转发到运行的 pods 上，实现负载均衡。</p>
+<p><img src="https://ww3.sinaimg.cn/large/006tNc79gy1fee5voyscmj31hm0p0gnm.jpg" alt=""></p>
+<p>当用户创建 service 的时候，endpointController 会根据 service 的 selector 找到对应的 pod，然后生成 endpoints 对象保存到 etcd 中。kube-proxy 的主要工作就是监听 etcd（通过 apiserver 的接口，而不是直接读取 etcd），来实时更新节点上的 iptables。</p>
+<p>service 有关的信息保存在 etcd 的 <code>/registry/services</code> 目录，比如在我的集群中，这个目录的内容是这样的：</p>
+<pre class=" language-bash"><code class="language-bash">~<span class="token punctuation">]</span>$ etcdctl <span class="token function">ls</span> --recursive  /registry/services
+/registry/services/endpoints
+/registry/services/endpoints/default
+/registry/services/endpoints/default/whoami
+/registry/services/endpoints/default/kubernetes
+/registry/services/endpoints/kube-system
+/registry/services/endpoints/kube-system/kube-controller-manager
+/registry/services/endpoints/kube-system/container-log
+/registry/services/endpoints/kube-system/container-terminal
+/registry/services/endpoints/kube-system/kube-scheduler
+/registry/services/endpoints/kube-system/kube-dns
+/registry/services/specs
+/registry/services/specs/default
+/registry/services/specs/default/kubernetes
+/registry/services/specs/default/whoami
+/registry/services/specs/kube-system
+/registry/services/specs/kube-system/kube-dns
+/registry/services/specs/kube-system/container-log
+/registry/services/specs/kube-system/container-terminal
+</code></pre>
+<p>这篇文章我们会分析 kube-proxy 的源码，讲解在 <code>iptables</code> 模式下它的原理。文章所有的代码基于 kubernetes 1.5.0，为了增强可读性会对某些部分做删减（错误处理、日志打印、无关的功能等）。</p>
+<h2 id="函数入口"><a href="#函数入口" class="headerlink" title="函数入口"></a>函数入口</h2><p>和 kubernetes 其他组件一样，<code>kube-proxy</code> 入口在 <code>kubernetes/cmd/kube-proxy</code>，具体的代码如下：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    config <span class="token operator">:=</span> options<span class="token punctuation">.</span><span class="token function">NewProxyConfig</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    config<span class="token punctuation">.</span><span class="token function">AddFlags</span><span class="token punctuation">(</span>pflag<span class="token punctuation">.</span>CommandLine<span class="token punctuation">)</span>
+    flag<span class="token punctuation">.</span><span class="token function">InitFlags</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token operator">...</span>
+    s<span class="token punctuation">,</span> err <span class="token operator">:=</span> app<span class="token punctuation">.</span><span class="token function">NewProxyServerDefault</span><span class="token punctuation">(</span>config<span class="token punctuation">)</span>
+    <span class="token operator">...</span>
+
+    <span class="token keyword">if</span> err <span class="token operator">=</span> s<span class="token punctuation">.</span><span class="token function">Run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+        fmt<span class="token punctuation">.</span><span class="token function">Fprintf</span><span class="token punctuation">(</span>os<span class="token punctuation">.</span>Stderr<span class="token punctuation">,</span> <span class="token string">"%v\n"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+        os<span class="token punctuation">.</span><span class="token function">Exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>上述代码的大概过程是：用 <code>options.NewProxyConfig()</code> 创建出默认的配置选项，然后用命令行的参数更新配置的内容；然后 <code>app.NewProxyServerDefault(config)</code> 利用配置创建服务，最后运行创建的服务，一直保持运行状态。</p>
+<h2 id="服务创建"><a href="#服务创建" class="headerlink" title="服务创建"></a>服务创建</h2><p>kube-proxy 入口很重要的一部分就是创建 ProxyServer，我们来看一下 <code>app.NewProxyServerDefault(config)</code> 内部的实现，这个函数定义是在 <code>cmd/kube-proxy/app/server.go</code>：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">NewProxyServerDefault</span><span class="token punctuation">(</span>config <span class="token operator">*</span>options<span class="token punctuation">.</span>ProxyServerConfig<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token operator">*</span>ProxyServer<span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token operator">...</span>
+    protocol <span class="token operator">:=</span> utiliptables<span class="token punctuation">.</span>ProtocolIpv4
+    <span class="token keyword">if</span> net<span class="token punctuation">.</span><span class="token function">ParseIP</span><span class="token punctuation">(</span>config<span class="token punctuation">.</span>BindAddress<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">To4</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+        protocol <span class="token operator">=</span> utiliptables<span class="token punctuation">.</span>ProtocolIpv6
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">var</span> netshInterface utilnetsh<span class="token punctuation">.</span>Interface
+    <span class="token keyword">var</span> iptInterface utiliptables<span class="token punctuation">.</span>Interface
+    <span class="token keyword">var</span> dbus utildbus<span class="token punctuation">.</span>Interface
+
+    execer <span class="token operator">:=</span> exec<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token operator">...</span>
+    <span class="token comment" spellcheck="true">// Create event recorder</span>
+    hostname <span class="token operator">:=</span> nodeutil<span class="token punctuation">.</span><span class="token function">GetHostname</span><span class="token punctuation">(</span>config<span class="token punctuation">.</span>HostnameOverride<span class="token punctuation">)</span>
+    eventBroadcaster <span class="token operator">:=</span> record<span class="token punctuation">.</span><span class="token function">NewBroadcaster</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    recorder <span class="token operator">:=</span> eventBroadcaster<span class="token punctuation">.</span><span class="token function">NewRecorder</span><span class="token punctuation">(</span>api<span class="token punctuation">.</span>EventSource<span class="token punctuation">{</span>Component<span class="token punctuation">:</span> <span class="token string">"kube-proxy"</span><span class="token punctuation">,</span> Host<span class="token punctuation">:</span> hostname<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">var</span> proxier proxy<span class="token punctuation">.</span>ProxyProvider
+    <span class="token keyword">var</span> endpointsHandler proxyconfig<span class="token punctuation">.</span>EndpointsConfigHandler
+
+    proxyMode <span class="token operator">:=</span> <span class="token function">getProxyMode</span><span class="token punctuation">(</span><span class="token function">string</span><span class="token punctuation">(</span>config<span class="token punctuation">.</span>Mode<span class="token punctuation">)</span><span class="token punctuation">,</span> client<span class="token punctuation">.</span><span class="token function">Core</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Nodes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> hostname<span class="token punctuation">,</span> iptInterface<span class="token punctuation">,</span> iptables<span class="token punctuation">.</span>LinuxKernelCompatTester<span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> proxyMode <span class="token operator">==</span> proxyModeIPTables <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> config<span class="token punctuation">.</span>IPTablesMasqueradeBit <span class="token operator">==</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> fmt<span class="token punctuation">.</span><span class="token function">Errorf</span><span class="token punctuation">(</span><span class="token string">"Unable to read IPTablesMasqueradeBit from config"</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+        proxierIPTables<span class="token punctuation">,</span> err <span class="token operator">:=</span> iptables<span class="token punctuation">.</span><span class="token function">NewProxier</span><span class="token punctuation">(</span>iptInterface<span class="token punctuation">,</span> utilsysctl<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> execer<span class="token punctuation">,</span> config<span class="token punctuation">.</span>IPTablesSyncPeriod<span class="token punctuation">.</span>Duration<span class="token punctuation">,</span> config<span class="token punctuation">.</span>IPTablesMinSyncPeriod<span class="token punctuation">.</span>Duration<span class="token punctuation">,</span> config<span class="token punctuation">.</span>MasqueradeAll<span class="token punctuation">,</span> <span class="token function">int</span><span class="token punctuation">(</span><span class="token operator">*</span>config<span class="token punctuation">.</span>IPTablesMasqueradeBit<span class="token punctuation">)</span><span class="token punctuation">,</span> config<span class="token punctuation">.</span>ClusterCIDR<span class="token punctuation">,</span> hostname<span class="token punctuation">,</span> <span class="token function">getNodeIP</span><span class="token punctuation">(</span>client<span class="token punctuation">,</span> hostname<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+        proxier <span class="token operator">=</span> proxierIPTables
+        endpointsHandler <span class="token operator">=</span> proxierIPTables
+        <span class="token operator">...</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        glog<span class="token punctuation">.</span><span class="token function">V</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Info</span><span class="token punctuation">(</span><span class="token string">"Using userspace Proxier."</span><span class="token punctuation">)</span>
+        <span class="token operator">...</span>
+    <span class="token punctuation">}</span>
+
+    serviceConfig <span class="token operator">:=</span> proxyconfig<span class="token punctuation">.</span><span class="token function">NewServiceConfig</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    serviceConfig<span class="token punctuation">.</span><span class="token function">RegisterHandler</span><span class="token punctuation">(</span>proxier<span class="token punctuation">)</span>
+
+    endpointsConfig <span class="token operator">:=</span> proxyconfig<span class="token punctuation">.</span><span class="token function">NewEndpointsConfig</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    endpointsConfig<span class="token punctuation">.</span><span class="token function">RegisterHandler</span><span class="token punctuation">(</span>endpointsHandler<span class="token punctuation">)</span>
+
+    proxyconfig<span class="token punctuation">.</span><span class="token function">NewSourceAPI</span><span class="token punctuation">(</span>
+        client<span class="token punctuation">.</span><span class="token function">Core</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">RESTClient</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        config<span class="token punctuation">.</span>ConfigSyncPeriod<span class="token punctuation">,</span>
+        serviceConfig<span class="token punctuation">.</span><span class="token function">Channel</span><span class="token punctuation">(</span><span class="token string">"api"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        endpointsConfig<span class="token punctuation">.</span><span class="token function">Channel</span><span class="token punctuation">(</span><span class="token string">"api"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">)</span>
+
+    <span class="token operator">...</span>
+    conntracker <span class="token operator">:=</span> realConntracker<span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> <span class="token function">NewProxyServer</span><span class="token punctuation">(</span>client<span class="token punctuation">,</span> config<span class="token punctuation">,</span> iptInterface<span class="token punctuation">,</span> proxier<span class="token punctuation">,</span> eventBroadcaster<span class="token punctuation">,</span> recorder<span class="token punctuation">,</span> conntracker<span class="token punctuation">,</span> proxyMode<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>最终 <code>NewProxyServer()</code> 比较简单，把所有传给它的参数作为结构体的内容返回，这些参数中的解释如下：</p>
+<ul>
+<li><code>client</code>：连接到 kubernetes api server 的客户端对象</li>
+<li><code>config</code>: proxyServer 配置对象，包含了所有的配置信息</li>
+<li><code>iptInterface</code>: iptables 对象，运行执行所有的 iptables 操作</li>
+<li><code>proxier</code>: proxier 是具体执行转发逻辑的对象，不管 userspace 模式还是 iptables 模式，都是一个 proxier 对象</li>
+<li><code>eventBroadcaster</code>: 事件广播对象，把 kube-proxy 内部发生的事件发送到 apiserver</li>
+<li><code>recorder</code>: 事件记录对象</li>
+<li><code>conntracker</code>: connection track 有关的操作</li>
+<li><code>proxyMode</code>: 代理的模式，iptables 还是 userspace</li>
+</ul>
+<p>这里面有两个比较重要的变量：<code>proxier</code> 和 <code>endpointsHandler</code>，它们的值都是 <code>proxierIPTables</code>。</p>
+<h3 id="ServiceConfig-和-endpointsConfig"><a href="#ServiceConfig-和-endpointsConfig" class="headerlink" title="ServiceConfig 和 endpointsConfig"></a>ServiceConfig 和 endpointsConfig</h3><p>serviceConfig 和 endpointsConfig 分别负责服务和端点相关内容的同步，它们的原理都是一样的。我们这里只分析 serviceConfig，它的代码在 <code>pkg/proxy/config/config.go</code> 文件中。serviceConfig 结构如下：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">type</span> ServiceConfig <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+    mux     <span class="token operator">*</span>config<span class="token punctuation">.</span>Mux
+    bcaster <span class="token operator">*</span>config<span class="token punctuation">.</span>Broadcaster
+    store   <span class="token operator">*</span>serviceStore
+<span class="token punctuation">}</span>
+</code></pre>
+<p>它有三个结构：<code>mux</code> 是个汇聚器，可以把发送过来的更新统一保存到内部，<code>serviceStore</code> 保存了发生变化的 Service 对象，<code>Broadcaster</code> 在一旦有变化出现的时候通知对应的处理函数就行处理。</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">NewServiceConfig</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">*</span>ServiceConfig <span class="token punctuation">{</span>
+    updates <span class="token operator">:=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token keyword">chan</span> <span class="token keyword">struct</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    store <span class="token operator">:=</span> <span class="token operator">&amp;</span>serviceStore<span class="token punctuation">{</span>updates<span class="token punctuation">:</span> updates<span class="token punctuation">,</span> services<span class="token punctuation">:</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token keyword">map</span><span class="token punctuation">[</span><span class="token builtin">string</span><span class="token punctuation">]</span><span class="token keyword">map</span><span class="token punctuation">[</span>types<span class="token punctuation">.</span>NamespacedName<span class="token punctuation">]</span>api<span class="token punctuation">.</span>Service<span class="token punctuation">)</span><span class="token punctuation">}</span>
+    mux <span class="token operator">:=</span> config<span class="token punctuation">.</span><span class="token function">NewMux</span><span class="token punctuation">(</span>store<span class="token punctuation">)</span>
+    bcaster <span class="token operator">:=</span> config<span class="token punctuation">.</span><span class="token function">NewBroadcaster</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">go</span> <span class="token function">watchForUpdates</span><span class="token punctuation">(</span>bcaster<span class="token punctuation">,</span> store<span class="token punctuation">,</span> updates<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token operator">&amp;</span>ServiceConfig<span class="token punctuation">{</span>mux<span class="token punctuation">,</span> bcaster<span class="token punctuation">,</span> store<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">func</span> <span class="token function">watchForUpdates</span><span class="token punctuation">(</span>bcaster <span class="token operator">*</span>config<span class="token punctuation">.</span>Broadcaster<span class="token punctuation">,</span> accessor config<span class="token punctuation">.</span>Accessor<span class="token punctuation">,</span> updates <span class="token operator">&lt;-</span><span class="token keyword">chan</span> <span class="token keyword">struct</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">for</span> <span class="token boolean">true</span> <span class="token punctuation">{</span>
+        <span class="token operator">&lt;-</span>updates
+        bcaster<span class="token punctuation">.</span><span class="token function">Notify</span><span class="token punctuation">(</span>accessor<span class="token punctuation">.</span><span class="token function">MergedState</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// 注册 handler，有变化的时候会调用对应的 handler 进行处理</span>
+<span class="token keyword">func</span> <span class="token punctuation">(</span>c <span class="token operator">*</span>ServiceConfig<span class="token punctuation">)</span> <span class="token function">RegisterHandler</span><span class="token punctuation">(</span>handler ServiceConfigHandler<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    c<span class="token punctuation">.</span>bcaster<span class="token punctuation">.</span><span class="token function">Add</span><span class="token punctuation">(</span>config<span class="token punctuation">.</span><span class="token function">ListenerFunc</span><span class="token punctuation">(</span><span class="token keyword">func</span><span class="token punctuation">(</span>instance <span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        glog<span class="token punctuation">.</span><span class="token function">V</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Infof</span><span class="token punctuation">(</span><span class="token string">"Calling handler.OnServiceUpdate()"</span><span class="token punctuation">)</span>
+        handler<span class="token punctuation">.</span><span class="token function">OnServiceUpdate</span><span class="token punctuation">(</span>instance<span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span>api<span class="token punctuation">.</span>Service<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>上面这段代码可以看到 <code>NewServiceConfig</code> 初始化的时候会在后台启动一个 goroutine 运行 <code>watchForUpdates</code>，这个 goroutine 不断循环的逻辑就是上面提到的：一旦 updates 可读（service 对象有变化），就调用 <code>bcaster.Notify()</code> 把变化的内容（通过 <code>accessor.MergedState()</code> 函数得到的结果）进行通知，最终会调用在内部注册的 handler 函数。</p>
+<p><strong>NOTE</strong>: 这个注册-触发的逻辑是通过 <code>Broadcaster</code> 实现的，对应的代码在 <code>pkg/util/config/config.go</code>，它提供了两个方法：<code>Add()</code> 是添加 handler，可以添加多个；<code>notify()</code> 会把参数交给所有的 handler 进行处理。</p>
+<p>注册 handler 的步骤是 <code>serviceConfig.RegisterHandler(proxier)</code>，所以最终会调用 <code>proxier.OnServiceUpdate（）</code>方法，这个方法就是 <code>pkg/proxy/iptables/proxier.go:Proxier</code> 定义的，会实现最终 iptables 规则的刷新。</p>
+<p>说道这里，还有两者问题需要解决：<strong>变化的内容是怎么获得的？谁会往 <code>updates channel</code> 中写东西？</strong></p>
+<p>第一个问题的答案在 <code>serviceStore.MergedState()</code> 方法中：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token punctuation">(</span>s <span class="token operator">*</span>serviceStore<span class="token punctuation">)</span> <span class="token function">MergedState</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token punctuation">{</span>
+    s<span class="token punctuation">.</span>serviceLock<span class="token punctuation">.</span><span class="token function">RLock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">defer</span> s<span class="token punctuation">.</span>serviceLock<span class="token punctuation">.</span><span class="token function">RUnlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    services <span class="token operator">:=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span>api<span class="token punctuation">.</span>Service<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> <span class="token boolean">_</span><span class="token punctuation">,</span> sourceServices <span class="token operator">:=</span> <span class="token keyword">range</span> s<span class="token punctuation">.</span>services <span class="token punctuation">{</span>
+        <span class="token keyword">for</span> <span class="token boolean">_</span><span class="token punctuation">,</span> value <span class="token operator">:=</span> <span class="token keyword">range</span> sourceServices <span class="token punctuation">{</span>
+            services <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>services<span class="token punctuation">,</span> value<span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> services
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>serviceStore</code> 结构体内部用一个嵌套字典 <code>map[string]map[types.NamespacedName]api.Service</code> 保存了所有的 Service 对象，这个嵌套字典外层的键是来源，内层是对应的服务名和服务对象。<code>MergedState</code> 方法删除了最外层的来源，返回所有的 Service 对象，也就是起到了汇聚不同来源 Service 的功能。至于这个字典是谁在什么时候写进去的，我们后面再说。</p>
+<p>第二个问题，我们要看下面这段代码的实现了：</p>
+<pre class=" language-go"><code class="language-go">proxyconfig<span class="token punctuation">.</span><span class="token function">NewSourceAPI</span><span class="token punctuation">(</span>
+    client<span class="token punctuation">.</span><span class="token function">Core</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">RESTClient</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    config<span class="token punctuation">.</span>ConfigSyncPeriod<span class="token punctuation">,</span>
+    serviceConfig<span class="token punctuation">.</span><span class="token function">Channel</span><span class="token punctuation">(</span><span class="token string">"api"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    endpointsConfig<span class="token punctuation">.</span><span class="token function">Channel</span><span class="token punctuation">(</span><span class="token string">"api"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span>
+</code></pre>
+<p><code>NewSourceAPI</code> 有四个参数，第一个参数是 RESTClient，用来从 apiserver 获取请求；后面两个参数分别是 service 和 endpoints 的 channel，读取的数据最终会发送到这里。我们还是来看一下 <code>serviceConfig.Channel()</code> 的代码：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token punctuation">(</span>c <span class="token operator">*</span>ServiceConfig<span class="token punctuation">)</span> <span class="token function">Channel</span><span class="token punctuation">(</span>source <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token keyword">chan</span> ServiceUpdate <span class="token punctuation">{</span>
+    ch <span class="token operator">:=</span> c<span class="token punctuation">.</span>mux<span class="token punctuation">.</span><span class="token function">Channel</span><span class="token punctuation">(</span>source<span class="token punctuation">)</span>
+    serviceCh <span class="token operator">:=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token keyword">chan</span> ServiceUpdate<span class="token punctuation">)</span>
+    <span class="token keyword">go</span> <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">for</span> update <span class="token operator">:=</span> <span class="token keyword">range</span> serviceCh <span class="token punctuation">{</span>
+            ch <span class="token operator">&lt;-</span> update
+        <span class="token punctuation">}</span>
+        <span class="token function">close</span><span class="token punctuation">(</span>ch<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> serviceCh
+<span class="token punctuation">}</span>
+</code></pre>
+<p>这段代码创建了两个 channel：一个是在 <code>c.mux</code> 中创建的，用来汇聚所有的 service 对象，一个是新建的 <code>ServiceUpdate</code> channel，最终作为返回值。在后台启动一个参数，会把 <code>ServiceUpdate</code> channel 中的东西，持续不断地转送到 <code>c.mux</code> channel 中。也就是说，任何写到 <code>serviceConfig.Channel(&quot;api&quot;)</code> 的内容最终都会被 <code>c.mux</code> 调用 <code>serviceStore.Merge()</code>，这个方法会把 channel 中的更新保存到字典中 <code>map[string]map[types.NamespacedName]api.Service</code>。这个可以回答我们上面留下的疑问，<code>serviceConfig</code> 中的数据是谁写进去的。</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token punctuation">(</span>s <span class="token operator">*</span>serviceStore<span class="token punctuation">)</span> <span class="token function">Merge</span><span class="token punctuation">(</span>source <span class="token builtin">string</span><span class="token punctuation">,</span> change <span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token builtin">error</span> <span class="token punctuation">{</span>
+    s<span class="token punctuation">.</span>serviceLock<span class="token punctuation">.</span><span class="token function">Lock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    services <span class="token operator">:=</span> s<span class="token punctuation">.</span>services<span class="token punctuation">[</span>source<span class="token punctuation">]</span>
+    <span class="token keyword">if</span> services <span class="token operator">==</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+        services <span class="token operator">=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token keyword">map</span><span class="token punctuation">[</span>types<span class="token punctuation">.</span>NamespacedName<span class="token punctuation">]</span>api<span class="token punctuation">.</span>Service<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    update <span class="token operator">:=</span> change<span class="token punctuation">.</span><span class="token punctuation">(</span>ServiceUpdate<span class="token punctuation">)</span>
+    <span class="token keyword">switch</span> update<span class="token punctuation">.</span>Op <span class="token punctuation">{</span>
+    <span class="token keyword">case</span> ADD<span class="token punctuation">:</span>
+        glog<span class="token punctuation">.</span><span class="token function">V</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Infof</span><span class="token punctuation">(</span><span class="token string">"Adding new service from source %s : %s"</span><span class="token punctuation">,</span> source<span class="token punctuation">,</span> spew<span class="token punctuation">.</span><span class="token function">Sdump</span><span class="token punctuation">(</span>update<span class="token punctuation">.</span>Services<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">for</span> <span class="token boolean">_</span><span class="token punctuation">,</span> value <span class="token operator">:=</span> <span class="token keyword">range</span> update<span class="token punctuation">.</span>Services <span class="token punctuation">{</span>
+            name <span class="token operator">:=</span> types<span class="token punctuation">.</span>NamespacedName<span class="token punctuation">{</span>Namespace<span class="token punctuation">:</span> value<span class="token punctuation">.</span>Namespace<span class="token punctuation">,</span> Name<span class="token punctuation">:</span> value<span class="token punctuation">.</span>Name<span class="token punctuation">}</span>
+            services<span class="token punctuation">[</span>name<span class="token punctuation">]</span> <span class="token operator">=</span> value
+        <span class="token punctuation">}</span>
+    <span class="token keyword">case</span> REMOVE<span class="token punctuation">:</span>
+        glog<span class="token punctuation">.</span><span class="token function">V</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Infof</span><span class="token punctuation">(</span><span class="token string">"Removing a service %s"</span><span class="token punctuation">,</span> spew<span class="token punctuation">.</span><span class="token function">Sdump</span><span class="token punctuation">(</span>update<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">for</span> <span class="token boolean">_</span><span class="token punctuation">,</span> value <span class="token operator">:=</span> <span class="token keyword">range</span> update<span class="token punctuation">.</span>Services <span class="token punctuation">{</span>
+            name <span class="token operator">:=</span> types<span class="token punctuation">.</span>NamespacedName<span class="token punctuation">{</span>Namespace<span class="token punctuation">:</span> value<span class="token punctuation">.</span>Namespace<span class="token punctuation">,</span> Name<span class="token punctuation">:</span> value<span class="token punctuation">.</span>Name<span class="token punctuation">}</span>
+            <span class="token function">delete</span><span class="token punctuation">(</span>services<span class="token punctuation">,</span> name<span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+    <span class="token keyword">case</span> SET<span class="token punctuation">:</span>
+        glog<span class="token punctuation">.</span><span class="token function">V</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Infof</span><span class="token punctuation">(</span><span class="token string">"Setting services %s"</span><span class="token punctuation">,</span> spew<span class="token punctuation">.</span><span class="token function">Sdump</span><span class="token punctuation">(</span>update<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token comment" spellcheck="true">// Clear the old map entries by just creating a new map</span>
+        services <span class="token operator">=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token keyword">map</span><span class="token punctuation">[</span>types<span class="token punctuation">.</span>NamespacedName<span class="token punctuation">]</span>api<span class="token punctuation">.</span>Service<span class="token punctuation">)</span>
+        <span class="token keyword">for</span> <span class="token boolean">_</span><span class="token punctuation">,</span> value <span class="token operator">:=</span> <span class="token keyword">range</span> update<span class="token punctuation">.</span>Services <span class="token punctuation">{</span>
+            name <span class="token operator">:=</span> types<span class="token punctuation">.</span>NamespacedName<span class="token punctuation">{</span>Namespace<span class="token punctuation">:</span> value<span class="token punctuation">.</span>Namespace<span class="token punctuation">,</span> Name<span class="token punctuation">:</span> value<span class="token punctuation">.</span>Name<span class="token punctuation">}</span>
+            services<span class="token punctuation">[</span>name<span class="token punctuation">]</span> <span class="token operator">=</span> value
+        <span class="token punctuation">}</span>
+    <span class="token keyword">default</span><span class="token punctuation">:</span>
+        glog<span class="token punctuation">.</span><span class="token function">V</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Infof</span><span class="token punctuation">(</span><span class="token string">"Received invalid update type: %s"</span><span class="token punctuation">,</span> spew<span class="token punctuation">.</span><span class="token function">Sdump</span><span class="token punctuation">(</span>update<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    s<span class="token punctuation">.</span>services<span class="token punctuation">[</span>source<span class="token punctuation">]</span> <span class="token operator">=</span> services
+    s<span class="token punctuation">.</span>serviceLock<span class="token punctuation">.</span><span class="token function">Unlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> s<span class="token punctuation">.</span>updates <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// Since we record the snapshot before sending this signal, it's</span>
+        <span class="token comment" spellcheck="true">// possible that the consumer ends up performing an extra update.</span>
+        <span class="token keyword">select</span> <span class="token punctuation">{</span>
+        <span class="token keyword">case</span> s<span class="token punctuation">.</span>updates <span class="token operator">&lt;-</span> <span class="token keyword">struct</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">:</span>
+        <span class="token keyword">default</span><span class="token punctuation">:</span>
+            glog<span class="token punctuation">.</span><span class="token function">V</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Infof</span><span class="token punctuation">(</span><span class="token string">"Service handler already has a pending interrupt."</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> <span class="token boolean">nil</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>另外，在 <code>ServiceStore</code> 的最后，还会往 <code>s.updates</code> 写入一个数据，告诉监听在 channel 另一端说有数据更新，你可以调用处理函数来同步 iptables 了。</p>
+<p>整个 <code>serviceConfig</code> 的逻辑是这样的：</p>
+<p><img src="https://ww4.sinaimg.cn/large/006tNc79gy1fee66e8rbbj30wy0io40h.jpg" alt=""></p>
+<p>它对外暴露了一个 channel，任何写到这个 channel 中的数据，都会被 <code>mux</code> 自动保存到内部的 <code>serviceStore</code> 中，并往 <code>updates channel</code> 发一个通过，监听在 <code>updates channel</code> 另一端的 <code>bcaster</code> 接到通知，就调用处理函数 <code>proxier.OnServiceUpdate()</code> 去处理。</p>
+<p>不难猜测，在 <code>NewSourceAPI</code> 函数的内部一定会有把读取的数据写到 <code>serviceConfig.Channel(&quot;api&quot;)</code> 的逻辑。</p>
+<p><strong>NOTE:</strong> endpointsConfig 和 serviceConfig 的实现原理完全一样，只不过监听的对象是 etcd 中的 endpoints，而不是 services。</p>
+<h3 id="NewSourceAPI-和数据的真实来源"><a href="#NewSourceAPI-和数据的真实来源" class="headerlink" title="NewSourceAPI 和数据的真实来源"></a>NewSourceAPI 和数据的真实来源</h3><p>上面这部分我们看到了如果监听到的对象有变化，会执行对应的 iptables 同步处理函数，这部分我们讲讲 kube-proxy 是怎么监听 apiserver 的数据，并把结果转换成正确的格式的。</p>
+<p>继续看 <code>NewSourceAPI</code> 的代码：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">NewSourceAPI</span><span class="token punctuation">(</span>c cache<span class="token punctuation">.</span>Getter<span class="token punctuation">,</span> period time<span class="token punctuation">.</span>Duration<span class="token punctuation">,</span> servicesChan <span class="token keyword">chan</span><span class="token operator">&lt;-</span> ServiceUpdate<span class="token punctuation">,</span> endpointsChan <span class="token keyword">chan</span><span class="token operator">&lt;-</span> EndpointsUpdate<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    servicesLW <span class="token operator">:=</span> cache<span class="token punctuation">.</span><span class="token function">NewListWatchFromClient</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> <span class="token string">"services"</span><span class="token punctuation">,</span> api<span class="token punctuation">.</span>NamespaceAll<span class="token punctuation">,</span> fields<span class="token punctuation">.</span><span class="token function">Everything</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    cache<span class="token punctuation">.</span><span class="token function">NewReflector</span><span class="token punctuation">(</span>servicesLW<span class="token punctuation">,</span> <span class="token operator">&amp;</span>api<span class="token punctuation">.</span>Service<span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token function">NewServiceStore</span><span class="token punctuation">(</span><span class="token boolean">nil</span><span class="token punctuation">,</span> servicesChan<span class="token punctuation">)</span><span class="token punctuation">,</span> period<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Run</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    endpointsLW <span class="token operator">:=</span> cache<span class="token punctuation">.</span><span class="token function">NewListWatchFromClient</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> <span class="token string">"endpoints"</span><span class="token punctuation">,</span> api<span class="token punctuation">.</span>NamespaceAll<span class="token punctuation">,</span> fields<span class="token punctuation">.</span><span class="token function">Everything</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    cache<span class="token punctuation">.</span><span class="token function">NewReflector</span><span class="token punctuation">(</span>endpointsLW<span class="token punctuation">,</span> <span class="token operator">&amp;</span>api<span class="token punctuation">.</span>Endpoints<span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token function">NewEndpointsStore</span><span class="token punctuation">(</span><span class="token boolean">nil</span><span class="token punctuation">,</span> endpointsChan<span class="token punctuation">)</span><span class="token punctuation">,</span> period<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Run</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>NewServiceAPI</code> 为 service 和 endpoints 分别创建了 <code>ListWatch</code> 和 <code>Reflector</code>，根据惯例，我们还是只分析 <code>Service</code> 有关的部分。</p>
+<p><code>cache.NewListWatchFromClient()</code> 方法定义在 <code>pkg/client/cache/listwatch.go</code> 文件，它主要的功能是从 apiserver 读取（list）和监听（watch）某个 uri 地址的数据。它的实现不是本文的重点，在此略过不表，有兴趣可以自行阅读，并不是很复杂。</p>
+<p><code>NewServiceStore</code> 是什么的呢？</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">NewServiceStore</span><span class="token punctuation">(</span>store cache<span class="token punctuation">.</span>Store<span class="token punctuation">,</span> ch <span class="token keyword">chan</span><span class="token operator">&lt;-</span> ServiceUpdate<span class="token punctuation">)</span> cache<span class="token punctuation">.</span>Store <span class="token punctuation">{</span>
+    fn <span class="token operator">:=</span> <span class="token keyword">func</span><span class="token punctuation">(</span>objs <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> services <span class="token punctuation">[</span><span class="token punctuation">]</span>api<span class="token punctuation">.</span>Service
+        <span class="token keyword">for</span> <span class="token boolean">_</span><span class="token punctuation">,</span> o <span class="token operator">:=</span> <span class="token keyword">range</span> objs <span class="token punctuation">{</span>
+            services <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>services<span class="token punctuation">,</span> <span class="token operator">*</span><span class="token punctuation">(</span>o<span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token operator">*</span>api<span class="token punctuation">.</span>Service<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+        ch <span class="token operator">&lt;-</span> ServiceUpdate<span class="token punctuation">{</span>Op<span class="token punctuation">:</span> SET<span class="token punctuation">,</span> Services<span class="token punctuation">:</span> services<span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> store <span class="token operator">==</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+        store <span class="token operator">=</span> cache<span class="token punctuation">.</span><span class="token function">NewStore</span><span class="token punctuation">(</span>cache<span class="token punctuation">.</span>MetaNamespaceKeyFunc<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> <span class="token operator">&amp;</span>cache<span class="token punctuation">.</span>UndeltaStore<span class="token punctuation">{</span>
+        Store<span class="token punctuation">:</span>    store<span class="token punctuation">,</span>
+        PushFunc<span class="token punctuation">:</span> fn<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>Reflector</code> 会从 <code>ListWatcher</code> 中读取要监听资源的变化，写到 <code>store</code> 对象中去。这部分的代码在 <code>pkg/client/cache/</code> ，不是本文的重点。简单说一下它的大致过程：它内部进入循环，调用 <code>servicesLW.wathc()</code> 方法，根据得到的数据更新 <code>serviceStore</code> 的值，这个 serviceStore 每次更新都会出发一个 <code>pushFunc</code> 把当前的数据写到 channel <code>ServiceUpdate</code> ，从而完成了和上面部分的对接！</p>
+<p><img src="https://ww4.sinaimg.cn/large/006tNc79gy1fee6z9jczrj30sg0ig75i.jpg" alt=""></p>
+<h3 id="OnServiceUpdate：最终干活的人"><a href="#OnServiceUpdate：最终干活的人" class="headerlink" title="OnServiceUpdate：最终干活的人"></a>OnServiceUpdate：最终干活的人</h3><p>前面说了数据是怎么从 api Server 被 kube-rpoxy 拿到，并一层层地传递的。最终拿到了 service 和 endpoints 的数据，最终还是要落到谁来处理这些数据。前面我们也提过，不管是 <code>iptables</code> 模式，还是 <code>userspace</code> 模式，最终的处理函数都是 <code>OnServiceUpdate()</code>，我们这里还是看一下 <code>iptables/proxier.go:OnServiceUpdate</code>：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token punctuation">(</span>proxier <span class="token operator">*</span>Proxier<span class="token punctuation">)</span> <span class="token function">OnServiceUpdate</span><span class="token punctuation">(</span>allServices <span class="token punctuation">[</span><span class="token punctuation">]</span>api<span class="token punctuation">.</span>Service<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    proxier<span class="token punctuation">.</span>mu<span class="token punctuation">.</span><span class="token function">Lock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">defer</span> proxier<span class="token punctuation">.</span>mu<span class="token punctuation">.</span><span class="token function">Unlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    proxier<span class="token punctuation">.</span>haveReceivedServiceUpdate <span class="token operator">=</span> <span class="token boolean">true</span>
+
+    activeServices <span class="token operator">:=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token keyword">map</span><span class="token punctuation">[</span>proxy<span class="token punctuation">.</span>ServicePortName<span class="token punctuation">]</span><span class="token builtin">bool</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// use a map as a set</span>
+
+    <span class="token keyword">for</span> i <span class="token operator">:=</span> <span class="token keyword">range</span> allServices <span class="token punctuation">{</span>
+        service <span class="token operator">:=</span> <span class="token operator">&amp;</span>allServices<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+        svcName <span class="token operator">:=</span> types<span class="token punctuation">.</span>NamespacedName<span class="token punctuation">{</span>
+            Namespace<span class="token punctuation">:</span> service<span class="token punctuation">.</span>Namespace<span class="token punctuation">,</span>
+            Name<span class="token punctuation">:</span>      service<span class="token punctuation">.</span>Name<span class="token punctuation">,</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">for</span> i <span class="token operator">:=</span> <span class="token keyword">range</span> service<span class="token punctuation">.</span>Spec<span class="token punctuation">.</span>Ports <span class="token punctuation">{</span>
+            servicePort <span class="token operator">:=</span> <span class="token operator">&amp;</span>service<span class="token punctuation">.</span>Spec<span class="token punctuation">.</span>Ports<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+
+            serviceName <span class="token operator">:=</span> proxy<span class="token punctuation">.</span>ServicePortName<span class="token punctuation">{</span>
+                NamespacedName<span class="token punctuation">:</span> svcName<span class="token punctuation">,</span>
+                Port<span class="token punctuation">:</span>           servicePort<span class="token punctuation">.</span>Name<span class="token punctuation">,</span>
+            <span class="token punctuation">}</span>
+            activeServices<span class="token punctuation">[</span>serviceName<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span>
+            info<span class="token punctuation">,</span> exists <span class="token operator">:=</span> proxier<span class="token punctuation">.</span>serviceMap<span class="token punctuation">[</span>serviceName<span class="token punctuation">]</span>
+            <span class="token keyword">if</span> exists <span class="token operator">&amp;&amp;</span> proxier<span class="token punctuation">.</span><span class="token function">sameConfig</span><span class="token punctuation">(</span>info<span class="token punctuation">,</span> service<span class="token punctuation">,</span> servicePort<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">continue</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">if</span> exists <span class="token punctuation">{</span>
+                glog<span class="token punctuation">.</span><span class="token function">V</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Infof</span><span class="token punctuation">(</span><span class="token string">"Something changed for service %q: removing it"</span><span class="token punctuation">,</span> serviceName<span class="token punctuation">)</span>
+                <span class="token function">delete</span><span class="token punctuation">(</span>proxier<span class="token punctuation">.</span>serviceMap<span class="token punctuation">,</span> serviceName<span class="token punctuation">)</span>
+            <span class="token punctuation">}</span>
+            serviceIP <span class="token operator">:=</span> net<span class="token punctuation">.</span><span class="token function">ParseIP</span><span class="token punctuation">(</span>service<span class="token punctuation">.</span>Spec<span class="token punctuation">.</span>ClusterIP<span class="token punctuation">)</span>
+            glog<span class="token punctuation">.</span><span class="token function">V</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Infof</span><span class="token punctuation">(</span><span class="token string">"Adding new service %q at %s:%d/%s"</span><span class="token punctuation">,</span> serviceName<span class="token punctuation">,</span> serviceIP<span class="token punctuation">,</span> servicePort<span class="token punctuation">.</span>Port<span class="token punctuation">,</span> servicePort<span class="token punctuation">.</span>Protocol<span class="token punctuation">)</span>
+            info <span class="token operator">=</span> <span class="token function">newServiceInfo</span><span class="token punctuation">(</span>serviceName<span class="token punctuation">)</span>
+            info<span class="token punctuation">.</span>clusterIP <span class="token operator">=</span> serviceIP
+            info<span class="token punctuation">.</span>port <span class="token operator">=</span> <span class="token function">int</span><span class="token punctuation">(</span>servicePort<span class="token punctuation">.</span>Port<span class="token punctuation">)</span>
+            info<span class="token punctuation">.</span>protocol <span class="token operator">=</span> servicePort<span class="token punctuation">.</span>Protocol
+            info<span class="token punctuation">.</span>nodePort <span class="token operator">=</span> <span class="token function">int</span><span class="token punctuation">(</span>servicePort<span class="token punctuation">.</span>NodePort<span class="token punctuation">)</span>
+            info<span class="token punctuation">.</span>externalIPs <span class="token operator">=</span> service<span class="token punctuation">.</span>Spec<span class="token punctuation">.</span>ExternalIPs
+            <span class="token comment" spellcheck="true">// Deep-copy in case the service instance changes</span>
+            info<span class="token punctuation">.</span>loadBalancerStatus <span class="token operator">=</span> <span class="token operator">*</span>api<span class="token punctuation">.</span><span class="token function">LoadBalancerStatusDeepCopy</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>service<span class="token punctuation">.</span>Status<span class="token punctuation">.</span>LoadBalancer<span class="token punctuation">)</span>
+            info<span class="token punctuation">.</span>sessionAffinityType <span class="token operator">=</span> service<span class="token punctuation">.</span>Spec<span class="token punctuation">.</span>SessionAffinity
+            info<span class="token punctuation">.</span>loadBalancerSourceRanges <span class="token operator">=</span> service<span class="token punctuation">.</span>Spec<span class="token punctuation">.</span>LoadBalancerSourceRanges
+
+            proxier<span class="token punctuation">.</span>serviceMap<span class="token punctuation">[</span>serviceName<span class="token punctuation">]</span> <span class="token operator">=</span> info
+            glog<span class="token punctuation">.</span><span class="token function">V</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Infof</span><span class="token punctuation">(</span><span class="token string">"added serviceInfo(%s): %s"</span><span class="token punctuation">,</span> serviceName<span class="token punctuation">,</span> spew<span class="token punctuation">.</span><span class="token function">Sdump</span><span class="token punctuation">(</span>info<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    staleUDPServices <span class="token operator">:=</span> sets<span class="token punctuation">.</span><span class="token function">NewString</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">// Remove serviceports missing from the update.</span>
+    <span class="token keyword">for</span> name<span class="token punctuation">,</span> info <span class="token operator">:=</span> <span class="token keyword">range</span> proxier<span class="token punctuation">.</span>serviceMap <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token operator">!</span>activeServices<span class="token punctuation">[</span>name<span class="token punctuation">]</span> <span class="token punctuation">{</span>
+            glog<span class="token punctuation">.</span><span class="token function">V</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Infof</span><span class="token punctuation">(</span><span class="token string">"Removing service %q"</span><span class="token punctuation">,</span> name<span class="token punctuation">)</span>
+            <span class="token keyword">if</span> info<span class="token punctuation">.</span>protocol <span class="token operator">==</span> api<span class="token punctuation">.</span>ProtocolUDP <span class="token punctuation">{</span>
+                staleUDPServices<span class="token punctuation">.</span><span class="token function">Insert</span><span class="token punctuation">(</span>info<span class="token punctuation">.</span>clusterIP<span class="token punctuation">.</span><span class="token function">String</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token punctuation">}</span>
+            <span class="token function">delete</span><span class="token punctuation">(</span>proxier<span class="token punctuation">.</span>serviceMap<span class="token punctuation">,</span> name<span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    proxier<span class="token punctuation">.</span><span class="token function">syncProxyRules</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    proxier<span class="token punctuation">.</span><span class="token function">deleteServiceConnections</span><span class="token punctuation">(</span>staleUDPServices<span class="token punctuation">.</span><span class="token function">List</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>这段代码的核心是遍历作为参数传进来的 <code>api.Service</code> 数组，根据里面的信息构建 <code>proxier.serviceMap</code>（service 有改动，或者新建、删除），然后调用 <code>proxier.syncProxyRules()</code> 去同步 iptables 规则列表。</p>
+<p>通过这个部分的分析，我们明白了 <code>kube-proxy</code> 是如何保证 <code>apiserver</code> 中数据一旦变化，就立即更新节点的 iptables 规则的。</p>
+<p>这个过程的流程图如下：</p>
+<p><img src="https://ww3.sinaimg.cn/large/006tNc79gy1fee5sbtsraj31fy0oggnx.jpg" alt=""></p>
+<h2 id="服务的运行"><a href="#服务的运行" class="headerlink" title="服务的运行"></a>服务的运行</h2><p> <code>ProxyServer</code> 初始化结束之后，还会调用 <code>s.Run()</code>，我们来看一下里面的内容：</p>
+<pre><code>func (s *ProxyServer) Run() error {
+
+    // Start up a webserver if requested
+    if s.Config.HealthzPort &gt; 0 {
+        http.HandleFunc(&quot;/proxyMode&quot;, func(w http.ResponseWriter, r *http.Request) {
+            fmt.Fprintf(w, &quot;%s&quot;, s.ProxyMode)
+        })
+        configz.InstallHandler(http.DefaultServeMux)
+        go wait.Until(func() {
+            err := http.ListenAndServe(s.Config.HealthzBindAddress+&quot;:&quot;+strconv.Itoa(int(s.Config.HealthzPort)), nil)
+            if err != nil {
+                glog.Errorf(&quot;Starting health server failed: %v&quot;, err)
+            }
+        }, 5*time.Second, wait.NeverStop)
+    }
+
+    // Tune conntrack, if requested
+    if s.Conntracker != nil &amp;&amp; runtime.GOOS != &quot;windows&quot; {
+        max, err := getConntrackMax(s.Config)
+        if err != nil {
+            return err
+        }
+        if max &gt; 0 {
+            err := s.Conntracker.SetMax(max)
+            if err != nil {
+                if err != readOnlySysFSError {
+                    return err
+                }
+                const message = &quot;DOCKER RESTART NEEDED (docker issue #24000): /sys is read-only: &quot; +
+                    &quot;cannot modify conntrack limits, problems may arise later.&quot;
+                s.Recorder.Eventf(s.Config.NodeRef, api.EventTypeWarning, err.Error(), message)
+            }
+        }
+
+        if s.Config.ConntrackTCPEstablishedTimeout.Duration &gt; 0 {
+            timeout := int(s.Config.ConntrackTCPEstablishedTimeout.Duration / time.Second)
+            if err := s.Conntracker.SetTCPEstablishedTimeout(timeout); err != nil {
+                return err
+            }
+        }
+
+        if s.Config.ConntrackTCPCloseWaitTimeout.Duration &gt; 0 {
+            timeout := int(s.Config.ConntrackTCPCloseWaitTimeout.Duration / time.Second)
+            if err := s.Conntracker.SetTCPCloseWaitTimeout(timeout); err != nil {
+                return err
+            }
+        }
+    }
+
+    // Birth Cry after the birth is successful
+    s.birthCry()
+
+    // Just loop forever for now...
+    s.Proxier.SyncLoop()
+    return nil
+}
+</code></pre><p>这是个会一直运行的函数，前面的部分主要给 kube-proxy 做一些额外的补充，比如启动 <code>healthz</code> web 服务器，优化 <code>conntrack</code> 的参数。最后会调用 <code>s.Proxier.SyncLoop()</code> 进入主循环。</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token punctuation">(</span>proxier <span class="token operator">*</span>Proxier<span class="token punctuation">)</span> <span class="token function">Sync</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    proxier<span class="token punctuation">.</span>mu<span class="token punctuation">.</span><span class="token function">Lock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">defer</span> proxier<span class="token punctuation">.</span>mu<span class="token punctuation">.</span><span class="token function">Unlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    proxier<span class="token punctuation">.</span><span class="token function">syncProxyRules</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">func</span> <span class="token punctuation">(</span>proxier <span class="token operator">*</span>Proxier<span class="token punctuation">)</span> <span class="token function">SyncLoop</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    t <span class="token operator">:=</span> time<span class="token punctuation">.</span><span class="token function">NewTicker</span><span class="token punctuation">(</span>proxier<span class="token punctuation">.</span>syncPeriod<span class="token punctuation">)</span>
+    <span class="token keyword">defer</span> t<span class="token punctuation">.</span><span class="token function">Stop</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> <span class="token punctuation">{</span>
+        <span class="token operator">&lt;-</span>t<span class="token punctuation">.</span>C
+        glog<span class="token punctuation">.</span><span class="token function">V</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Infof</span><span class="token punctuation">(</span><span class="token string">"Periodic sync"</span><span class="token punctuation">)</span>
+        proxier<span class="token punctuation">.</span><span class="token function">Sync</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>这是一个周期性的任务，每隔  <code>proxier.syncPeriod</code> 的时间周期（默认是 30s，可以通过启动参数 <code>--iptables-sync-period</code> 配置）就会调用 <code>proxier.syncProxyRules()</code> 对 iptables 进行更新。</p>
+<p>这里有个疑问：既然 <code>kube-proxy</code> 能够自动监听 apiserver 的变化，并更新 iptables，为什么这里还要再每隔一段时间强制同步一次呢？我的看法是这只是安全防护措施，来规避有些情况（比如代码 bug，或者网络、环境问题等原因）下数据可能没有及时同步。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="http://licyhust.com/%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/2016/11/05/kube-proxy/" target="_blank" rel="noopener">kube-proxy 源码解析</a></li>
+<li><a href="http://blog.csdn.net/waltonwang/article/details/55286724" target="_blank" rel="noopener">CSDN 博客：kube-proxy源码分析</a></li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="kubernetes 简介：kube-dns 和服务发现" href="/2017/04/11/kubernetes-intro-kube-dns/">
+        ← kubernetes 简介：kube-dns 和服务发现
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="kubernetes 简介：service 和 kube-proxy 原理" href="/2017/03/30/kubernetes-introduction-service-and-kube-proxy/">
+        kubernetes 简介：service 和 kube-proxy 原理 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#kube-proxy-功能简介"><span class="toc-text">kube-proxy 功能简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数入口"><span class="toc-text">函数入口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#服务创建"><span class="toc-text">服务创建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ServiceConfig-和-endpointsConfig"><span class="toc-text">ServiceConfig 和 endpointsConfig</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NewSourceAPI-和数据的真实来源"><span class="toc-text">NewSourceAPI 和数据的真实来源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OnServiceUpdate：最终干活的人"><span class="toc-text">OnServiceUpdate：最终干活的人</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#服务的运行"><span class="toc-text">服务的运行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">kube-proxy 源码解析</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

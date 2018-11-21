@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>nova scheduler 原理介绍和源码解析 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="nova scheduler 原理介绍和源码解析 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2016/02/01/nova-scheduler-insight/">
+
+	
+	<meta property="article:published_time" content="2016-02-01T00:02:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2016/02/01/nova-scheduler-insight/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2016-01-31T16:00:00.000Z" itemprop="datePublished">
+                    2016-02-1
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">nova scheduler 原理介绍和源码解析</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p>TL;DR</p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>在 openstack 中，scheduler 负责从宿主机（运行 nova-compute 的节点）中根据一系列的算法和参数（CPU 核数，可用 RAM，镜像类型等 ）选择出来一个，来部署虚拟机（instance）。openstack 官方网站上这张经典的图可以直观地看到 scheduler 的两个步骤：过滤（filter） + 权重计算（weighting）。</p>
+<p><img src="http://docs.openstack.org/kilo/config-reference/content/figures/4/a/a/common/figures/filteringWorkflow1.png" alt="scheduler"></p>
+<p>简单来说，过滤就是把不符合条件的宿主机去除掉，权重计算就是把剩下的主机根据某个值排序。如果这个过程中出错，就会报 NoValidHost 这个“万能错误”（horizon 上部署机器这个错误出现的几率很高，而且原因是多种多样的）。</p>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p><strong>注：下面所有分析的源码都是在 Icehouse 版本进行的，其他版本可能会有不同。</strong></p>
+<h3 id="代码结构"><a href="#代码结构" class="headerlink" title="代码结构"></a>代码结构</h3><p>scheduler 相关的代码主要放在 <code>nova/scheduler/</code> 这个文件夹下面，外加 <code>nova/filters.py</code> 和 <code>nova/weights.py</code> 这两个辅助文件。</p>
+<p>文件的目录结构如下：</p>
+<pre><code>nova/scheduler
+├── __init__.py
+├── baremetal_host_manager.py
+├── caching_scheduler.py
+├── chance.py
+├── driver.py
+├── filter_scheduler.py
+├── filters
+│   ├── __init__.py
+│   ├── affinity_filter.py
+│   ├── aggregate_image_properties_isolation.py
+│   ├── aggregate_instance_extra_specs.py
+│   ├── aggregate_multitenancy_isolation.py
+│   ├── all_hosts_filter.py
+│   ├── availability_zone_filter.py
+│   ├── compute_capabilities_filter.py
+│   ├── compute_filter.py
+│   ├── core_filter.py
+│   ├── disk_filter.py
+│   ├── extra_specs_ops.py
+│   ├── image_props_filter.py
+│   ├── io_ops_filter.py
+│   ├── isolated_hosts_filter.py
+│   ├── json_filter.py
+│   ├── metrics_filter.py
+│   ├── num_instances_filter.py
+│   ├── pci_passthrough_filter.py
+│   ├── ram_filter.py
+│   ├── retry_filter.py
+│   ├── trusted_filter.py
+│   └── type_filter.py
+├── host_manager.py
+├── manager.py
+├── rpcapi.py
+├── scheduler_options.py
+├── utils.py
+└── weights
+    ├── __init__.py
+    ├── metrics.py
+    └── ram.py
+</code></pre><p><code>manager.py</code> 这个文件中主要处理 Scheduler 服务接受到的消息，除了 <code>run_instance</code> 之外，还有 <code>live_migration</code>、<code>prep_resize</code>。 这些操作一般会直接调用自身的 Scheduler 去执行，也有一部分会直接发送消息给 compute 服务去做。</p>
+<p><code>host_manager.py</code> 是管理 zone 里面宿主机资源的，里面有两个类：</p>
+<ul>
+<li><code>HostState</code> 封装了一台宿主机的资源情况，比如可用的内存，已用的内存，已用的硬盘，可用的硬盘，运行的 instance 个数，宿主机 ip，宿主机类型等等信息，还包含了一些方法来更新这些值。</li>
+<li><code>HostManager</code>： 管理宿主机的类，主要功能是：调用 filter 和 weight 的 handler 和配置里定义的对应的类来实现调度，主要的方法有：<ul>
+<li><code>get_all_host_states(self, context)</code>： 返回能发现的所有宿主机信息，返回值是 HostState 列表</li>
+<li><code>get_filters_hosts(self, hosts, filter_properties)</code>：返回符合过滤条件的所有宿主机</li>
+<li><code>get_weighted_hosts(self, hosts, weight_properties)</code>：对传进去的宿主机进行权重计算，返回排序好的列表</li>
+</ul>
+</li>
+</ul>
+<p><code>filters/__init__.py</code> 定义了两个重要的类：</p>
+<ul>
+<li><code>BaseHostFilter</code>：所有的 filter 都要继承这个基类来实现自己的过滤功能，里面有两个方法：<ul>
+<li><code>host_passes(self, host_state, filter_properties)</code>：如果 HostState 能够通过过滤函数，就返回 True，否则返回 False</li>
+<li><code>_filter_one(self, obj, filter_properties)</code>：调用 <code>host_passes</code>，判断 obj 是否能通过过滤</li>
+</ul>
+</li>
+<li><code>HostFilterHandler</code>：直接继承自 <code>nova/filters.py:BaseFiltrHandler</code> 这个类，最重要的方法是 <code>get_filtered_objects(self, filter_classes, objs, filter_properties, index=0)</code>，对每台 instance 调用 各个 filter_classes（可能有些 filter 只在第一次运行），最后返回通过的对象</li>
+</ul>
+<p><code>weights/__init__.py</code> 也定义了两个重要的类：</p>
+<ul>
+<li><code>BaseHostWeigher</code>：直接继承自 <code>nova/weights.py:BaseWeigher</code>，所有具体的子类都要继承这个类，并实现自己的 <code>_weigh_object(self, host_state, weight_properties)</code> 方法，来对宿主机计算权重。</li>
+<li><code>HostWeightHandler</code>：直接继承自 <code>nova/weights.py:BaseWeightHandler</code> 类，最重要的方法是 <code>get_weighted_objects(self, weigher_classes, obj_list, weighing_properties)</code>，用来调用各个权重类来计算总的权重，并返回排序后的结果</li>
+</ul>
+<p><code>weights/ram.py</code>：根据宿主机目前可用内存进行权重计算<br><code>weights/metrics.py</code>：根据自定义的 metrics 进行权重计算</p>
+<h3 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h3><p>主要的文件和类都已经介绍得差不多了，我们来把这些东西串一下，看看实际调度怎么工作的：</p>
+<ol>
+<li>nova-scheduler 服务从 MQ 中接收到创建虚拟机的请求，调用 <code>manger.py:SchedulerManager</code> 的 <code>run_instance</code> 方法</li>
+<li><code>run_instance</code> 中会调用自己 driver（默认是 <code>filter_scheduler.py:FilterScheduler</code>） 的 <code>schedule_run_instance</code> 方法来调度</li>
+<li><code>schedule_run_instance</code> 会调用自身类里 <code>_schedule</code> 方法来进行过滤和计算权重</li>
+<li><code>_schedule</code> 方法会调用 <code>host_manager.py:HostManager</code> 的 <code>get_all_host_states</code> 来获取所有可用的宿主机，调用 <code>get_filtered_hosts</code> 来对宿主机进行过滤，调用 <code>get_weighed_hosts</code> 对宿主机进行权重排序。如果有多个 instances 要创建，会循环为每个 instance 都跑一遍，获得最终的宿主机</li>
+<li><code>get_filtered_hosts</code> 会先对 <code>ignore_hosts</code>，<code>force_hosts</code> 和 <code>force_nodes</code> 属性进行过滤，然后调用 <code>self.filter_handler.get_filtered_objects</code> 方法。默认的 filter_handler 是 <code>scheduler/filters/__init__.py:HostFilterHandler</code> ，它直接继承了 <code>nova/filtes.py:BaseFilterHandler</code> 类的 <code>get_filted_objects</code> 方法，这个方法会调用所有的 filter_class，执行最终的过滤</li>
+<li>类似的，<code>get_weighed_hosts</code> 直接调用 <code>self.weight_handler.get_weighed_objects</code> 方法，默认的 weight_handler 是 <code>scheduler/weights/__init__.py:HostWeightHandler</code>，它直接继承了 <code>nova/weights.py:BaseWeightHandler</code> 的 <code>get_weighed_objects</code>，这个方法是最终计算权重并排序的地方</li>
+<li>得到了最终的列表，就循环给 nova-compute 发消息，里面带上刚选择的宿主机，并更新数库中 instance 的数据</li>
+<li>nova-compute 接收到消息，开始自己的逻辑，部署一台虚拟机</li>
+</ol>
+<h3 id="filter-scheduler"><a href="#filter-scheduler" class="headerlink" title="filter_scheduler"></a>filter_scheduler</h3><p>我们重点讲一下 Scheduler，所有的 Scheduler 的基类是 <code>nova/scheduler/driver.py:Scheduler</code>：</p>
+<pre><code>class Scheduler(object):
+    &quot;&quot;&quot;The base class that all Scheduler classes should inherit from.&quot;&quot;&quot;
+
+    def __init__(self):
+        self.host_manager = importutils.import_object(
+                CONF.scheduler_host_manager)
+        self.servicegroup_api = servicegroup.API()
+
+    def run_periodic_tasks(self, context):
+        &quot;&quot;&quot;Manager calls this so drivers can perform periodic tasks.&quot;&quot;&quot;
+        pass
+
+    def hosts_up(self, context, topic):
+        &quot;&quot;&quot;Return the list of hosts that have a running service for topic.&quot;&quot;&quot;
+
+        services = db.service_get_all_by_topic(context, topic)
+        return [service[&#39;host&#39;]
+                for service in services
+                if self.servicegroup_api.service_is_up(service)]
+
+    def schedule_run_instance(self, context, request_spec,
+                              admin_password, injected_files,
+                              requested_networks, is_first_time,
+                              filter_properties, legacy_bdm_in_spec):
+        &quot;&quot;&quot;Must override schedule_run_instance method for scheduler to work.&quot;&quot;&quot;
+        msg = _(&quot;Driver must implement schedule_run_instance&quot;)
+        raise NotImplementedError(msg)
+
+    def select_destinations(self, context, request_spec, filter_properties):
+        &quot;&quot;&quot;Must override select_destinations method.
+
+        :return: A list of dicts with &#39;host&#39;, &#39;nodename&#39; and &#39;limits&#39; as keys
+            that satisfies the request_spec and filter_properties.
+        &quot;&quot;&quot;
+        msg = _(&quot;Driver must implement select_destinations&quot;)
+        raise NotImplementedError(msg)
+</code></pre><p>子类需要实现 <code>schedule_run_instance</code> 和 <code>select_destionations</code> 方法来做具体的调度。目前有三种不同的实现：</p>
+<ul>
+<li><code>chance.py:ChanceScheduler</code> ：随机选择一台宿主机，只要上面 nova-compute 服务正常，并且不再 <code>ignore_hosts</code> 列表里</li>
+<li><code>filter_scheduler.py:FilterScheduler</code>：先过滤后计算权重的调度模式，用户可以扩展自己的 filter</li>
+<li><code>caching_scheduler.py:CachingScheduler</code> ：在 FilterScheduler 上面又封装了一层，将所有 host 信息保存到内存中，然后定时通过 DB 来信息来更新这个列表，这样下次调度的时候使用缓存的数据</li>
+</ul>
+<p>默认使用 <code>FilterScheduler</code>，也是我们下面重点介绍的部分。刚刚提到，它最重要的方法是 <code>schedule_run_isntance</code>：</p>
+<pre><code>def schedule_run_instance(self, context, request_spec,
+                          admin_password, injected_files,
+                          requested_networks, is_first_time,
+                          filter_properties, legacy_bdm_in_spec):
+    &quot;&quot;&quot;This method is called from nova.compute.api to provision
+    an instance.  We first create a build plan (a list of WeightedHosts)
+    and then provision.
+
+    Returns a list of the instances created.
+    &quot;&quot;&quot;
+    payload = dict(request_spec=request_spec)
+    self.notifier.info(context, &#39;scheduler.run_instance.start&#39;, payload)
+
+    instance_uuids = request_spec.get(&#39;instance_uuids&#39;)
+    LOG.info(_(&quot;Attempting to build %(num_instances)d instance(s) &quot;
+                &quot;uuids: %(instance_uuids)s&quot;),
+              {&#39;num_instances&#39;: len(instance_uuids),
+               &#39;instance_uuids&#39;: instance_uuids})
+    LOG.debug(_(&quot;Request Spec: %s&quot;) % request_spec)
+
+    weighed_hosts = self._schedule(context, request_spec,
+                                   filter_properties, instance_uuids)
+
+    # NOTE: Pop instance_uuids as individual creates do not need the
+    # set of uuids. Do not pop before here as the upper exception
+    # handler fo NoValidHost needs the uuid to set error state
+    instance_uuids = request_spec.pop(&#39;instance_uuids&#39;)
+
+    # NOTE(comstud): Make sure we do not pass this through.  It
+    # contains an instance of RpcContext that cannot be serialized.
+    filter_properties.pop(&#39;context&#39;, None)
+
+    for num, instance_uuid in enumerate(instance_uuids):
+        request_spec[&#39;instance_properties&#39;][&#39;launch_index&#39;] = num
+
+        try:
+            try:
+                weighed_host = weighed_hosts.pop(0)
+                LOG.info(_(&quot;Choosing host %(weighed_host)s &quot;
+                            &quot;for instance %(instance_uuid)s&quot;),
+                          {&#39;weighed_host&#39;: weighed_host,
+                           &#39;instance_uuid&#39;: instance_uuid})
+            except IndexError:
+                raise exception.NoValidHost(reason=&quot;&quot;)
+
+            self._provision_resource(context, weighed_host,
+                                     request_spec,
+                                     filter_properties,
+                                     requested_networks,
+                                     injected_files, admin_password,
+                                     is_first_time,
+                                     instance_uuid=instance_uuid,
+                                     legacy_bdm_in_spec=legacy_bdm_in_spec)
+        except Exception as ex:
+            # NOTE(vish): we don&#39;t reraise the exception here to make sure
+            #             that all instances in the request get set to
+            #             error properly
+            driver.handle_schedule_error(context, ex, instance_uuid,
+                                         request_spec)
+        # scrub retry host list in case we&#39;re scheduling multiple
+        # instances:
+        retry = filter_properties.get(&#39;retry&#39;, {})
+        retry[&#39;hosts&#39;] = []
+
+    self.notifier.info(context, &#39;scheduler.run_instance.end&#39;, payload)
+</code></pre><p>上面这段代码可以简单分成三个部分：</p>
+<ol>
+<li>准备和构造工作</li>
+<li>调用 <code>_schedule</code> 方法进行调度</li>
+<li>循环调度的结果，调用 <code>_provision_resource</code> 进行部署</li>
+</ol>
+<p><code>_provision_resource</code> 的主要工作就是更新宿主机的资源情况，向 compute 发送部署消息，我们来重点看一下 <code>_schedule</code>：</p>
+<pre><code>def _schedule(self, context, request_spec, filter_properties,
+              instance_uuids=None):
+    &quot;&quot;&quot;Returns a list of hosts that meet the required specs,
+    ordered by their fitness.
+    &quot;&quot;&quot;
+    elevated = context.elevated()
+    instance_properties = request_spec[&#39;instance_properties&#39;]
+    instance_type = request_spec.get(&quot;instance_type&quot;, None)
+
+    update_group_hosts = self._setup_instance_group(context,
+            filter_properties)
+
+    config_options = self._get_configuration_options()
+
+    # check retry policy.  Rather ugly use of instance_uuids[0]...
+    # but if we&#39;ve exceeded max retries... then we really only
+    # have a single instance.
+    properties = instance_properties.copy()
+    if instance_uuids:
+        properties[&#39;uuid&#39;] = instance_uuids[0]
+    self._populate_retry(filter_properties, properties)
+
+    filter_properties.update({&#39;context&#39;: context,
+                              &#39;request_spec&#39;: request_spec,
+                              &#39;config_options&#39;: config_options,
+                              &#39;instance_type&#39;: instance_type})
+
+    self.populate_filter_properties(request_spec,
+                                    filter_properties)
+
+    # Find our local list of acceptable hosts by repeatedly
+    # filtering and weighing our options. Each time we choose a
+    # host, we virtually consume resources on it so subsequent
+    # selections can adjust accordingly.
+
+    # Note: remember, we are using an iterator here. So only
+    # traverse this list once. This can bite you if the hosts
+    # are being scanned in a filter or weighing function.
+    hosts = self._get_all_host_states(elevated)
+
+    selected_hosts = []
+    if instance_uuids:
+        num_instances = len(instance_uuids)
+    else:
+        num_instances = request_spec.get(&#39;num_instances&#39;, 1)
+    for num in xrange(num_instances):
+        # Filter local hosts based on requirements ...
+        hosts = self.host_manager.get_filtered_hosts(hosts,
+                filter_properties, index=num)
+        if not hosts:
+            # Can&#39;t get any more locally.
+            break
+
+        LOG.debug(_(&quot;Filtered %(hosts)s&quot;), {&#39;hosts&#39;: hosts})
+
+        weighed_hosts = self.host_manager.get_weighed_hosts(hosts,
+                filter_properties)
+
+        LOG.debug(_(&quot;Weighed %(hosts)s&quot;), {&#39;hosts&#39;: weighed_hosts})
+
+        scheduler_host_subset_size = CONF.scheduler_host_subset_size
+        if scheduler_host_subset_size &gt; len(weighed_hosts):
+            scheduler_host_subset_size = len(weighed_hosts)
+        if scheduler_host_subset_size &lt; 1:
+            scheduler_host_subset_size = 1
+
+        chosen_host = random.choice(
+            weighed_hosts[0:scheduler_host_subset_size])
+        selected_hosts.append(chosen_host)
+
+        # Now consume the resources so the filter/weights
+        # will change for the next instance.
+        chosen_host.obj.consume_from_instance(instance_properties)
+        if update_group_hosts is True:
+            filter_properties[&#39;group_hosts&#39;].add(chosen_host.obj.host)
+    return selected_hosts
+</code></pre><p>这段代码也可以简单分成几部分：</p>
+<ol>
+<li>更新和完善 <code>filter_properties</code></li>
+<li>获取所有宿主机信息</li>
+<li>为每个 instance 循环调用 filter 和 weigh 方法</li>
+<li>获取最终的宿主机，并更新宿主机资源信息</li>
+</ol>
+<p>filter 部分最终会调用 <code>nova/filters.py:BaseFilterHandler</code> 定义的方法：</p>
+<pre><code>def get_filtered_objects(self, filter_classes, objs,
+        filter_properties, index=0):
+    list_objs = list(objs)
+    LOG.debug(_(&quot;Starting with %d host(s)&quot;), len(list_objs))
+    for filter_cls in filter_classes:
+        cls_name = filter_cls.__name__
+        filter = filter_cls()
+
+        if filter.run_filter_for_index(index):
+            objs = filter.filter_all(list_objs,
+                                           filter_properties)
+            if objs is None:
+                LOG.debug(_(&quot;Filter %(cls_name)s says to stop filtering&quot;),
+                      {&#39;cls_name&#39;: cls_name})
+                return
+            list_objs = list(objs)
+            if not list_objs:
+                LOG.info(_(&quot;Filter %s returned 0 hosts&quot;), cls_name)
+                break
+            LOG.debug(_(&quot;Filter %(cls_name)s returned &quot;
+                        &quot;%(obj_len)d host(s)&quot;),
+                      {&#39;cls_name&#39;: cls_name, &#39;obj_len&#39;: len(list_objs)})
+    return list_objs
+</code></pre><p>没什么好说的，就是把所有的 filters 都跑一遍，进去的是 objs 对象，返回能通过 filter 的 list_objs。每个 filter 都是调用 <code>filter_all</code> 方法，这个方法最终会调用 filter 的 <code>host_passes</code>，后面还会分析几个 filter 的代码。</p>
+<p>类似的，权重计算过程也是调用所有的 weigh 类：</p>
+<pre><code>def get_weighed_objects(self, weigher_classes, obj_list,
+        weighing_properties):
+    &quot;&quot;&quot;Return a sorted (descending), normalized list of WeighedObjects.&quot;&quot;&quot;
+
+    if not obj_list:
+        return []
+
+    weighed_objs = [self.object_class(obj, 0.0) for obj in obj_list]
+    for weigher_cls in weigher_classes:
+        weigher = weigher_cls()
+        weights = weigher.weigh_objects(weighed_objs, weighing_properties)
+
+        # Normalize the weights
+        weights = normalize(weights,
+                            minval=weigher.minval,
+                            maxval=weigher.maxval)
+
+        for i, weight in enumerate(weights):
+            obj = weighed_objs[i]
+            obj.weight += weigher.weight_multiplier() * weight
+
+    return sorted(weighed_objs, key=lambda x: x.weight, reverse=True)
+</code></pre><p>不同的是，每个对象最终的权重是叠加起来的。为了防止某些 weigh 计算得到的值太夸张（比如你自定义了一个类，把权重结果设置得很大），在叠加之前还会调用 <code>normalize</code> 函数把值标准化到 [0, 1] 之间，算法也比较简单，会取出你给出的一组权重值的最大值和最小值，然后每个值变成：</p>
+<pre><code>(value - min) / (max - min)
+</code></pre><p>这样就不会出现某个权重指标影响过大的问题。除此之外，每个权重指标还有一个 multiplier 的概念，就是你希望某个指标占的比重更大一点，而不是所有权重指标都一样。</p>
+<h3 id="filters"><a href="#filters" class="headerlink" title="filters"></a>filters</h3><p>在 <code>nova/scheduler/filters/__init__.py</code> 文件中有一个类 <code>BaseHostFilter</code>：</p>
+<pre><code>class BaseHostFilter(filters.BaseFilter):
+    &quot;&quot;&quot;Base class for host filters.&quot;&quot;&quot;
+    def _filter_one(self, obj, filter_properties):
+        &quot;&quot;&quot;Return True if the object passes the filter, otherwise False.&quot;&quot;&quot;
+        return self.host_passes(obj, filter_properties)
+
+    def host_passes(self, host_state, filter_properties):
+        &quot;&quot;&quot;Return True if the HostState passes the filter, otherwise False.
+        Override this in a subclass.
+        &quot;&quot;&quot;
+        raise NotImplementedError()
+</code></pre><p>这个类是所有具体 filter 的基类，子类需要实现自己的 <code>host_passes</code> 方法，我们先看一个简单的 filter：</p>
+<pre><code>class BaseRamFilter(filters.BaseHostFilter):
+
+    def _get_ram_allocation_ratio(self, host_state, filter_properties):
+        raise NotImplementedError
+
+    def host_passes(self, host_state, filter_properties):
+        &quot;&quot;&quot;Only return hosts with sufficient available RAM.&quot;&quot;&quot;
+        instance_type = filter_properties.get(&#39;instance_type&#39;)
+        requested_ram = instance_type[&#39;memory_mb&#39;]
+        free_ram_mb = host_state.free_ram_mb
+        total_usable_ram_mb = host_state.total_usable_ram_mb
+
+        ram_allocation_ratio = self._get_ram_allocation_ratio(host_state,
+                                                          filter_properties)
+
+        memory_mb_limit = total_usable_ram_mb * ram_allocation_ratio
+        used_ram_mb = total_usable_ram_mb - free_ram_mb
+        usable_ram = memory_mb_limit - used_ram_mb
+        if not usable_ram &gt;= requested_ram:
+            LOG.debug(_(&quot;%(host_state)s does not have %(requested_ram)s MB &quot;
+                    &quot;usable ram, it only has %(usable_ram)s MB usable ram.&quot;),
+                    {&#39;host_state&#39;: host_state,
+                     &#39;requested_ram&#39;: requested_ram,
+                     &#39;usable_ram&#39;: usable_ram})
+            return False
+
+        # save oversubscription limit for compute node to test against:
+        host_state.limits[&#39;memory_mb&#39;] = memory_mb_limit
+        return True
+</code></pre><p><code>filters/ram_filter.py</code> 文件中定义的 <code>BaseRamFilter</code> 很简单，只要宿主机可分配的内存大于 instance 请求的内存，就返回 True，否则返回 False。类似的 <code>DiskFilter</code> 和 <code>CoreFilter</code> 都是同样的意思。这些简单的 filters 组合起来非常强大，可以满足很复杂的需求。</p>
+<h3 id="weights"><a href="#weights" class="headerlink" title="weights"></a>weights</h3><p>所有的 weigh 类只要继承 <code>schedule/weights/__ini__.py:BaseHostWeigher</code>，实现自己的 <code>_weigh_objects</code> 就可以啦，比如 <code>RamWeigher</code>：</p>
+<pre><code>class RAMWeigher(weights.BaseHostWeigher):
+    minval = 0
+
+    def weight_multiplier(self):
+        &quot;&quot;&quot;Override the weight multiplier.&quot;&quot;&quot;
+        return CONF.ram_weight_multiplier
+
+    def _weigh_object(self, host_state, weight_properties):
+        &quot;&quot;&quot;Higher weights win.  We want spreading to be the default.&quot;&quot;&quot;
+        return host_state.free_ram_mb
+</code></pre><p><code>_weigh_object</code> 返回一个数值，表示权重指标。另外一个 weigher 类是 <code>MetricsWeigher</code>：</p>
+<pre><code>class MetricsWeigher(weights.BaseHostWeigher):
+    def __init__(self):
+        self._parse_setting()
+
+    def _parse_setting(self):
+        self.setting = utils.parse_options(CONF.metrics.weight_setting,
+                                           sep=&#39;=&#39;,
+                                           converter=float,
+                                           name=&quot;metrics.weight_setting&quot;)
+
+    def weight_multiplier(self):
+        &quot;&quot;&quot;Override the weight multiplier.&quot;&quot;&quot;
+        return CONF.metrics.weight_multiplier
+
+    def _weigh_object(self, host_state, weight_properties):
+        value = 0.0
+
+        for (name, ratio) in self.setting:
+            try:
+                value += host_state.metrics[name].value * ratio
+            except KeyError:
+                if CONF.metrics.required:
+                    raise exception.ComputeHostMetricNotFound(
+                            host=host_state.host,
+                            node=host_state.nodename,
+                            name=name)
+                else:
+                    # We treat the unavailable metric as the most negative
+                    # factor, i.e. set the value to make this obj would be
+                    # at the end of the ordered weighed obj list
+                    # Do nothing if ratio or weight_multiplier is 0.
+                    if ratio * self.weight_multiplier() != 0:
+                        return CONF.metrics.weight_of_unavailable
+
+        return value
+</code></pre><p>返回所有自定义 metrics 与对应 ratio 的乘积和。</p>
+<p>如果需要定制自己的调度算法，只要在 filters 或者 weights 文件夹下面添加一个文件，并修改一下配置文件就好了。</p>
+<p>对了，还要提醒一件事：因为 filters 是逐个调用的，所以最好把过滤性强（能除去更多不符合条件宿主机）的放到配置项的最前面。</p>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="nova compute service 启动过程" href="/2016/02/25/nova-service-insight/">
+        ← nova compute service 启动过程
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="bottle 源码解析" href="/2016/01/20/dive-into-bottle/">
+        bottle 源码解析 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#介绍"><span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码分析"><span class="toc-text">源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#代码结构"><span class="toc-text">代码结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行流程"><span class="toc-text">执行流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#filter-scheduler"><span class="toc-text">filter_scheduler</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#filters"><span class="toc-text">filters</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#weights"><span class="toc-text">weights</span></a></li></ol></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">nova scheduler 原理介绍和源码解析</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

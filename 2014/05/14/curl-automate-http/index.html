@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>【翻译】curl自动化http操作 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="【翻译】curl自动化http操作 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2014/05/14/curl-automate-http/">
+
+	
+	<meta property="article:published_time" content="2014-05-14T00:05:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2014/05/14/curl-automate-http/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2014-05-13T16:00:00.000Z" itemprop="datePublished">
+                    2014-05-14
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/程序技术/">程序技术</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">【翻译】curl自动化http操作</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p><img src="http://cdn.osxdaily.com/wp-content/uploads/2014/02/download-with-curl.png" alt="curl"></p>
+<h2 id="HTTP-脚本"><a href="#HTTP-脚本" class="headerlink" title="HTTP 脚本"></a>HTTP 脚本</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>这篇文档假定读者熟悉HTML和简单的网络知识。</p>
+<p>大量应用转到网络使得HTTP 脚本被大量使用，自动化地从网络获取信息、伪装成用户、上传数据到网络服务器也变得至关重要。</p>
+<p><code>curl</code>是进行各种 url 操作和转换的命令行工具，这篇文章只关注<code>curl</code>在 http 请求中的应用。我想你已经知道使用<code>curl --help</code>或者<code>curl --manual</code> 来初步了解<code>curl</code>。</p>
+<p><code>curl</code>不能保证完成你所有的任务。它能发出请求、获取数据、发送数据和获得信息，你或许需要通过其他的脚本语言把这些结合在一起达到所需的目标。</p>
+<h3 id="HTTP-协议"><a href="#HTTP-协议" class="headerlink" title="HTTP 协议"></a>HTTP 协议</h3><p>HTTP 是从网络服务器端获得数据的协议，是建立在<code>TCP/IP</code>协议上的简单协议。这一协议也允许把数据从客户端发送到服务器端，不过用的是不同的方法，下面我们将介绍到。</p>
+<p>HTTP 的实质是：客户端向服务器端请求某个动作时发送<code>ASCII</code>码文件，然后服务器端返回实际的请求资源。</p>
+<p>Curl，作为客户端就是发送 HTTP 请求的。请求由方法（GET,POST,HEAD等）、请求头部和请求的正文组成。HTTP 服务器端的响应包括：状态行（指明一切是否正常），响应头部和响应的正文。正文就是指你请求的数据，可以是html或者图像等。</p>
+<h3 id="查看协议"><a href="#查看协议" class="headerlink" title="查看协议"></a>查看协议</h3><p>使用<code>curl</code>的选项<code>--verbose</code>(或者简写<code>-v</code>)可以查看<code>curl</code>发给服务器端的命令，以及其他一些信息。<code>--verbose</code>是调试和理解<code>curl &lt;--&gt; server</code>交互的最有用的选项。</p>
+<p>有时候只是<code>--verbose</code>还不够，<code>--trace</code>和<code>--trace-ascii</code>会提供<code>curl</code>发送和接收的更详细信息，可以这样使用：</p>
+<pre><code>curl --trace-ascii debugdump.txt http://www.example.com
+</code></pre><h3 id="查看时间"><a href="#查看时间" class="headerlink" title="查看时间"></a>查看时间</h3><p>如果你想知道到底什么占用了那么多时间的话，或者只是想了解传输的两点间所用的时间，以及其他一些情况，你可以使用<code>--trace-time</code>选项。它将在输出中打印时间：</p>
+<pre><code>curl --trace-ascii d.txt --trace-time http://www.example.com
+</code></pre><h3 id="查看返回内容"><a href="#查看返回内容" class="headerlink" title="查看返回内容"></a>查看返回内容</h3><p>默认情况下，<code>curl</code>会把内容返回到<code>stdout</code>(标准输出)。你可以使用<code>-o</code>或者<code>-O</code>把它重定向到其他地方。</p>
+<blockquote>
+<p>译者注： 更多关于<code>-o</code>和<code>-O</code>的详情请查看<code>man curl</code>。</p>
+</blockquote>
+<h2 id="URL"><a href="#URL" class="headerlink" title="URL"></a>URL</h2><h3 id="规范"><a href="#规范" class="headerlink" title="规范"></a>规范</h3><p>URL(Uniform Resource Locator)指定网络上每个资源的位置，你一定见过诸如<code>http://curl.haxx.se</code>或者<code>https://yourbank.com</code>的URL不下千次了。RFC 3986就是关于URL最权威的规范。</p>
+<h3 id="主机"><a href="#主机" class="headerlink" title="主机"></a>主机</h3><p>主机名通常由DNS或者你的<code>/etc/hosts</code>文件指定的ip来解析，也就是<code>curl</code>最终通信的服务器地址。你也可以直接在url中使用ip来取代主机名。</p>
+<p>在测试或者其他特殊情况下，你可以用<code>curl</code>的<code>--resolve</code>选项指定主机名所对应的ip地址：</p>
+<pre><code>curl --resolve www.example.org:80:127.0.01 http://example.org
+</code></pre><h3 id="端口号"><a href="#端口号" class="headerlink" title="端口号"></a>端口号</h3><p>每个<code>curl</code>命令都作用在一个特定的端口上，一般是TCP端口也有可能是UDP端口。大多数情况下，你无须担心这个问题，但有时候你要在不同的端口上做测试，就需要指定端口号。端口号紧跟在主机名的冒号后，例如我们希望http协议请求<code>1234</code>端口：</p>
+<pre><code>curl http://www.example.com:1234
+</code></pre><p>服务器将使用你在URL里指定的端口号来获取服务。有时你会用到本地的代理，这个时候你就要指定代理的端口号来限定<code>curl</code>的连接服务：</p>
+<pre><code>curl --proxy http://proxy.example.org:4321 http://remote.example.org
+</code></pre><h3 id="用户名和密码"><a href="#用户名和密码" class="headerlink" title="用户名和密码"></a>用户名和密码</h3><p>有些需要HTTP认证的服务会要求你提供用户名和密码上传到服务器端。</p>
+<p>你可以直接在URL里面使用用户名和密码也可以分开使用：</p>
+<pre><code>curl http://user:password@example.org
+</code></pre><p>或者</p>
+<pre><code>curl -u user:password http://example.org
+</code></pre><p>需要注意的是，这类的用户名/密码验证并不是现代用户登录的网页使用的方法，后者一般使用表单和缓存。</p>
+<h3 id="路径"><a href="#路径" class="headerlink" title="路径"></a>路径</h3><p>URL的路径用来发送给服务器端来请求相应的资源，路径是主机名（或者端口号）后面跟的内容。</p>
+<h2 id="获取页面"><a href="#获取页面" class="headerlink" title="获取页面"></a>获取页面</h2><h3 id="GET"><a href="#GET" class="headerlink" title="GET"></a>GET</h3><p>HTTP 最常见也最简单的操作就是获取一个 URL 的内容，URL 指向的可以是网页、图像或者文件。客户端向服务器端发起 GET 请求，然后收到想要的文档。如果你使用下面的命令：</p>
+<pre><code>curl http://curl.haxx.se
+</code></pre><p>就会在终端得到URL所指向网页的所有内容。</p>
+<p>HTTP响应会包含头部信息，而默认情况下它是隐藏的，可以使用 <code>curl</code>的<code>--include(-i)</code>选项来显示头部。</p>
+<h3 id="HEAD"><a href="#HEAD" class="headerlink" title="HEAD"></a>HEAD</h3><p>你也可以使用<code>--head（-I&lt;大写的i&gt;）</code>选项<strong>只请求</strong>头部信息，这时候<code>curl</code>会发送一个HEAD请求。在某些特殊的情况下，服务器端会拒绝HEAD请求，而其他的请求都是正常的。</p>
+<p>HEAD请求就是告诉服务端只返回和GET请求完全一样的头部，不返回响应正文。也就是说你可以看到头部的<code>Content-Length</code>标签，但是没有具体的正文。</p>
+<h2 id="HTML表单"><a href="#HTML表单" class="headerlink" title="HTML表单"></a>HTML表单</h2><h3 id="表单的解释"><a href="#表单的解释" class="headerlink" title="表单的解释"></a>表单的解释</h3><p>表单用来在 HTML 显示可供用户输入的域，通过点击 <em>OK</em> 或者 <em>submit</em> 把输入的数据发送给服务器。服务器端根据得到的数据来决定接下来的行为。比如，用输入的词来进行搜索，或者把信息保存到缺陷跟踪系统，在地图上显示输入的地址，或者用这些信息验证用户登录以确定他是否可以看到更多的内容。</p>
+<p>当然，服务器端必须要有响应的程序来处理输入的数据，毕竟这些东西不可能无中生有。</p>
+<h3 id="GET-1"><a href="#GET-1" class="headerlink" title="GET"></a>GET</h3><p><code>GET-form</code>使用 GET 方法，在 HTML 中是这样的：</p>
+<pre><code> &lt;form method=&quot;GET&quot; action=&quot;junk.cgi&quot;&gt;
+ &lt;input type=text name=&quot;birthyear&quot;&gt;
+ &lt;input type=submit name=press value=&quot;OK&quot;&gt;
+ &lt;/form&gt;
+</code></pre><p>在你最喜欢的浏览器里，你会看到这个表单包括一个文本框和一个<code>OK</code>按钮。如果你填入<code>1905</code>，然后点击按钮，浏览器就会生产一个url。这个url会把<code>junk.cgi?birthyear=1905&amp;press=OK</code>附加到前面url（表单所在的url）的路径部分。</p>
+<p>如果原来的表单出现在<code>www.hotmail.com/when/birth.html</code>，那么你得到的第二个页面将是<code>www.hotmail.com/when/junk.cgi?birthyear=1905&amp;press=OK</code>。</p>
+<p>大多数的搜索引擎也是这么工作的。</p>
+<p>要使用<code>curl</code>来完成 GET 表单的功能，直接输入预期的 url 就行：</p>
+<pre><code>curl www.hotmail.com/when/junk.cgi?birthyear=1905&amp;press=OK
+</code></pre><h3 id="POST"><a href="#POST" class="headerlink" title="POST"></a>POST</h3><p>GET 方法把所有的输入项都放在浏览器的 url 上。如果你想把该页保存为书签，这当然是个不错的方法。这种方法的缺点也是显而易见的：当你输入的是保密信息或者有很长输入域的时候也会产生特别长的 url。</p>
+<p>HTTP 协议提供了另外一种方法：POST。 用户发送的信息和 url 是独立的，所以你就不会在 url 里看到输入的数据。</p>
+<p>这时候的表单和前面的大体一样：</p>
+<pre><code> &lt;form method=&quot;POST&quot; action=&quot;junk.cgi&quot;&gt;
+ &lt;input type=text name=&quot;birthyear&quot;&gt;
+ &lt;input type=submit name=press value=&quot; OK &quot;&gt;
+ &lt;/form&gt;
+</code></pre><p>要使用<code>curl</code>来实现这一方法，我们可以使用：</p>
+<pre><code>curl --data &quot;birthday=1905&amp;press=%20OK%20&quot; http://www.example.com/when.cgi
+</code></pre><p>这种 POST 会使用 <code>Content-Type： application/x-www-form-urlencoded</code>头部选项，也是最普遍使用的 POST 方法。</p>
+<p>你发送到服务器的数据必须是提前编码好的，<code>curl</code>不会自动给你编码。如果你想数据里包含空格，你必须要用<code>%20</code>来替换。不进行编码会导致收到的数据是错误的。</p>
+<p>实际上，当前的<code>curl</code>版本已经支持自动 url 编码了：</p>
+<pre><code>curl --data-urlencode &quot;name=I am Dnaniel&quot; http://www.example.com
+</code></pre><h3 id="POST上传文件"><a href="#POST上传文件" class="headerlink" title="POST上传文件"></a>POST上传文件</h3><p>在1995年的时候，就已经定义了HTTP POST数据的另一种方式，它出现在RFC 1867文档里，因此也被称为<code>RFC1867-posting</code>。</p>
+<p>这个方法主要是为了更好地支持文件上传设计的。可以让用户上传文件的表单在 HTML 里可以写成这样：</p>
+<pre><code>&lt;form method=&quot;POST&quot; enctype=&#39;multipart/form-data&#39; action=&quot;upload.cgi&quot;&gt;
+ &lt;input type=file name=upload&gt;
+ &lt;input type=submit name=press value=&quot;OK&quot;&gt;
+&lt;/form&gt;
+</code></pre><p>这表明要上传的数据格式为<code>multipart/form-data</code>， 要使用<code>curl</code>来实现这样的表单上传，可以使用下面的命令：</p>
+<pre><code>curl --form upload=@localfilename --form press=OK [URL]
+</code></pre><h3 id="隐藏域"><a href="#隐藏域" class="headerlink" title="隐藏域"></a>隐藏域</h3><p>HTML 应用在页面之间传递状态信息的一个常用方式是在表单中使用隐藏域。隐藏域是默认填写好的，但不会展示给用户，和其他域一样被传递。</p>
+<p>包含一个可见域、一个隐藏域还有一个提交按钮的简单表单如下所示：</p>
+<pre><code>&lt;form method=&quot;POST&quot; action=&quot;foobar.cgi&quot;&gt;
+ &lt;input type=text name=&quot;birthyear&quot;&gt;
+ &lt;input type=hidden name=&quot;person&quot; value=&quot;daniel&quot;&gt;
+ &lt;input type=submit name=&quot;press&quot; value=&quot;OK&quot;&gt;
+&lt;/form&gt;
+</code></pre><p>要用<code>curl</code>来实现隐藏域并不需要考虑额外的东西，直接把它当做正常的域就行：</p>
+<pre><code>curl --data &quot;birthyear=1905&amp;press=OK&amp;person=daniel&quot; [URL]
+</code></pre><h3 id="弄清POST的样子"><a href="#弄清POST的样子" class="headerlink" title="弄清POST的样子"></a>弄清POST的样子</h3><p>当你使用<code>curl</code>来填充表单发送到服务器的时候，自然会想弄明白浏览器发送 POST 请求的方式。</p>
+<p>有一个简单的方法：把 HTML 页面存储下来，把 form 的<code>method</code>改成 GET，点击提交按钮。你就可以在 URL 栏看到浏览器发送的数据。</p>
+<h2 id="HTTP-上传"><a href="#HTTP-上传" class="headerlink" title="HTTP 上传"></a>HTTP 上传</h2><h3 id="PUT"><a href="#PUT" class="headerlink" title="PUT"></a>PUT</h3><p>上传数据到HTTP服务器的最佳方式是 PUT，再次提醒，服务器端必须有相应的程序来处理接收的 HTTP 数据流。</p>
+<p>把文件上传到服务器的命令：</p>
+<pre><code>curl --upload-file uploadfile http://www.example.com/reveive.cgi
+</code></pre><h2 id="HTTP验证"><a href="#HTTP验证" class="headerlink" title="HTTP验证"></a>HTTP验证</h2><h3 id="基本验证"><a href="#基本验证" class="headerlink" title="基本验证"></a>基本验证</h3><p>HTTP 验证是告诉服务端你的用户名和密码，这样服务端来判断你是否有权限访问特定的资源。基本的验证是基于明文的，也就是说用户名和密码的发送只是稍微不那么明显，但是在你和服务端的嗅探器是可读到的。</p>
+<p><code>curl</code>使用用户名和密码的验证如下：</p>
+<pre><code>curl --user name:password http://www.example.com
+</code></pre><h3 id="其他验证"><a href="#其他验证" class="headerlink" title="其他验证"></a>其他验证</h3><p>网站可能会需要其他的验证方式（查看服务端返回的头部），那么或许 <code>--ntlm</code>,<code>--digest</code>, <code>--negotiate</code> 或者 <code>--anyauth</code>会适合你。</p>
+<h3 id="代理验证"><a href="#代理验证" class="headerlink" title="代理验证"></a>代理验证</h3><p>有时候，你的 HTTP 访问只能通过特定的 HTTP 代理才能完成，这在公司比较普遍。HTTP 代理器需要自己的用户名和密码来允许客户端访问互联网。使用<code>curl</code>来指定这些的话，就要这样：</p>
+<pre><code>curl --proxy-user proxyuser:proxypass curl.haxx.se
+</code></pre><p>如果你的代理需要 NTLM 方法认证，就用 <code>--proxy-ntlm</code>，如果需要 Digest,就用<code>--proxy-digest</code>。</p>
+<p>如果你用上面方式的时候，没有指定密码，<code>curl</code>会提示你输入密码。</p>
+<h3 id="隐藏的凭据"><a href="#隐藏的凭据" class="headerlink" title="隐藏的凭据"></a>隐藏的凭据</h3><p>要注意，程序启动的时候，可以通过列出系统的进程来查看它的参数。如果你使用明文密码的话，其他用户就可以看到。</p>
+<p>需要注意的是，尽管 HTTP 的验证是这么工作的，很多的网站不会采用这种登录方式进行验证。你可以阅读下面的<code>WEB登录</code>章节来了解更多细节。</p>
+<h2 id="更多HTTP-头部选项"><a href="#更多HTTP-头部选项" class="headerlink" title="更多HTTP 头部选项"></a>更多HTTP 头部选项</h2><h3 id="Referer"><a href="#Referer" class="headerlink" title="Referer"></a>Referer</h3><p>HTTP 请求可以包含<code>referer</code>域，来指明客户端通过什么 URL 来访问该资源的。有些程序通过查看这一选项来核实请求不是来自外部或者未知的地方。虽然这样根据可任意伪造的项来判断是很蠢的做法，很多程序还是会这么做。使用<code>curl</code>，你可以把任意内容放到 referer 域，以此来欺骗服务器来响应你的请求.</p>
+<pre><code> curl --referer http://www.example.come http://www.example.com
+</code></pre><h3 id="User-Agent"><a href="#User-Agent" class="headerlink" title="User Agent"></a>User Agent</h3><p>和 referer 域类似，所有的 HTTP 请求也可以设置 <code>User-Agent</code>域,它指明用户使用的客户端。许多程序根据该选项决定如何渲染页面。愚蠢的程序员会对不同的浏览器编写不同的页面，来让所有的页面在不同的浏览器上达到最佳效果。当然也包括重写javascript、vbscript等。</p>
+<p>有时候，你发现通过<code>curl</code>获得的页面和浏览器获得的页面是不一样的。那你就需要修改<code>user-agent</code>选项来欺骗服务器，让它以为你使用的是某个浏览器。</p>
+<p>要让<code>curl</code>变成 windows 2000 的 IE5，使用：</p>
+<pre><code>curl --user-agent &quot;Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)&quot; [URL]
+</code></pre><p>要让<code>curl</code>变成 Linux 下的 Netscape4.73 ， 使用：</p>
+<pre><code>curl --user-agent &quot;Mozilla/4.73 [en] (X11; U; Linux 2.2.15 i686)&quot; [URL]
+</code></pre><h2 id="重定向"><a href="#重定向" class="headerlink" title="重定向"></a>重定向</h2><h3 id="位置头部"><a href="#位置头部" class="headerlink" title="位置头部"></a>位置头部</h3><p>当某资源从服务器上被获取时，服务器的回应可以包含浏览器下一步去哪里找到该资源的提示。头部中提示浏览器重定向的选项就是<code>Location</code>。</p>
+<p><code>curl</code>默认情况下并不追踪头部的位置选项，而是直接把重定向回应像其他应答一样显示出来。当然<code>curl</code>有选项可以来追踪头部的重定向，那就是<code>--location</code>选项:</p>
+<pre><code>curl --location http://www.example.com
+</code></pre><p>如果你使用<code>curl</code>来 POST 请求到某网站，而该网站立即把你重定向到另外的页面，你可以结合<code>--location(-L)</code>和<code>--data/--form</code>一起使用。Curl只会在第一个请求中使用 POST，而在后面的请求使用GET方法。</p>
+<h3 id="其他重定向"><a href="#其他重定向" class="headerlink" title="其他重定向"></a>其他重定向</h3><p>浏览器一般至少支持两种<code>curl</code>无法支持的重定向：一种是HTTP头部包含某个标签，让浏览器在特定秒之后重新获取特定的 URL，还有就是使用 javascript 来获取新的 URL。</p>
+<h2 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h2><h3 id="cookie基础"><a href="#cookie基础" class="headerlink" title="cookie基础"></a>cookie基础</h3><p>网页浏览器使用Cookie来保持客户端的状态。Cookie只是一系列被赋值的名字而已，通过服务器被发送到客户端。服务器端会告诉客户端它希望该cookie被发送回来的主机名和地址，也包括过期日期和其他的一些属性。</p>
+<p>很多服务器和程序使用cookie把一系列的请求归类到一个会话（session）。为了保持这一状态，我们必须能够保存cookie，并通过服务希望的方式把cookie发送回去。这也是浏览器处理cookie的方式。</p>
+<h3 id="cookie选项"><a href="#cookie选项" class="headerlink" title="cookie选项"></a>cookie选项</h3><p>把 cookie 发送到服务器端最简单的方式是直接把它们添加到命令行里：</p>
+<pre><code>curl --cookie &quot;name=Daniel&quot; http://www.example.com
+</code></pre><p>cookie 通过正常的 HTTP 请求在头部被发送出去。要用<code>curl</code>来记录 cookie 可以使用<code>--dump-header(-D)</code>选项：</p>
+<pre><code>curl --dump-header headers_and_cookies http://www.example.com
+</code></pre><p>(下面介绍的<code>--cookie-jar</code>是使用 cookie 更好的方式。)</p>
+<p><code>curl</code>内部提供了 cookie 解析的引擎，可以让你方便地连接到服务器端，并发送前面的连接已经保存的 cookie（或者手动伪造的 cookie 让服务器端相信你有过上一个连接）。要使用以前存储的 cookie，你可以这样：</p>
+<pre><code>curl --cookies stored_cookies_in_file http://www.example.com
+</code></pre><p>当你使用<code>--cookie</code>选项的时候，<code>curl</code>的 cookie 引擎就会自动开启。如果你只想让<code>curl</code>理解要接收的 cookie，你可以指定一个不存在的文件。比如，如果你想让<code>curl</code>理解某个页面的 cookie，并追踪重定向的话，可以这么用：</p>
+<pre><code>curl --cookie nada --location http://www.example.com
+</code></pre><p><code>curl</code>能和 Netscape 与 Mozilla 使用相同的文件格式来处理 cookie，在脚本间传递 cookie 也就很方便。<code>--cookie(-b)</code>选项自动检测给定参数是否为 cookie 文件并解析其中的 cookie，而<code>--cookie-jar(-c)</code>选项，你可以让<code>curl</code>把新的 cookie写入到文件里：</p>
+<pre><code>curl --cookie cookies.txt --cookie-jar newcookies.txt  http://www.example.com
+</code></pre><h2 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h2><h3 id="HTTPS-是安全的-HTTP"><a href="#HTTPS-是安全的-HTTP" class="headerlink" title="HTTPS 是安全的 HTTP"></a>HTTPS 是安全的 HTTP</h3><p>安全 HTPP 协议的传输有很多种方法，现在最常用的协议是 HTTPS，就是基于 SSL 的 HTTP 协议。SSL 把要传输和接收的数据加密，使得对敏感信息的攻击变得困难。<br>SSL 这种加密传输和密钥管理机制有很多的优势。</p>
+<p>归功于开源的 OpenSSL 库，<code>curl</code>也支持加密的操作。从 HTTPS 服务器获得页面的只需要简单运行<code>curl</code>：</p>
+<pre><code>curl https://secure.example.com
+</code></pre><h3 id="证书"><a href="#证书" class="headerlink" title="证书"></a>证书</h3><p>在 HTTPS 的世界里，证书作为密码的补充来证明你的身份。<code>curl</code>支持客户端的证书，所有的证书都要求你输入密码来使用。这个密码可以直接在命令行指定，也可以在<code>curl</code>提示时交互式输入。使用证书来获取 HTTPS 的内容：</p>
+<pre><code>curl --cert mycert.pem https://secure.example.com
+</code></pre><p><code>curl</code>也会把服务器端的证书与本地存储的 CA 证书进行验证，验证失败会导致<code>curl</code>拒绝连接。你也可以使用 <code>--insecure(-k)</code>选项来告诉<code>curl</code>忽略验证失败的服务器。</p>
+<p>更多关于服务器证书和ca的问题可以访问下面的<a href="http://curl.haxx.se/docs/sslcerts.html" target="_blank" rel="noopener">文档</a>。</p>
+<h2 id="自定义请求元素"><a href="#自定义请求元素" class="headerlink" title="自定义请求元素"></a>自定义请求元素</h2><h3 id="修改方法和头部"><a href="#修改方法和头部" class="headerlink" title="修改方法和头部"></a>修改方法和头部</h3><p>要完成一些很 cool 的东西，你可能需要增加或者修改<code>curl</code>请求的头部元素。</p>
+<p>例如，你可以把 POST 方法改为 PROPFIND，发送类型为<code>Content-Type: text/xml</code>的数据：</p>
+<pre><code>curl --data &quot;&lt;xml&gt;&quot; --header &quot;Content-Type: text/xml&quot; --request PROPFIND url.com
+</code></pre><p>通过传递一个没有值的头部，你可以删除原来的项。例如，你可以这样删除 Host: header：</p>
+<pre><code>curl --header &quot;Host:&quot; http://www.example.com
+</code></pre><p>这种方式也可以用来添加头部的选项。如果服务器需要<code>Destination</code>的头部，你可以加上去：</p>
+<pre><code>curl --header &quot;Destination: http://nowhere&quot; http://example.com
+</code></pre><h3 id="修改方法（续）"><a href="#修改方法（续）" class="headerlink" title="修改方法（续）"></a>修改方法（续）</h3><p>需要注意的是，<code>curl</code>会根据自己被传递的方法来进行 HTTP 的请求，比如<code>-d</code>表示 POST，<code>-l</code>表示 HEAD。如果你是用<code>curl</code>的<code>--request/-X</code>选项,<code>curl</code>会改变它方法的关键字，但是行为却不会改变。也就是说，如果你用<code>-d</code> data 来做 POST 请求，然后用<code>-X</code>来修改方法为 PROPFIND，<code>curl</code>仍然会发送 POST 请求。你可以把 GET 请求这么改成 POST 请求：</p>
+<pre><code>curl -X POST http://example.com
+</code></pre><p>但是<code>curl</code>还是会执行 GET 的动作，不会发送任何的正文。</p>
+<h2 id="网页登陆"><a href="#网页登陆" class="headerlink" title="网页登陆"></a>网页登陆</h2><h3 id="登录技巧"><a href="#登录技巧" class="headerlink" title="登录技巧"></a>登录技巧</h3><p>虽然登陆不属于 HTTP 的内容，但是会给很多学习 HTTP 的人造成困惑，所以这里就说说大部分的登录框是怎么工作的，以及怎么使用<code>curl</code>来完成登录的工作。</p>
+<p>需要注意的是，虽然可以自动化地执行登录动作，你还是需要些不少脚本来完成<code>curl</code>的登录命令的。</p>
+<p>首先，服务器端大多用 cookies 来追踪客户端的登录信息的，所以你必须要获取响应里的 cookies。其次，很多网站在登陆页面也会设置特殊的 cookie（以此确定你是从登陆页面进来的），你也必须先到登陆页面来获取响应的 cookies。</p>
+<p>不少网页的登录系统使用大量的 javascript 来设置和修改 cookie 的内容，可能是为了防止程序化的自动登录，比如这篇文章讲到的… 如果阅读源码不能让你清晰地手动重复登录的过程，抓取浏览器发送和接收的 HTTP 包来分析其中的 cookies 是一定可行的捷径。</p>
+<p>在实际的<code>&lt;form&gt;</code>标签里，会有很多填充的随机内容或者秘密生成的隐藏域，你要先捕获这些 HTML 代码，找到所有登录需要的内容，添加到 POST 的请求里。记住在正常 POST 之前，这些数据必须进行 URL 编码。</p>
+<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><h3 id="一些调试技巧"><a href="#一些调试技巧" class="headerlink" title="一些调试技巧"></a>一些调试技巧</h3><p>有些时候，你用<code>curl</code>命令获取的网页信息和你用浏览器的不一样，那你就要把<code>curl</code>的请求尽量变得和浏览器的一致。</p>
+<ul>
+<li>使用<code>--trace-ascii</code>选项来存储请求所有的详细日志，以便后续的理解和分析</li>
+<li>确保你在必要时使用了 cookie（包括使用<code>--cookie</code>读取 cookie和<code>--cookie-jar</code>写 cookie）</li>
+<li>和浏览器设置相同的<code>user-agent</code>选项</li>
+<li>和浏览器设置相同的<code>referer</code>选项</li>
+<li>如果你使用 POST，确保发送的数据包括所有的域，并且顺序和浏览器保持一致</li>
+</ul>
+<p>firefox 下的 LiveHTTPHeader 插件可以帮你查看发送和接收请求的头部信息，chrome 的开发者工具也能完成相同的功能。</p>
+<p>还可以使用 ethereal 或者 tcpdump 工具捕获网络上的 HTTP 流量来检查浏览器发送和接收的 HTTP 头部。（HTTPS 让这一方法很没有效率可言）</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><h3 id="协议标准"><a href="#协议标准" class="headerlink" title="协议标准"></a>协议标准</h3><ul>
+<li>RFC 2616：如果你想深入理解 HTTP 协议，就必须阅读该标准。</li>
+<li>RFC 3986：解释 URL 的语法</li>
+<li>RFC 1867：定义了 HTTP 上传文件的格式</li>
+<li>RFC 6525：定义了 HTTP cookies 的工作方式</li>
+</ul>
+<h3 id="网站"><a href="#网站" class="headerlink" title="网站"></a>网站</h3><ul>
+<li><a href="http://curl.haxx.se" target="_blank" rel="noopener">cURL的主页</a></li>
+</ul>
+<p><a href="http://curl.haxx.se/docs/httpscripting.html" target="_blank" rel="noopener">原文链接</a></p>
+<blockquote>
+<p>Written with <a href="https://stackedit.io/" target="_blank" rel="noopener">StackEdit</a>.</p>
+</blockquote>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="Linux 文本处理" href="/2014/10/19/text-manipulation-in-linux/">
+        ← Linux 文本处理
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="apt 背后的故事" href="/2014/04/10/ubuntu_repository_format_explained/">
+        apt 背后的故事 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-脚本"><span class="toc-text">HTTP 脚本</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#背景"><span class="toc-text">背景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP-协议"><span class="toc-text">HTTP 协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看协议"><span class="toc-text">查看协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看时间"><span class="toc-text">查看时间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看返回内容"><span class="toc-text">查看返回内容</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#URL"><span class="toc-text">URL</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#规范"><span class="toc-text">规范</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#主机"><span class="toc-text">主机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#端口号"><span class="toc-text">端口号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用户名和密码"><span class="toc-text">用户名和密码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#路径"><span class="toc-text">路径</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取页面"><span class="toc-text">获取页面</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GET"><span class="toc-text">GET</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HEAD"><span class="toc-text">HEAD</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTML表单"><span class="toc-text">HTML表单</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#表单的解释"><span class="toc-text">表单的解释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GET-1"><span class="toc-text">GET</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POST"><span class="toc-text">POST</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POST上传文件"><span class="toc-text">POST上传文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#隐藏域"><span class="toc-text">隐藏域</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#弄清POST的样子"><span class="toc-text">弄清POST的样子</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-上传"><span class="toc-text">HTTP 上传</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PUT"><span class="toc-text">PUT</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP验证"><span class="toc-text">HTTP验证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本验证"><span class="toc-text">基本验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他验证"><span class="toc-text">其他验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代理验证"><span class="toc-text">代理验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#隐藏的凭据"><span class="toc-text">隐藏的凭据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更多HTTP-头部选项"><span class="toc-text">更多HTTP 头部选项</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Referer"><span class="toc-text">Referer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#User-Agent"><span class="toc-text">User Agent</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重定向"><span class="toc-text">重定向</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#位置头部"><span class="toc-text">位置头部</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他重定向"><span class="toc-text">其他重定向</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cookie"><span class="toc-text">Cookie</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#cookie基础"><span class="toc-text">cookie基础</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cookie选项"><span class="toc-text">cookie选项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTPS"><span class="toc-text">HTTPS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTPS-是安全的-HTTP"><span class="toc-text">HTTPS 是安全的 HTTP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#证书"><span class="toc-text">证书</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义请求元素"><span class="toc-text">自定义请求元素</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#修改方法和头部"><span class="toc-text">修改方法和头部</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改方法（续）"><span class="toc-text">修改方法（续）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#网页登陆"><span class="toc-text">网页登陆</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#登录技巧"><span class="toc-text">登录技巧</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#调试"><span class="toc-text">调试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一些调试技巧"><span class="toc-text">一些调试技巧</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#协议标准"><span class="toc-text">协议标准</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#网站"><span class="toc-text">网站</span></a></li></ol></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">【翻译】curl自动化http操作</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

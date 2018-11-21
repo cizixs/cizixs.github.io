@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>跟着 Github 学习 Restful HTTP API 设计 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="跟着 Github 学习 Restful HTTP API 设计 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2016/12/12/restful-api-design-guide/">
+
+	
+	<meta property="article:published_time" content="2016-12-12T00:12:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2016/12/12/restful-api-design-guide/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2016-12-11T16:00:00.000Z" itemprop="datePublished">
+                    2016-12-12
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">跟着 Github 学习 Restful HTTP API 设计</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p>近几年提供 <code>HTTP API</code> 服务的公司越来越多，许多公司都把 API 作为产品重要的一部分，作为服务提供出去。而微服务的兴起，也让企业内部开始重视和频繁使用 HTTP API 。好的 <code>HTTP API</code> 设计容易理解、符合 RFC 标准、提供使用者便利的功能，其中经常被拿来作为教科书典范的当属 <a href="https://developer.github.com/v3/" target="_blank" rel="noopener">Github API</a>。这篇文章就通过 <code>Github API</code> 总结了一些非常好的设计原则，可以作为以后要编写 HTTP API 的参考。</p>
+<p>注意：这篇文章只讨论设计原则，不是强制要求（API 设计者可以根据实际情况实现部分内容，甚至实现出和某些原则相反的内容），也不会给出实现的思路和细节。</p>
+<h2 id="1-使用-HTTPS"><a href="#1-使用-HTTPS" class="headerlink" title="1. 使用 HTTPS"></a>1. 使用 HTTPS</h2><p>这个和 Restful API 本身没有很大的关系，但是对于增加网站的安全是非常重要的。特别如果你提供的是公开 API，用户的信息泄露或者被攻击会严重影响网站的信誉。</p>
+<p>NOTE：不要让非SSL的url访问重定向到SSL的url。</p>
+<h2 id="2-API-地址和版本"><a href="#2-API-地址和版本" class="headerlink" title="2. API 地址和版本"></a>2. API 地址和版本</h2><p>在 <code>url</code> 中指定 API 的版本是个很好地做法。如果 API 变化比较大，可以把  API 设计为子域名，比如 <code>https://api.github.com/v3</code>；也可以简单地把版本放在路径中，比如 <code>https://example.com/api/v1</code>。</p>
+<h2 id="3-schema"><a href="#3-schema" class="headerlink" title="3. schema"></a>3. schema</h2><p>对于响应返回的格式，JSON 因为它的可读性、紧凑性以及多种语言支持等优点，成为了 HTTP API 最常用的返回格式。因此，最好采用 JSON 作为返回内容的格式。如果用户需要其他格式，比如 <code>xml</code>，应该在请求头部 <code>Accept</code> 中指定。对于不支持的格式，服务端需要返回正确的 status code，并给出详细的说明。</p>
+<h2 id="4-以资源为中心的-URL-设计"><a href="#4-以资源为中心的-URL-设计" class="headerlink" title="4. 以资源为中心的 URL 设计"></a>4. 以资源为中心的 URL 设计</h2><p>资源是 <code>Restful API</code> 的核心元素，所有的操作都是针对特定资源进行的。而资源就是 <code>URL</code>（Uniform Resoure Locator）表示的，所以简洁、清晰、结构化的 URL 设计是至关重要的。Github 可以说是这方面的典范，下面我们就拿 <code>repository</code> 来说明。</p>
+<pre><code>/users/:username/repos
+/users/:org/repos
+/repos/:owner/:repo
+/repos/:owner/:repo/tags
+/repos/:owner/:repo/branches/:branch
+</code></pre><p>我们可以看到几个特性：</p>
+<ul>
+<li>资源分为单个文档和集合，尽量使用复数来表示资源，单个资源通过添加 id 或者 name 等来表示</li>
+<li>一个资源可以有多个不同的 URL</li>
+<li>资源可以嵌套，通过类似目录路径的方式来表示，以体现它们之间的关系</li>
+</ul>
+<p><strong>NOTE</strong>: 根据RFC3986定义，URL是大小写敏感的。所以为了避免歧义，尽量使用小写字母。</p>
+<h2 id="5-使用正确的-Method"><a href="#5-使用正确的-Method" class="headerlink" title="5. 使用正确的 Method"></a>5. 使用正确的 Method</h2><p>有了资源的 URL 设计，所有针对资源的操作都是使用 HTTP 方法指定的。比较常用的方法有：</p>
+<table>
+<thead>
+<tr>
+<th>Verb</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HEAD</td>
+<td>只获取某个资源的头部信息。比如只想了解某个文件的大小，某个资源的修改日期等</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>获取资源</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>创建资源</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>更新资源的部分属性。因为 PATCH 比较新，而且规范比较复杂，所以真正实现的比较少，一般都是用 POST 替代</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>替换资源，客户端需要提供新建资源的所有属性。如果新内容为空，要设置 <code>Content-Length</code> 为 0，以区别错误信息</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>删除资源</td>
+</tr>
+</tbody>
+</table>
+<p>比如：</p>
+<pre><code>GET /repos/:owner/:repo/issues
+GET /repos/:owner/:repo/issues/:number
+POST /repos/:owner/:repo/issues
+PATCH /repos/:owner/:repo/issues/:number
+DELETE /repos/:owner/:repo
+</code></pre><p>NOTE：更新和创建操作应该返回最新的资源，来通知用户资源的情况；删除资源一般不会返回内容。</p>
+<h3 id="不符合-CRUD-的情况"><a href="#不符合-CRUD-的情况" class="headerlink" title="不符合 CRUD 的情况"></a>不符合 CRUD 的情况</h3><p>在实际资源操作中，总会有一些不符合 <code>CRUD</code>（Create-Read-Update-Delete） 的情况，一般有几种处理方法。</p>
+<h4 id="使用-POST"><a href="#使用-POST" class="headerlink" title="使用 POST"></a>使用 POST</h4><p>为需要的动作增加一个 endpoint，使用 POST 来执行动作，比如 <code>POST /resend</code> 重新发送邮件。</p>
+<h4 id="增加控制参数"><a href="#增加控制参数" class="headerlink" title="增加控制参数"></a>增加控制参数</h4><p>添加动作相关的参数，通过修改参数来控制动作。比如一个博客网站，会有把写好的文章“发布”的功能，可以用上面的 <code>POST /articles/{:id}/publish</code> 方法，也可以在文章中增加 <code>published:boolean</code> 字段，发布的时候就是更新该字段 <code>PUT /articles/{:id}?published=true</code></p>
+<h4 id="把动作转换成资源"><a href="#把动作转换成资源" class="headerlink" title="把动作转换成资源"></a>把动作转换成资源</h4><p>把动作转换成可以执行 <code>CRUD</code> 操作的资源， github 就是用了这种方法。</p>
+<p>比如“喜欢”一个 gist，就增加一个 <code>/gists/:id/star</code> 子资源，然后对其进行操作：“喜欢”使用 <code>PUT /gists/:id/star</code>，“取消喜欢”使用 <code>DELETE /gists/:id/star</code>。</p>
+<p>另外一个例子是 <code>Fork</code>，这也是一个动作，但是在 gist 下面增加 <code>forks</code>资源，就能把动作变成 <code>CRUD</code> 兼容的：<code>POST /gists/:id/forks</code> 可以执行用户 fork 的动作。</p>
+<h2 id="6-Query-让查询更自由"><a href="#6-Query-让查询更自由" class="headerlink" title="6. Query 让查询更自由"></a>6. Query 让查询更自由</h2><p>比如查询某个 repo 下面 issues 的时候，可以通过以下参数来控制返回哪些结果：</p>
+<ul>
+<li>state：issue 的状态，可以是 <code>open</code>，<code>closed</code>，<code>all</code></li>
+<li>since：在指定时间点之后更新过的才会返回</li>
+<li>assignee：被 assign 给某个 user 的 issues</li>
+<li>sort：选择排序的值，可以是 <code>created</code>、<code>updated</code>、<code>comments</code></li>
+<li>direction：排序的方向，升序（asc）还是降序（desc）</li>
+<li>……</li>
+</ul>
+<h2 id="7-分页-Pagination"><a href="#7-分页-Pagination" class="headerlink" title="7. 分页 Pagination"></a>7. 分页 Pagination</h2><p>当返回某个资源的列表时，如果要返回的数目特别多，比如 github 的 <code>/users</code>，就需要使用分页分批次按照需要来返回特定数量的结果。</p>
+<p>分页的实现会用到上面提到的 url query，通过两个参数来控制要返回的资源结果：</p>
+<ul>
+<li>per_page：每页返回多少资源，如果没提供会使用预设的默认值；这个数量也是有一个最大值，不然用户把它设置成一个非常大的值（比如 <code>99999999</code>）也失去了设计的初衷</li>
+<li>page：要获取哪一页的资源，默认是第一页</li>
+</ul>
+<p>返回的资源列表为 <code>[(page-1)*per_page, page*per_page)</code>。github API 文档中还提到一个很好的点，相关的分页信息还可以存放到 <code>Link</code> 头部，这样客户端可以直接得到诸如<code>下一页</code>、<code>最后一页</code>、<code>上一页</code>等内容的 url 地址，而不是自己手动去计算和拼接。</p>
+<h2 id="8-选择合适的状态码"><a href="#8-选择合适的状态码" class="headerlink" title="8. 选择合适的状态码"></a>8. 选择合适的状态码</h2><p>HTTP 应答中，需要带一个很重要的字段：<code>status code</code>。它说明了请求的大致情况，是否正常完成、需要进一步处理、出现了什么错误，对于客户端非常重要。状态码都是三位的整数，大概分成了几个区间：</p>
+<ul>
+<li><code>2XX</code>：请求正常处理并返回</li>
+<li><code>3XX</code>：重定向，请求的资源位置发生变化</li>
+<li><code>4XX</code>：客户端发送的请求有错误</li>
+<li><code>5XX</code>：服务器端错误</li>
+</ul>
+<p>在 HTTP API 设计中，经常用到的状态码以及它们的意义如下表：</p>
+<table>
+<thead>
+<tr>
+<th>状态码</th>
+<th>Label</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>OK</td>
+<td>请求成功接收并处理，一般响应中都会有 body</td>
+</tr>
+<tr>
+<td>201</td>
+<td>Created</td>
+<td>请求已完成，并导致了一个或者多个资源被创建，最常用在 POST 创建资源的时候</td>
+</tr>
+<tr>
+<td>202</td>
+<td>Accepted</td>
+<td>请求已经接收并开始处理，但是处理还没有完成。一般用在异步处理的情况，响应 body 中应该告诉客户端去哪里查看任务的状态</td>
+</tr>
+<tr>
+<td>204</td>
+<td>No Content</td>
+<td>请求已经处理完成，但是没有信息要返回，经常用在 PUT 更新资源的时候（客户端提供资源的所有属性，因此不需要服务端返回）。如果有重要的 metadata，可以放到头部返回</td>
+</tr>
+<tr>
+<td>301</td>
+<td>Moved Permanently</td>
+<td>请求的资源已经永久性地移动到另外一个地方，后续所有的请求都应该直接访问新地址。服务端会把新地址写在 <code>Location</code> 头部字段，方便客户端使用。允许客户端把 POST 请求修改为 GET。</td>
+</tr>
+<tr>
+<td>304</td>
+<td>Not Modified</td>
+<td>请求的资源和之前的版本一样，没有发生改变。用来缓存资源，和条件性请求（conditional request）一起出现</td>
+</tr>
+<tr>
+<td>307</td>
+<td>Temporary Redirect</td>
+<td>目标资源暂时性地移动到新的地址，客户端需要去新地址进行操作，但是<strong>不能</strong>修改请求的方法。</td>
+</tr>
+<tr>
+<td>308</td>
+<td>Permanent Redirect</td>
+<td>和 301 类似，除了客户端<strong>不能</strong>修改原请求的方法</td>
+</tr>
+<tr>
+<td>400</td>
+<td>Bad Request</td>
+<td>客户端发送的请求有错误（请求语法错误，body 数据格式有误，body 缺少必须的字段等），导致服务端无法处理</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>请求的资源需要认证，客户端没有提供认证信息或者认证信息不正确</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>服务器端接收到并理解客户端的请求，但是客户端的权限不足。比如，普通用户想操作只有管理员才有权限的资源。</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found</td>
+<td>客户端要访问的资源不存在，链接失效或者客户端伪造 URL 的时候回遇到这个情况</td>
+</tr>
+<tr>
+<td>405</td>
+<td>Method Not Allowed</td>
+<td>服务端接收到了请求，而且要访问的资源也存在，但是不支持对应的方法。服务端<strong>必须</strong>返回 <code>Allow</code> 头部，告诉客户端哪些方法是允许的</td>
+</tr>
+<tr>
+<td>415</td>
+<td>Unsupported Media Type</td>
+<td>服务端不支持客户端请求的资源格式，一般是因为客户端在 <code>Content-Type</code> 或者 <code>Content-Encoding</code> 中申明了希望的返回格式，但是服务端没有实现。比如，客户端希望收到 <code>xml</code>返回，但是服务端支持 <code>Json</code></td>
+</tr>
+<tr>
+<td>429</td>
+<td>Too Many Requests</td>
+<td>客户端在规定的时间里发送了太多请求，在进行限流的时候会用到</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal Server Error</td>
+<td>服务器内部错误，导致无法完成请求的内容</td>
+</tr>
+<tr>
+<td>503</td>
+<td>Service Unavailable</td>
+<td>服务器因为负载过高或者维护，暂时无法提供服务。服务器端应该返回 <code>Retry-After</code> 头部，告诉客户端过一段时间再来重试</td>
+</tr>
+</tbody>
+</table>
+<p>上面这些状态码覆盖了 API 设计中大部分的情况，如果对某个状态码不清楚或者希望查看更完整的列表，可以参考 <a href="https://httpstatuses.com/" target="_blank" rel="noopener">HTTP Status Code</a> 这个网站，或者 <a href="https://tools.ietf.org/html/rfc7231#section-6" target="_blank" rel="noopener">RFC7231 Response Status Codes</a> 的内容。</p>
+<h2 id="9-错误处理：给出详细的信息"><a href="#9-错误处理：给出详细的信息" class="headerlink" title="9. 错误处理：给出详细的信息"></a>9. 错误处理：给出详细的信息</h2><p>如果出错的话，在 response body 中通过 <code>message</code> 给出明确的信息。</p>
+<p>比如客户端发送的请求有错误，一般会返回 <code>4XX Bad Request</code> 结果。这个结果很模糊，给出错误 message 的话，能更好地让客户端知道具体哪里有问题，进行快速修改。</p>
+<ul>
+<li>如果请求的 JSON 数据无法解析，会返回 <code>Problems parsing JSON</code></li>
+<li>如果缺少必要的 filed，会返回 <code>422 Unprocessable Entity</code>，除了 message 之外，还通过 <code>errors</code> 给出了哪些 field 缺少了，能够方便调用方快速排错</li>
+</ul>
+<p>基本的思路就是尽可能提供更准确的错误信息：比如数据不是正确的 json，缺少必要的字段，字段的值不符合规定…… 而不是直接说“请求错误”之类的信息。</p>
+<h2 id="10-验证和授权"><a href="#10-验证和授权" class="headerlink" title="10. 验证和授权"></a>10. 验证和授权</h2><p>一般来说，让任何人随意访问公开的 API 是不好的做法。验证和授权是两件事情：</p>
+<ul>
+<li>验证（Authentication）是为了确定用户是其申明的身份，比如提供账户的密码。不然的话，任何人伪造成其他身份（比如其他用户或者管理员）是非常危险的</li>
+<li>授权（Authorization）是为了保证用户有对请求资源特定操作的权限。比如用户的私人信息只能自己能访问，其他人无法看到；有些特殊的操作只能管理员可以操作，其他用户有只读的权限等等</li>
+</ul>
+<p>如果没有通过验证（提供的用户名和密码不匹配，token 不正确等），需要返回 <a href="https://httpstatuses.com/401" target="_blank" rel="noopener"><strong>401 Unauthorized</strong></a>状态码，并在 body 中说明具体的错误信息；而没有被授权访问的资源操作，需要返回 <a href="https://httpstatuses.com/403" target="_blank" rel="noopener"><strong>403 Forbidden</strong></a> 状态码，还有详细的错误信息。</p>
+<p><strong>NOTE</strong>：Github API 对某些用户未被授权访问的资源操作返回 <a href="https://httpstatuses.com/404" target="_blank" rel="noopener"><strong>404 Not Found</strong></a>，目的是为了防止私有资源的泄露（比如黑客可以自动化试探用户的私有资源，返回 403 的话，就等于告诉黑客用户有这些私有的资源）。</p>
+<h2 id="11-限流-rate-limit"><a href="#11-限流-rate-limit" class="headerlink" title="11. 限流 rate limit"></a>11. 限流 rate limit</h2><p>如果对访问的次数不加控制，很可能会造成 API 被滥用，甚至被 <a href="https://en.wikipedia.org/wiki/Denial-of-service_attack" target="_blank" rel="noopener">DDos 攻击</a>。根据使用者不同的身份对其进行限流，可以防止这些情况，减少服务器的压力。</p>
+<p>对用户的请求限流之后，要有方法告诉用户它的请求使用情况，<code>Github API</code> 使用的三个相关的头部：</p>
+<ul>
+<li><code>X-RateLimit-Limit</code>: 用户每个小时允许发送请求的最大值</li>
+<li><code>X-RateLimit-Remaining</code>：当前时间窗口剩下的可用请求数目</li>
+<li><code>X-RateLimit-Rest</code>: 时间窗口重置的时候，到这个时间点可用的请求数量就会变成 <code>X-RateLimit-Limit</code> 的值</li>
+</ul>
+<p>如果允许没有登录的用户使用 API（可以让用户试用），可以把 <code>X-RateLimit-Limit</code> 的值设置得很小，比如 Github 使用的 <code>60</code>。没有登录的用户是按照请求的 IP 来确定的，而登录的用户按照认证后的信息来确定身份。</p>
+<p>对于超过流量的请求，可以返回 <a href="https://httpstatuses.com/429" target="_blank" rel="noopener"><strong>429 Too many requests</strong></a> 状态码，并附带错误信息。而 <code>Github API</code> 返回的是 <a href="https://httpstatuses.com/403" target="_blank" rel="noopener"><strong>403 Forbidden</strong></a>，虽然没有 <code>429</code> 更准确，也是可以理解的。</p>
+<p>Github 更进一步，提供了不影响当然 <code>RateLimit</code> 的请求查看当前 <code>RateLimit</code> 的接口 <a href="https://developer.github.com/v3/rate_limit/" target="_blank" rel="noopener"><strong>GET /rate_limit</strong></a>。</p>
+<h2 id="12-Hypermedia-API"><a href="#12-Hypermedia-API" class="headerlink" title="12. Hypermedia API"></a>12. Hypermedia API</h2><p>Restful API 的设计最好做到 Hypermedia：在返回结果中提供相关资源的链接。这种设计也被称为 <a href="http://en.wikipedia.org/wiki/HATEOAS" target="_blank" rel="noopener">HATEOAS</a>。这样做的好处是，用户可以根据返回结果就能得到后续操作需要访问的地址。</p>
+<p>比如访问 <a href="https://api.github.com/" target="_blank" rel="noopener">api.github.com</a>，就可以看到 Github API 支持的资源操作。</p>
+<h2 id="13-编写优秀的文档"><a href="#13-编写优秀的文档" class="headerlink" title="13. 编写优秀的文档"></a>13. 编写优秀的文档</h2><p>API 最终是给人使用的，不管是公司内部，还是公开的 API 都是一样。即使我们遵循了上面提到的所有规范，设计的 API 非常优雅，用户还是不知道怎么使用我们的 API。最后一步，但非常重要的一步是：为你的 API 编写优秀的文档。</p>
+<p>对每个请求以及返回的参数给出说明，最好给出一个详细而完整地示例，提醒用户需要注意的地方……反正目标就是用户可以根据你的文档就能直接使用 API，而不是要发邮件给你，或者跑到你的座位上问你一堆问题。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://developer.github.com/v3/" target="_blank" rel="noopener">Github API v3</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2014/05/restful_api.html" target="_blank" rel="noopener">RESTful API 设计指南</a></li>
+<li><a href="http://wangwei.info/about-rest-api/" target="_blank" rel="noopener">REST接口设计规范</a></li>
+<li><a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm" target="_blank" rel="noopener">Restful API 首次被提出的论文：Architectural Styles and<br>the Design of Network-based Software Architectures</a></li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="Go 语言 JSON 简介" href="/2016/12/19/golang-json-guide/">
+        ← Go 语言 JSON 简介
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="使用 coreos 运行 docker 的 netns 问题" href="/2016/11/22/coreos-docker-netns-issue/">
+        使用 coreos 运行 docker 的 netns 问题 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-使用-HTTPS"><span class="toc-text">1. 使用 HTTPS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-API-地址和版本"><span class="toc-text">2. API 地址和版本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-schema"><span class="toc-text">3. schema</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-以资源为中心的-URL-设计"><span class="toc-text">4. 以资源为中心的 URL 设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-使用正确的-Method"><span class="toc-text">5. 使用正确的 Method</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#不符合-CRUD-的情况"><span class="toc-text">不符合 CRUD 的情况</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用-POST"><span class="toc-text">使用 POST</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#增加控制参数"><span class="toc-text">增加控制参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#把动作转换成资源"><span class="toc-text">把动作转换成资源</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-Query-让查询更自由"><span class="toc-text">6. Query 让查询更自由</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-分页-Pagination"><span class="toc-text">7. 分页 Pagination</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-选择合适的状态码"><span class="toc-text">8. 选择合适的状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-错误处理：给出详细的信息"><span class="toc-text">9. 错误处理：给出详细的信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-验证和授权"><span class="toc-text">10. 验证和授权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-限流-rate-limit"><span class="toc-text">11. 限流 rate limit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-Hypermedia-API"><span class="toc-text">12. Hypermedia API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13-编写优秀的文档"><span class="toc-text">13. 编写优秀的文档</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">跟着 Github 学习 Restful HTTP API 设计</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

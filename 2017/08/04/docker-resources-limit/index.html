@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>使用 docker 对容器资源进行限制 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="使用 docker 对容器资源进行限制 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2017/08/04/docker-resources-limit/">
+
+	
+	<meta property="article:published_time" content="2017-08-04T00:08:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2017/08/04/docker-resources-limit/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2017-08-03T16:00:00.000Z" itemprop="datePublished">
+                    2017-08-4
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">使用 docker 对容器资源进行限制</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p>在使用 docker 运行容器时，一台主机上可能会运行几百个容器，这些容器虽然互相隔离，但是底层却使用着相同的 CPU、内存和磁盘资源。如果不对容器使用的资源进行限制，那么容器之间会互相影响，小的来说会导致容器资源使用不公平；大的来说，可能会导致主机和集群资源耗尽，服务完全不可用。</p>
+<p>docker 作为容器的管理者，自然提供了控制容器资源的功能。正如使用内核的 namespace 来做容器之间的隔离，docker 也是通过内核的 cgroups 来做容器的资源限制。这篇文章就介绍如何使用 docker 来限制 CPU、内存和 IO，以及对应的 cgroups 文件。</p>
+<p><strong>NOTE：</strong>如果想要了解 cgroups 的更多信息，可以参考 <a href="https://www.kernel.org/doc/Documentation/cgroup-v1/" target="_blank" rel="noopener">kernel 文档</a> 或者其他资源。</p>
+<p>我本地测试的 docker 版本是 <code>17.03.0</code> 社区版：</p>
+<pre><code>➜  stress docker version
+Client:
+ Version:      17.03.0-ce
+ API version:  1.26
+ Go version:   go1.7.5
+ Git commit:   60ccb22
+ Built:        Thu Feb 23 11:02:43 2017
+ OS/Arch:      linux/amd64
+
+Server:
+ Version:      17.03.0-ce
+ API version:  1.26 (minimum version 1.12)
+ Go version:   go1.7.5
+ Git commit:   60ccb22
+ Built:        Thu Feb 23 11:02:43 2017
+ OS/Arch:      linux/amd64
+ Experimental: false
+</code></pre><p>使用的是 ubuntu 16.04 系统，内核版本是 <code>4.10.0</code>：</p>
+<pre><code>➜  ~ uname -a
+Linux cizixs-ThinkPad-T450 4.10.0-28-generic #32~16.04.2-Ubuntu SMP Thu Jul 20 10:19:48 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux
+</code></pre><p><strong>NOTE:</strong> 不同版本和系统的功能会有差异，具体的使用方法和功能解释请以具体版本的 docker 官方文档为准。</p>
+<p>我们使用 <a href="https://github.com/progrium/docker-stress" target="_blank" rel="noopener">stress</a> 容器来产生 CPU、内存和 IO 的压力，具体的使用请参考它的帮助文档。</p>
+<h2 id="1-CPU-资源"><a href="#1-CPU-资源" class="headerlink" title="1. CPU 资源"></a>1. CPU 资源</h2><p>主机上的进程会通过时间分片机制使用 CPU，CPU 的量化单位是频率，也就是每秒钟能执行的运算次数。为容器限制 CPU 资源并不能改变 CPU 的运行频率，而是改变每个容器能使用的 CPU 时间片。理想状态下，CPU 应该一直处于运算状态（并且进程需要的计算量不会超过 CPU 的处理能力）。</p>
+<h3 id="docker-限制-CPU-Share"><a href="#docker-限制-CPU-Share" class="headerlink" title="docker 限制 CPU Share"></a>docker 限制 CPU Share</h3><p>docker 允许用户为每个容器设置一个数字，代表容器的 CPU share，默认情况下每个容器的 share 是 1024。要注意，这个 share 是相对的，本身并不能代表任何确定的意义。当主机上有多个容器运行时，每个容器占用的 CPU 时间比例为它的 share 在总额中的比例。举个例子，如果主机上有两个一直使用 CPU 的容器（为了简化理解，不考虑主机上其他进程），其 CPU share 都是 1024，那么两个容器 CPU 使用率都是 50%；如果把其中一个容器的 share 设置为 512，那么两者 CPU 的使用率分别为 67% 和 33%；如果删除 share 为 1024 的容器，剩下来容器的 CPU 使用率将会是 100%。</p>
+<p>总结下来，这种情况下，docker 会根据主机上运行的容器和进程动态调整每个容器使用 CPU 的时间比例。这样的好处是能保证 CPU 尽可能处于运行状态，充分利用 CPU 资源，而且保证所有容器的相对公平；缺点是无法指定容器使用 CPU 的确定值。</p>
+<p>docker 为容器设置 CPU share 的参数是 <code>-c --cpu-shares</code>，它的值是一个整数。</p>
+<p>我的机器是 4 核 CPU，因此使用 <code>stress</code> 启动 4 个进程来产生计算压力：</p>
+<pre><code>➜  stress docker run --rm -it stress --cpu 4
+stress: info: [1] dispatching hogs: 4 cpu, 0 io, 0 vm, 0 hdd
+stress: dbug: [1] using backoff sleep of 12000us
+stress: dbug: [1] --&gt; hogcpu worker 4 [7] forked
+stress: dbug: [1] using backoff sleep of 9000us
+stress: dbug: [1] --&gt; hogcpu worker 3 [8] forked
+stress: dbug: [1] using backoff sleep of 6000us
+stress: dbug: [1] --&gt; hogcpu worker 2 [9] forked
+stress: dbug: [1] using backoff sleep of 3000us
+stress: dbug: [1] --&gt; hogcpu worker 1 [10] forked
+</code></pre><p>在另外一个 terminal 使用 <code>htop</code> 查看资源的使用情况：</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fi6z1alsu4j30yz073myh.jpg" alt=""></p>
+<p>从上图中可以看到，CPU 四个核资源都达到了 100%。四个 stress 进程 CPU 使用率没有达到 100% 是因为系统中还有其他机器在运行。</p>
+<p>为了比较，我另外启动一个 share 为 512 的容器：</p>
+<pre><code>➜  stress docker run --rm -it -c 512 stress --cpu 4 
+stress: info: [1] dispatching hogs: 4 cpu, 0 io, 0 vm, 0 hdd
+stress: dbug: [1] using backoff sleep of 12000us
+stress: dbug: [1] --&gt; hogcpu worker 4 [6] forked
+stress: dbug: [1] using backoff sleep of 9000us
+stress: dbug: [1] --&gt; hogcpu worker 3 [7] forked
+stress: dbug: [1] using backoff sleep of 6000us
+stress: dbug: [1] --&gt; hogcpu worker 2 [8] forked
+stress: dbug: [1] using backoff sleep of 3000us
+stress: dbug: [1] --&gt; hogcpu worker 1 [9] forked
+</code></pre><p>因为默认情况下，容器的 CPU share 为 1024，所以这两个容器的 CPU 使用率应该大致为 2：1，下面是启动第二个容器之后的监控截图：</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tKfTcgy1fi6z6elptfj310309mmz9.jpg" alt=""></p>
+<p>两个容器分别启动了四个 <code>stress</code> 进程，第一个容器 <code>stress</code> 进程 CPU 使用率都在 54% 左右，第二个容器 <code>stress</code> 进程 CPU 使用率在 25% 左右，比例关系大致为 2：1，符合之前的预期。</p>
+<h3 id="限制容器能使用的-CPU-核数"><a href="#限制容器能使用的-CPU-核数" class="headerlink" title="限制容器能使用的 CPU 核数"></a>限制容器能使用的 CPU 核数</h3><p>上面讲述的 <code>-c --cpu-shares</code> 参数只能限制容器使用 CPU 的比例，或者说优先级，无法确定地限制容器使用 CPU 的具体核数；从 1.13 版本之后，docker 提供了 <code>--cpus</code> 参数可以限定容器能使用的 CPU 核数。这个功能可以让我们更精确地设置容器 CPU 使用量，是一种更容易理解也因此更常用的手段。</p>
+<p><code>--cpus</code> 后面跟着一个浮点数，代表容器最多使用的核数，可以精确到小数点二位，也就是说容器最小可以使用 <code>0.01</code> 核 CPU。比如，我们可以限制容器只能使用 <code>1.5</code> 核数 CPU：</p>
+<pre><code>➜  ~ docker run --rm -it --cpus 1.5 stress --cpu 3
+stress: info: [1] dispatching hogs: 3 cpu, 0 io, 0 vm, 0 hdd
+stress: dbug: [1] using backoff sleep of 9000us
+stress: dbug: [1] --&gt; hogcpu worker 3 [7] forked
+stress: dbug: [1] using backoff sleep of 6000us
+stress: dbug: [1] --&gt; hogcpu worker 2 [8] forked
+stress: dbug: [1] using backoff sleep of 3000us
+stress: dbug: [1] --&gt; hogcpu worker 1 [9] forked
+</code></pre><p>在容器里启动三个 stress 来跑 CPU 压力，如果不加限制，这个容器会导致 CPU 的使用率为 300% 左右（也就是说会占用三个核的计算能力）。实际的监控如下图：</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1fi6zckqjtlj310306w0tu.jpg" alt=""></p>
+<p>可以看到，每个 <code>stress</code> 进程 CPU 使用率大约在 50%，总共的使用率为 150%，符合 1.5 核的设置。</p>
+<p>如果设置的 <code>--cpus</code> 值大于主机的 CPU 核数，docker 会直接报错：</p>
+<pre><code>➜  ~ docker run --rm -it --cpus 8 stress --cpu 3
+docker: Error response from daemon: Range of CPUs is from 0.01 to 4.00, as there are only 4 CPUs available.
+See &#39;docker run --help&#39;.
+</code></pre><p>如果多个容器都设置了 <code>--cpus</code> ，并且它们之和超过主机的 CPU 核数，并不会导致容器失败或者退出，这些容器之间会竞争使用 CPU，具体分配的 CPU 数量取决于主机运行情况和容器的 CPU share 值。也就是说 <code>--cpus</code> 只能保证在 CPU 资源充足的情况下容器最多能使用的 CPU 数，docker 并不能保证在任何情况下容器都能使用这么多的 CPU（因为这根本是不可能的）。</p>
+<h3 id="限制容器运行在某些-CPU-核"><a href="#限制容器运行在某些-CPU-核" class="headerlink" title="限制容器运行在某些 CPU 核"></a>限制容器运行在某些 CPU 核</h3><p>现在的笔记本和服务器都会有多个 CPU，docker 也允许调度的时候限定容器运行在哪个 CPU 上。比如，我的主机上有 4 个核，可以通过 <code>--cpuset</code> 参数让容器只运行在前两个核上：</p>
+<pre><code>➜  ~ docker run --rm -it --cpuset-cpus=0,1 stress --cpu 2
+stress: info: [1] dispatching hogs: 2 cpu, 0 io, 0 vm, 0 hdd
+stress: dbug: [1] using backoff sleep of 6000us
+stress: dbug: [1] --&gt; hogcpu worker 2 [7] forked
+stress: dbug: [1] using backoff sleep of 3000us
+stress: dbug: [1] --&gt; hogcpu worker 1 [8] forked
+</code></pre><p>这样，监控中可以看到只有前面两个核 CPU 达到了 100% 使用率。</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tKfTcgy1fi6zk7gwt1j30z706cjsb.jpg" alt=""></p>
+<p><code>--cpuset-cpus</code> 参数可以和 <code>-c --cpu-shares</code> 一起使用，限制容器只能运行在某些 CPU 核上，并且配置了使用率。</p>
+<p>限制容器运行在哪些核上并不是一个很好的做法，因为它需要实现知道主机上有多少 CPU 核，而且非常不灵活。除非有特别的需求，一般并不推荐在生产中这样使用。</p>
+<h3 id="CPU-信息的-cgroup-文件"><a href="#CPU-信息的-cgroup-文件" class="headerlink" title="CPU 信息的 cgroup 文件"></a>CPU 信息的 cgroup 文件</h3><p>所有和容器 CPU share 有关的配置都在 <code>/sys/fs/cgroup/cpu/docker/&lt;docker_id&gt;/</code> 目录下面，其中 <code>cpu.shares</code> 保存了 CPU share 的值（其他文件的意义可以查看 cgroups 的官方文档）：</p>
+<pre><code>➜  ~ ls /sys/fs/cgroup/cpu/docker/d93c9a660f4a13789d995d56024f160e2267f2dc26ce676daa66ea6435473f6f/   
+cgroup.clone_children  cpuacct.stat   cpuacct.usage_all     cpuacct.usage_percpu_sys   cpuacct.usage_sys   cpu.cfs_period_us  cpu.shares  notify_on_release
+cgroup.procs           cpuacct.usage  cpuacct.usage_percpu  cpuacct.usage_percpu_user  cpuacct.usage_user  cpu.cfs_quota_us   cpu.stat    tasks
+➜  ~ cat /sys/fs/cgroup/cpu/docker/d93c9a660f4a13789d995d56024f160e2267f2dc26ce676daa66ea6435473f6f/cpu.shares 
+1024
+</code></pre><p>和 cpuset（限制 CPU 核）有关的文件在 <code>/sys/fs/cgroup/cpuset/docker/&lt;docker_id&gt;</code> 目录下，其中 <code>cpuset.cpus</code> 保存了当前容器能使用的 CPU 核：</p>
+<pre><code>➜  ~ ls /sys/fs/cgroup/cpuset/docker/d93c9a660f4a13789d995d56024f160e2267f2dc26ce676daa66ea6435473f6f/
+cgroup.clone_children  cpuset.cpus            cpuset.mem_exclusive   cpuset.memory_pressure     cpuset.mems                      notify_on_release
+cgroup.procs           cpuset.effective_cpus  cpuset.mem_hardwall    cpuset.memory_spread_page  cpuset.sched_load_balance        tasks
+cpuset.cpu_exclusive   cpuset.effective_mems  cpuset.memory_migrate  cpuset.memory_spread_slab  cpuset.sched_relax_domain_level
+
+➜  ~ cat /sys/fs/cgroup/cpuset/docker/d93c9a660f4a13789d995d56024f160e2267f2dc26ce676daa66ea6435473f6f/cpuset.cpus
+0-1
+</code></pre><p><code>--cpus</code> 限制 CPU 核数并不像上面两个参数一样有对应的文件对应，它是由 <code>cpu.cfs_period_us</code> 和 <code>cpu.cfs_quota_us</code> 两个文件控制的。如果容器的 <code>--cpus</code> 设置为 3，其对应的这两个文件值为：</p>
+<pre><code>➜  ~ cat /sys/fs/cgroup/cpu/docker/233a38cc641f2e4a1bec3434d88744517a2214aff9d8297e908fa13b9aa12e02/cpu.cfs_period_us 
+100000
+➜  ~ cat /sys/fs/cgroup/cpu/docker/233a38cc641f2e4a1bec3434d88744517a2214aff9d8297e908fa13b9aa12e02/cpu.cfs_quota_us 
+300000
+</code></pre><p>其实在 1.12 以及之前的版本，都是通过 <code>--cpu-period</code> 和 <code>--cpu-quota</code> 这两个参数控制容器能使用的 CPU 核数的。前者表示 CPU 的周期数，默认是 <code>100000</code>，单位是微秒，也就是 1s，一般不需要修改；后者表示容器的在上述 CPU 周期里能使用的 quota，真正能使用的 CPU 核数就是 <code>cpu-quota / cpu-period</code>，因此对于 3 核的容器，对应的 <code>cpu-quota</code> 值为 <code>300000</code>。</p>
+<h2 id="2-内存资源"><a href="#2-内存资源" class="headerlink" title="2. 内存资源"></a>2. 内存资源</h2><p><strong>默认情况下，docker 并没有对容器内存进行限制</strong>，也就是说容器可以使用主机提供的所有内存。这当然是非常危险的事情，如果某个容器运行了恶意的内存消耗软件，或者代码有内存泄露，很可能会导致主机内存耗尽，因此导致服务不可用。对于这种情况，docker 会设置 docker daemon 的 OOM（out of memory） 值，使其在内存不足的时候被杀死的优先级降低。另外，就是你可以为每个容器设置内存使用的上限，一旦超过这个上限，容器会被杀死，而不是耗尽主机的内存。</p>
+<p>限制内存上限虽然能保护主机，但是也可能会伤害到容器里的服务。如果为服务设置的内存上限太小，会导致服务还在正常工作的时候就被 OOM 杀死；如果设置的过大，会因为调度器算法浪费内存。因此，合理的做法包括：</p>
+<ul>
+<li>为应用做内存压力测试，理解正常业务需求下使用的内存情况，然后才能进入生产环境使用</li>
+<li>一定要限制容器的内存使用上限</li>
+<li>尽量保证主机的资源充足，一旦通过监控发现资源不足，就进行扩容或者对容器进行迁移</li>
+<li>如果可以（内存资源充足的情况），尽量不要使用 swap，swap 的使用会导致内存计算复杂，对调度器非常不友好</li>
+</ul>
+<h3 id="docker-限制容器内存使用量"><a href="#docker-限制容器内存使用量" class="headerlink" title="docker 限制容器内存使用量"></a>docker 限制容器内存使用量</h3><p>在 docker 启动参数中，和内存限制有关的包括（参数的值一般是内存大小，也就是一个正数，后面跟着内存单位 <code>b</code>、<code>k</code>、<code>m</code>、<code>g</code>，分别对应 bytes、KB、MB、和 GB）：</p>
+<ul>
+<li><code>-m --memory</code>：容器能使用的最大内存大小，最小值为 4m</li>
+<li><code>--memory-swap</code>：容器能够使用的 swap 大小</li>
+<li><code>--memory-swappiness</code>：默认情况下，主机可以把容器使用的匿名页（anonymous page）swap 出来，你可以设置一个 0-100 之间的值，代表允许 swap 出来的比例</li>
+<li><code>--memory-reservation</code>：设置一个内存使用的 soft limit，如果 docker 发现主机内存不足，会执行 OOM 操作。这个值必须小于 <code>--memory</code> 设置的值</li>
+<li><code>--kernel-memory</code>：容器能够使用的 kernel memory 大小，最小值为 4m。</li>
+<li><code>--oom-kill-disable</code>：是否运行 OOM 的时候杀死容器。只有设置了 <code>-m</code>，才可以把这个选项设置为 false，否则容器会耗尽主机内存，而且导致主机应用被杀死</li>
+</ul>
+<p>关于 <code>--memory-swap</code> 的设置必须解释一下，<code>--memory-swap</code> 必须在 <code>--memory</code> 也配置的情况下才能有用。</p>
+<ul>
+<li>如果 <code>--memory-swap</code> 的值大于 <code>--memory</code>，那么容器能使用的总内存（内存 + swap）为 <code>--memory-swap</code> 的值，能使用的 swap 值为 <code>--memory-swap</code> 减去 <code>--memory</code> 的值</li>
+<li>如果 <code>--memory-swap</code> 为 0，或者和 <code>--memory</code> 的值相同，那么容器能使用两倍于内存的 swap 大小，如果 <code>--memory</code> 对应的值是 <code>200M</code>，那么容器可以使用 <code>400M</code> swap</li>
+<li>如果 <code>--memory-swap</code> 的值为 -1，那么不限制 swap 的使用，也就是说主机有多少 swap，容器都可以使用</li>
+</ul>
+<p>如果限制容器的内存使用为 64M，在申请 64M 资源的情况下，容器运行正常（如果主机上内存非常紧张，并不一定能保证这一点）：</p>
+<pre class=" language-bash"><code class="language-bash">➜  docker run --rm -it -m 64m stress --vm 1 --vm-bytes 64M --vm-hang 0
+WARNING: Your kernel does not support swap limit capabilities or the cgroup is not mounted. Memory limited without swap.
+stress: info: <span class="token punctuation">[</span>1<span class="token punctuation">]</span> dispatching hogs: 0 cpu, 0 io, 1 vm, 0 hdd
+stress: dbug: <span class="token punctuation">[</span>1<span class="token punctuation">]</span> using backoff <span class="token function">sleep</span> of 3000us
+stress: dbug: <span class="token punctuation">[</span>1<span class="token punctuation">]</span> --<span class="token operator">></span> hogvm worker 1 <span class="token punctuation">[</span>7<span class="token punctuation">]</span> forked
+stress: dbug: <span class="token punctuation">[</span>7<span class="token punctuation">]</span> allocating 67108864 bytes <span class="token punctuation">..</span>.
+stress: dbug: <span class="token punctuation">[</span>7<span class="token punctuation">]</span> touching bytes <span class="token keyword">in</span> strides of 4096 bytes <span class="token punctuation">..</span>.
+stress: dbug: <span class="token punctuation">[</span>7<span class="token punctuation">]</span> sleeping forever with allocated memory
+<span class="token punctuation">..</span><span class="token punctuation">..</span>.
+</code></pre>
+<p>而如果申请 100M 内存，会发现容器里的进程被 kill 掉了（<strong>worker 7 got signal 9</strong>，signal 9 就是 kill 信号）</p>
+<pre><code>➜  docker run --rm -it -m 64m stress --vm 1 --vm-bytes 100M --vm-hang 0
+WARNING: Your kernel does not support swap limit capabilities or the cgroup is not mounted. Memory limited without swap.
+stress: info: [1] dispatching hogs: 0 cpu, 0 io, 1 vm, 0 hdd
+stress: dbug: [1] using backoff sleep of 3000us
+stress: dbug: [1] --&gt; hogvm worker 1 [7] forked
+stress: dbug: [7] allocating 104857600 bytes ...
+stress: dbug: [7] touching bytes in strides of 4096 bytes ...
+stress: FAIL: [1] (415) &lt;-- worker 7 got signal 9
+stress: WARN: [1] (417) now reaping child worker processes
+stress: FAIL: [1] (421) kill error: No such process
+stress: FAIL: [1] (451) failed run completed in 0s
+</code></pre><p>关于 swap 和 kernel memory 的限制就不在这里过多解释了，感兴趣的可以查看官方的文档。</p>
+<h3 id="内存信息的-cgroups-文件"><a href="#内存信息的-cgroups-文件" class="headerlink" title="内存信息的 cgroups 文件"></a>内存信息的 cgroups 文件</h3><p>对于 docker 来说，它的内存限制也是存放在 cgroups 文件系统的。对于某个容器，你可以在 <code>sys/fs/cgroup/memory/docker/&lt;container_id&gt;</code> 目录下看到容器内存相关的文件：</p>
+<pre><code>➜  ls /sys/fs/cgroup/memory/docker/b067fa0c58dcdd4fa856177fac0112655b605fcc9a0fe07e36950f0086f62f46 
+cgroup.clone_children  memory.kmem.failcnt             memory.kmem.tcp.limit_in_bytes      memory.max_usage_in_bytes        memory.soft_limit_in_bytes  notify_on_release
+cgroup.event_control   memory.kmem.limit_in_bytes      memory.kmem.tcp.max_usage_in_bytes  memory.move_charge_at_immigrate  memory.stat                 tasks
+cgroup.procs           memory.kmem.max_usage_in_bytes  memory.kmem.tcp.usage_in_bytes      memory.numa_stat                 memory.swappiness
+memory.failcnt         memory.kmem.slabinfo            memory.kmem.usage_in_bytes          memory.oom_control               memory.usage_in_bytes
+memory.force_empty     memory.kmem.tcp.failcnt         memory.limit_in_bytes               memory.pressure_level            memory.use_hierarchy
+</code></pre><p>而上面的内存限制对应的文件是 <code>memory.limit_in_bytes</code>：</p>
+<pre><code>➜  cat /sys/fs/cgroup/memory/docker/b067fa0c58dcdd4fa856177fac0112655b605fcc9a0fe07e36950f0086f62f46/memory.limit_in_bytes
+67108864
+</code></pre><h2 id="3-IO-资源（磁盘）"><a href="#3-IO-资源（磁盘）" class="headerlink" title="3. IO 资源（磁盘）"></a>3. IO 资源（磁盘）</h2><p>对于磁盘来说，考量的参数是容量和读写速度，因此对容器的磁盘限制也应该从这两个维度出发。目前 docker 支持对磁盘的读写速度进行限制，但是并没有方法能限制容器能使用的磁盘容量（一旦磁盘 mount 到容器里，容器就能够使用磁盘的所有容量）。</p>
+<pre><code>➜  ~ docker run -it --rm ubuntu:16.04 bash
+
+root@5229f756523c:/# time $(dd if=/dev/zero of=/tmp/test.data bs=10M count=100 &amp;&amp; sync)
+100+0 records in
+100+0 records out
+1048576000 bytes (1.0 GB) copied, 3.82859 s, 274 MB/s
+
+real    0m4.124s
+user    0m0.000s
+sys    0m1.812s
+</code></pre><h3 id="限制磁盘的权重"><a href="#限制磁盘的权重" class="headerlink" title="限制磁盘的权重"></a>限制磁盘的权重</h3><p>通过 <code>--blkio-weight</code> 参数可以设置 block 的权重，这个权重和 <code>--cpu-shares</code> 类似，它是一个相对值，取值范围是 10-1000，当多个 block 去屑磁盘的时候，其读写速度和权重成反比。</p>
+<p>不过在我的环境中，<code>--blkio-weight</code> 参数虽然设置了对应的 cgroups 值，但是并没有作用，不同 weight 容器的读写速度还是一样的。github 上有一个对应的 <a href="https://github.com/moby/moby/issues/16173" target="_blank" rel="noopener">issue</a>，但是没有详细的解答。</p>
+<p><code>--blkio-weight-device</code> 可以设置某个设备的权重值，测试下来虽然两个容器同时读的速度不同，但是并没有按照对应的比例来限制。</p>
+<h3 id="限制磁盘的读写速率"><a href="#限制磁盘的读写速率" class="headerlink" title="限制磁盘的读写速率"></a>限制磁盘的读写速率</h3><p>除了权重之外，docker 还允许你直接限制磁盘的读写速率，对应的参数有：</p>
+<ul>
+<li><code>--device-read-bps</code>：磁盘每秒最多可以读多少比特（bytes）</li>
+<li><code>--device-write-bps</code>：磁盘每秒最多可以写多少比特（bytes）</li>
+</ul>
+<p>上面两个参数的值都是磁盘以及对应的速率，格式为 <code>&lt;device-path&gt;:&lt;limit&gt;[unit]</code>，<code>device-path</code> 表示磁盘所在的位置，限制 <code>limit</code> 为正整数，单位可以是 <code>kb</code>、<code>mb</code> 和 <code>gb</code>。</p>
+<p>比如可以把设备的度速率限制在 1mb：</p>
+<pre><code>$ docker run -it --device /dev/sda:/dev/sda --device-read-bps /dev/sda:1mb ubuntu:16.04 bash
+root@6c048edef769:/# cat /sys/fs/cgroup/blkio/blkio.throttle.read_bps_device 
+8:0 1048576
+root@6c048edef769:/# dd iflag=direct,nonblock if=/dev/sda of=/dev/null bs=5M count=10
+10+0 records in
+10+0 records out
+52428800 bytes (52 MB) copied, 50.0154 s, 1.0 MB/s
+</code></pre><p>从磁盘中读取 50m 花费了 50s 左右，说明磁盘速率限制起了作用。</p>
+<p>另外两个参数可以限制磁盘读写频率（每秒能执行多少次读写操作）：</p>
+<ul>
+<li><code>--device-read-iops</code>：磁盘每秒最多可以执行多少 IO 读操作</li>
+<li><code>--device-write-iops</code>：磁盘每秒最多可以执行多少 IO 写操作</li>
+</ul>
+<p>上面两个参数的值都是磁盘以及对应的 IO 上限，格式为 <code>&lt;device-path&gt;:&lt;limit&gt;</code>，limit 为正整数，表示磁盘 IO 上限数。</p>
+<p>比如，我们可以让磁盘每秒最多读 100 次：</p>
+<pre><code>➜  ~ docker run -it --device /dev/sda:/dev/sda --device-read-iops /dev/sda:100 ubuntu:16.04 bash
+root@2e3026e9ccd2:/# dd iflag=direct,nonblock if=/dev/sda of=/dev/null bs=1k count=1000
+1000+0 records in
+1000+0 records out
+1024000 bytes (1.0 MB) copied, 9.9159 s, 103 kB/s
+</code></pre><p>从测试中可以看出，容器设置了读操作的 iops 为 100，在容器内部从 block 中读取 1m 数据（每次 1k，一共要读 1000 次），共计耗时约 10s，换算起来就是 100 iops/s，符合预期结果。</p>
+<p>写操作 bps 和 iops 与读类似，这里就不再重复了，感兴趣的可以自己实验。</p>
+<h3 id="磁盘信息的-cgroups-文件"><a href="#磁盘信息的-cgroups-文件" class="headerlink" title="磁盘信息的 cgroups 文件"></a>磁盘信息的 cgroups 文件</h3><p>容器中磁盘限制的 cgroups 文件位于 <code>/sys/fs/cgroup/blkio/docker/&lt;docker_id&gt;</code> 目录：</p>
+<pre><code>➜  ~ ls /sys/fs/cgroup/blkio/docker/1402c1682cba743b4d80f638da3d4272b2ebdb6dc6c2111acfe9c7f7aeb72917/                               
+blkio.io_merged                   blkio.io_serviced                blkio.leaf_weight                blkio.throttle.io_serviced        blkio.time_recursive   tasks
+blkio.io_merged_recursive         blkio.io_serviced_recursive      blkio.leaf_weight_device         blkio.throttle.read_bps_device    blkio.weight
+blkio.io_queued                   blkio.io_service_time            blkio.reset_stats                blkio.throttle.read_iops_device   blkio.weight_device
+blkio.io_queued_recursive         blkio.io_service_time_recursive  blkio.sectors                    blkio.throttle.write_bps_device   cgroup.clone_children
+blkio.io_service_bytes            blkio.io_wait_time               blkio.sectors_recursive          blkio.throttle.write_iops_device  cgroup.procs
+blkio.io_service_bytes_recursive  blkio.io_wait_time_recursive     blkio.throttle.io_service_bytes  blkio.time                        notify_on_release
+</code></pre><p>其中 <code>blkio.throttle.read_iops_device</code> 对应了设备的读 IOPS，前面一列是<a href="http://www.makelinux.net/ldd3/chp-3-sect-2" target="_blank" rel="noopener">设备的编号</a>，可以通过 <code>cat /proc/partitions</code> 查看设备和分区的设备号；后面是 IOPS 上限值：</p>
+<pre><code>➜  ~ cat /sys/fs/cgroup/blkio/docker/1402c1682cba743b4d80f638da3d4272b2ebdb6dc6c2111acfe9c7f7aeb72917/blkio.throttle.read_iops_device 
+8:0 100
+</code></pre><p><code>blkio.throttle.read_bps_device</code> 对应了设备的读速率，格式和 IOPS 类似，只是第二列的值为 bps：</p>
+<pre><code>➜  ~ cat /sys/fs/cgroup/blkio/docker/9de94493f1ab4437d9c2c42fab818f12c7e82dddc576f356c555a2db7bc61e21/blkio.throttle.read_bps_device 
+8:0 1048576
+</code></pre><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>从上面的实验可以看出来，CPU 和内存的资源限制已经是比较成熟和易用，能够满足大部分用户的需求。磁盘限制也是不错的，虽然现在无法动态地限制容量，但是限制磁盘读写速度也能应对很多场景。</p>
+<p>至于网络，docker 现在并没有给出网络限制的方案，也不会在可见的未来做这件事情，因为目前网络是通过插件来实现的，和容器本身的功能相对独立，不是很容易实现，扩展性也很差。docker 社区已经有很多呼声，也有 issue 是关于网络流量限制的: <a href="https://github.com/moby/moby/issues/26767" target="_blank" rel="noopener">issue 26767</a>、<a href="https://github.com/moby/moby/issues/37" target="_blank" rel="noopener">issue 37</a>、<a href="https://github.com/moby/moby/issues/4763" target="_blank" rel="noopener">issue 4763</a>。</p>
+<p>资源限制一方面可以让我们为容器（应用）设置合理的 CPU、内存等资源，方便管理；另外一方面也能有效地预防恶意的攻击和异常，对容器来说是非常重要的功能。如果你需要在生产环境使用容器，请务必要花时间去做这件事情。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://docs.docker.com/engine/admin/resource_constraints/" target="_blank" rel="noopener">docker docs: Limit a container’s resources</a></li>
+<li><a href="https://goldmann.pl/blog/2014/09/11/resource-management-in-docker/" target="_blank" rel="noopener">Resource management in Docker</a></li>
+<li><a href="http://www.infoq.com/cn/articles/docker-resource-management-cgroups" target="_blank" rel="noopener">Docker资源管理探秘：Docker背后的内核Cgroups机制</a></li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="docker 容器网络下 UDP 协议的一个问题" href="/2017/08/21/docker-udp-issue/">
+        ← docker 容器网络下 UDP 协议的一个问题
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="ARP 协议解析" href="/2017/07/31/arp-protocol/">
+        ARP 协议解析 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-CPU-资源"><span class="toc-text">1. CPU 资源</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-限制-CPU-Share"><span class="toc-text">docker 限制 CPU Share</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#限制容器能使用的-CPU-核数"><span class="toc-text">限制容器能使用的 CPU 核数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#限制容器运行在某些-CPU-核"><span class="toc-text">限制容器运行在某些 CPU 核</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CPU-信息的-cgroup-文件"><span class="toc-text">CPU 信息的 cgroup 文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-内存资源"><span class="toc-text">2. 内存资源</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-限制容器内存使用量"><span class="toc-text">docker 限制容器内存使用量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#内存信息的-cgroups-文件"><span class="toc-text">内存信息的 cgroups 文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-IO-资源（磁盘）"><span class="toc-text">3. IO 资源（磁盘）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#限制磁盘的权重"><span class="toc-text">限制磁盘的权重</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#限制磁盘的读写速率"><span class="toc-text">限制磁盘的读写速率</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#磁盘信息的-cgroups-文件"><span class="toc-text">磁盘信息的 cgroups 文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">使用 docker 对容器资源进行限制</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>使用 sysdig 进行监控和调试 linux 机器 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="使用 sysdig 进行监控和调试 linux 机器 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2017/04/27/sysdig-for-linux-system-monitor-and-analysis/">
+
+	
+	<meta property="article:published_time" content="2017-04-27T00:04:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2017/04/27/sysdig-for-linux-system-monitor-and-analysis/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2017-04-26T16:00:00.000Z" itemprop="datePublished">
+                    2017-04-27
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">使用 sysdig 进行监控和调试 linux 机器</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <h2 id="sysdig-简介"><a href="#sysdig-简介" class="headerlink" title="sysdig 简介"></a>sysdig 简介</h2><p><a href="http://www.sysdig.org/" target="_blank" rel="noopener">sysdig 官网</a> 上对自己的介绍是：</p>
+<blockquote>
+<p>Open Source Universal System Visibility With Native Contaier Support.</p>
+</blockquote>
+<p>它的定位是系统监控、分析和排障的工具，其实在 linux 平台上，已经有很多这方面的工具 strace、tcpdump、htop、iftop、lsof、netstat，它们都能用来分析 linux 系统的运行情况，而且还有很多日志、监控工具。为什么还需要 sysdig 呢？在我看来，sysdig 的优点可以归纳为三个词语：整合、强大、灵活。</p>
+<h3 id="整合"><a href="#整合" class="headerlink" title="整合"></a>整合</h3><p>虽然 linux 有很多系统分析和调优的工具，但是它们一般都负责某个特殊的功能，并且使用方式有很大的差异，如果要分析和定位问题，一般都需要熟练掌握需要命令的使用。而且这些工具的数据无法进行共享，只能相互独立工作。<code>sysdig</code> 一个工具就能实现上述所有工具的功能，并且提供了统一的使用语法。</p>
+<h3 id="强大"><a href="#强大" class="headerlink" title="强大"></a>强大</h3><p>sysdig 能获取实时的系统数据，也能把信息保存到文件中以供后面分析。捕获的数据包含系统的个个方面：</p>
+<ul>
+<li>全方面的系统参数：CPU、memory、Disk IO、网络 IO</li>
+<li>支持各种 IO 活动：进程、文件、网络连接等</li>
+</ul>
+<p>除了帮你捕获信息之外，sysdig 还预先还有有用的工具来分析这些数据，从大量的数据中找到有用的信息变得非常简单。比如你能还简单地做到下面这些事情：</p>
+<ul>
+<li>按照 CPU 的使用率对进程进行排序，找到 CPU 使用率最高的那个</li>
+<li>按照发送网络数据报文的多少对进程进行排序</li>
+<li>找到打开最多文件描述符的进程</li>
+<li>查看哪些进程修改了指定的文件</li>
+<li>打印出某个进程的 HTTP 请求报文</li>
+<li>找到用时最久的系统调用</li>
+<li>查看系统中所有的用户都执行了哪些命令</li>
+<li>……</li>
+</ul>
+<p>基本上自带的工具就能满足大部分的分析需求。</p>
+<h3 id="灵活"><a href="#灵活" class="headerlink" title="灵活"></a>灵活</h3><p>sysdig 有着类似于 <code>tcpdump</code> 的过滤语法，用户可以随意组合自己的过滤逻辑，从茫茫的数据中找到关心的信息。除此之外，用户还可以自己编写 Lua 脚本来自定义分析逻辑，基本上不受任何限制。</p>
+<h3 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h3><p>sysdig 通过在内核的 driver 模块注册系统调用的 hook，这样当有系统调用发生和完成的时候，它会把系统调用信息拷贝到特定的 buffer，然后用户模块的组件对数据信息处理（解压、解析、过滤等），并最终通过 sysdig 命令行和用户进行交互。</p>
+<p><img src="https://478h5m1yrfsa3bbe262u7muv-wpengine.netdna-ssl.com/wp-content/uploads/2014/04/Blog2-pic3-1024x886.png" alt=""></p>
+<p>更多的原理可以参考<a href="https://sysdig.com/blog/sysdig-vs-dtrace-vs-strace-a-technical-discussion/" target="_blank" rel="noopener">官方博客</a></p>
+<p>除了 <code>sysdig</code> 命令之外，还有一个基于终端的 UI 命令 <code>csysdig</code>，它类似于 <code>top</code> 命令，定时对系统情况进行刷新，并且可以让用户交互。这篇文章我们只介绍 <code>sysdig</code>，不会讲解 <code>csysdig</code> 的使用。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>sysdig 的安装在<a href="http://www.sysdig.org/install/" target="_blank" rel="noopener">官方文档中</a>有详细的说明，这里不再赘述。需要注意的是，sysdig 对内核版本有一定的要求，请保证内核不要太旧。</p>
+<p>另外，如果使用容器的方式安装，需要把主机的很多系统目录 mount 到容器中：</p>
+<pre><code>docker run -i -t --name sysdig --privileged -v /var/run/docker.sock:/host/var/run/docker.sock -v /dev:/host/dev -v /proc:/host/proc:ro -v /boot:/host/boot:ro -v /lib/modules:/host/lib/modules:ro -v /usr:/host/usr:ro sysdig/sysdig
+</code></pre><h2 id="sysdig-基本用法"><a href="#sysdig-基本用法" class="headerlink" title="sysdig 基本用法"></a>sysdig 基本用法</h2><h3 id="基本格式"><a href="#基本格式" class="headerlink" title="基本格式"></a>基本格式</h3><p>直接在终端输入 <code>sysdig</code> 就能开始捕获系统信息，这个命令需要系统管理员权限，执行后你会看到终端有持续不断的输出流。</p>
+<pre class=" language-bash"><code class="language-bash">$ <span class="token function">sudo</span> sysdig
+</code></pre>
+<p>因为系统每时每刻都有大量的系统调用产生，这样是没办法看清更无法分析输出信息的，可以先使用 <code>CTRL + c</code> 来退出命令。</p>
+<p>在讲解如何使用 <code>sysdig</code> 的参数之前，我们先来解释一下它的输出格式：</p>
+<pre class=" language-bash"><code class="language-bash">5352209 11:54:08.853479695 0 ssh-agent <span class="token punctuation">(</span>13314<span class="token punctuation">)</span> <span class="token operator">&lt;</span> getrusage
+5352210 11:54:08.853481094 0 ssh-agent <span class="token punctuation">(</span>13314<span class="token punctuation">)</span> <span class="token operator">></span> clock_gettime
+5352211 11:54:08.853482049 0 ssh-agent <span class="token punctuation">(</span>13314<span class="token punctuation">)</span> <span class="token operator">&lt;</span> clock_gettime
+5352226 11:54:08.853510313 0 ssh-agent <span class="token punctuation">(</span>13314<span class="token punctuation">)</span> <span class="token operator">></span> getrusage
+5352228 11:54:08.853511089 0 ssh-agent <span class="token punctuation">(</span>13314<span class="token punctuation">)</span> <span class="token operator">&lt;</span> getrusage
+5352229 11:54:08.853511646 0 ssh-agent <span class="token punctuation">(</span>13314<span class="token punctuation">)</span> <span class="token operator">></span> clock_gettime
+5352231 11:54:08.853512020 0 ssh-agent <span class="token punctuation">(</span>13314<span class="token punctuation">)</span> <span class="token operator">&lt;</span> clock_gettime
+5352240 11:54:08.853530285 0 ssh-agent <span class="token punctuation">(</span>13314<span class="token punctuation">)</span> <span class="token operator">></span> <span class="token function">stat</span>
+5352241 11:54:08.853532329 0 ssh-agent <span class="token punctuation">(</span>13314<span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token function">stat</span> res<span class="token operator">=</span>0 path<span class="token operator">=</span>/home/cizixs/.ssh
+5352242 11:54:08.853533065 0 ssh-agent <span class="token punctuation">(</span>13314<span class="token punctuation">)</span> <span class="token operator">></span> <span class="token function">stat</span>
+5352243 11:54:08.853533990 0 ssh-agent <span class="token punctuation">(</span>13314<span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token function">stat</span> res<span class="token operator">=</span>0 path<span class="token operator">=</span>/home/cizixs/.ssh/id_rsa.pub
+5353954 11:54:08.857382204 0 ssh-agent <span class="token punctuation">(</span>13314<span class="token punctuation">)</span> <span class="token operator">></span> <span class="token function">write</span> fd<span class="token operator">=</span>16 size<span class="token operator">=</span>280
+</code></pre>
+<p>所有的输入都是按照行来分割的，每行都是一条记录，由多个列组成，默认的格式是：</p>
+<pre class=" language-bash"><code class="language-bash">%evt.num %evt.outputtime %evt.cpu %proc.name <span class="token punctuation">(</span>%thread.tid<span class="token punctuation">)</span> %evt.dir %evt.type %evt.info
+</code></pre>
+<p>各个字段的含义如下：</p>
+<ul>
+<li><strong><code>evt.num</code></strong>： 递增的事件号</li>
+<li><strong><code>evt.time</code></strong>： 事件发生的时间</li>
+<li><strong><code>evt.cpu</code></strong>： 事件被捕获时所在的 CPU，也就是系统调用是在哪个 CPU 执行的。比较上面的例子中，值 0 代表机器的第一个 CPU</li>
+<li><strong><code>proc.name</code></strong>： 生成事件的进程名字，也就是哪个进程在运行</li>
+<li><strong><code>thread.tid</code></strong>： 线程的 id，如果是单线程的程序，这也是进程的 pid</li>
+<li><strong><code>evt.dir</code></strong>： 事件的方向（direction），<code>&gt;</code> 代表进入事件，<code>&lt;</code> 代表退出事件</li>
+<li><strong><code>evt.type</code></strong>： 事件的名称，比如 <code>open</code>、<code>stat</code>等，一般是系统调用</li>
+<li><strong><code>evt.args</code></strong>： 事件的参数。如果是系统调用，这些对应着系统调用的参数</li>
+</ul>
+<h3 id="过滤"><a href="#过滤" class="headerlink" title="过滤"></a>过滤</h3><p>完整的 sysdig 使用方法是这样的：</p>
+<pre class=" language-bash"><code class="language-bash">sysdig <span class="token punctuation">[</span>option<span class="token punctuation">]</span><span class="token punctuation">..</span>.  <span class="token punctuation">[</span>filter<span class="token punctuation">]</span>
+</code></pre>
+<p>因为 sysdig 的输出内容很多，不管是监控还是查问题我们要关注的事件只是其中很小的一部分。这个时候就要用到过滤的功能，找到感兴趣的事件。sysdig 的过滤功能很强大，不仅支持的过滤项很多，而且还能够自由地进行逻辑组合。</p>
+<p>sysdig 的过滤器也是分成不同类别的，比如:</p>
+<ul>
+<li><strong><code>fd</code></strong>: 对文件描述符（file descriptor）进行过滤，比如 fd 标号（<code>fd.num</code>）、fd 名字（<code>fd.name</code>）</li>
+<li><strong><code>process</code></strong>: 进程信息的过滤，比如进程 id（<code>proc.id</code>）、进程名（<code>proc.name</code>）</li>
+<li><strong><code>evt</code></strong>: 事件信息的过滤，比如事件编号、事件名</li>
+<li><strong><code>user</code></strong>: 用户信息的过滤，比如用户 id、用户名、用户 home 目录、用户的登录 shell（<code>user.shell</code>）</li>
+<li><strong><code>syslog</code></strong>: 系统日志的过滤，比如日志的严重程度、日志的内容</li>
+<li><strong><code>fdlist</code></strong>: poll event 的文件描述符的过滤</li>
+</ul>
+<p>完整的过滤器列表可以使用 <code>sysdig -l</code> 来查看，比如可以查看建立 TCP 连接的事件：</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">sudo</span> sysdig evt.type<span class="token operator">=</span>accept
+</code></pre>
+<p>过滤器除了直接的相等比较之外，还有其他操作符，包括 <code>=</code>、<code>!=</code>、<code>&gt;=</code>、<code>&gt;</code>、<code>&lt;</code>、<code>&lt;=</code>、<code>contains</code>、<code>in</code> 和 <code>exists</code>，比如：</p>
+<pre class=" language-bash"><code class="language-bash">$ sysdig fd.name contains /etc
+$ sysdig <span class="token string">"evt.type in ( 'select', 'poll' )"</span>
+$ sysdig proc.name exists
+</code></pre>
+<p>更酷的是，多个过滤条件还可以通过 <code>and</code>、<code>or</code> 和 <code>not</code> 进行逻辑组合，比如：</p>
+<pre class=" language-bash"><code class="language-bash">$ sysdig <span class="token string">"not (fd.name contains /proc or fd.name contains /dev)"</span>
+</code></pre>
+<p>这些强大的功能综合到一起，就能让我们很容易定位到需要的事件，分析和监控更有目的性。</p>
+<h3 id="自定义输出格式"><a href="#自定义输出格式" class="headerlink" title="自定义输出格式"></a>自定义输出格式</h3><p>标准的输出已经打印出常用的信息，sysdig 还允许你自定义打印出的内容，参数 <code>-p</code> 可以加上类似于 C 语言 <code>printf</code> 字符串，比如：</p>
+<pre class=" language-bash"><code class="language-bash">$ sysdig -p<span class="token string">"user:%user.name dir:%evt.arg.path"</span> evt.type<span class="token operator">=</span>chdir
+user:ubuntu dir:/root
+user:ubuntu dir:/root/tmp
+user:ubuntu dir:/root/Download
+</code></pre>
+<p>上面的信息，可以很容易看到用户更改当前目录的情况。从上面的例子也可以使用 <code>-p</code> 的使用方法：</p>
+<ul>
+<li>字段必须用 <code>%</code> 作为前缀，所有在 <code>sysdig -l</code> 中列出来的字段都可以使用</li>
+<li>你可以在字符串中加入其他可读性的内容，它们会如实打印出来</li>
+<li>如果某个字段在时间中不存在，默认这个事件会过滤掉，在这个字符串最前面加上 <code>*</code> 符号，会打印出所有的事件，不存在的字段会变成 <code>&lt;NA&gt;</code>，比如:</li>
+</ul>
+<pre class=" language-bash"><code class="language-bash">$ sysdig -p<span class="token string">"*%evt.type %evt.dir %evt.arg.name"</span> evt.type<span class="token operator">=</span>open
+<span class="token function">open</span> <span class="token operator">></span> <span class="token operator">&lt;</span>NA<span class="token operator">></span>
+<span class="token function">open</span> <span class="token operator">&lt;</span> /proc/1285/task/1399/stat
+<span class="token function">open</span> <span class="token operator">></span> <span class="token operator">&lt;</span>NA<span class="token operator">></span>
+<span class="token function">open</span> <span class="token operator">&lt;</span> /proc/1285/task/1400/io
+<span class="token function">open</span> <span class="token operator">></span> <span class="token operator">&lt;</span>NA<span class="token operator">></span>
+<span class="token function">open</span> <span class="token operator">&lt;</span> /proc/1285/task/1400/statm
+<span class="token function">open</span> <span class="token operator">></span> <span class="token operator">&lt;</span>NA<span class="token operator">></span>
+</code></pre>
+<h3 id="保存到文件"><a href="#保存到文件" class="headerlink" title="保存到文件"></a>保存到文件</h3><p>尽管可以用过滤器减少输出，直接在终端查看事件流还是没有办法让我们进行深入分析。和 <code>tcpdump</code> 工具类似，<code>sysdig</code> 也允许你把捕获的时间保存到本地的文件，然后再读取文件的内容进行分析。</p>
+<p>保存到文件可以通过 <code>-w</code> 实现，从文件中读取需要 <code>-r</code> 参数，比如：</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 捕获事件，并保存到文件中，这样在终端是不看到输出的</span>
+$ <span class="token function">sudo</span> sysdig -w sysdig-trace-file.scap
+
+<span class="token comment" spellcheck="true"># 从文件中读取 sysdig 格式的事件进行分析</span>
+$ <span class="token function">sudo</span> sysdig -r sysdig-trace-file.scap
+</code></pre>
+<p>另一个有用的功能是，你可以控制捕获到文件的内容。通常情况下，sysdig 捕获了系统所有的活动，因此这些数据会很大，如果一直捕获的话，会造成磁盘空间的浪费，sysdig 提供了类似于 log rotate 的方式，让你只保存最新捕获的文件。</p>
+<p>控制捕获文件大小的一个办法是在捕获的使用使用过滤器，之外，你还可以通过 <code>-n 2000</code> 指定捕获 2000 条事件之后就退出，或者通过 logrotate 的方式来滚动文件：</p>
+<ul>
+<li><code>sysdig -C 5 -W 10 -w dump.pcap</code> ：保证每个文件不超过 5M 大小，并且只保存最近的 10 个文件</li>
+<li><code>sysdig -G 60 -W 60 -w dump.pcap</code>：每个文件只保存一分钟内的系统活动（-G 60），并且只保存 60 个文件，也就是说捕获最近一个小时的系统活动，每分钟的数据一个文件</li>
+<li><code>sysdig -e 1000 -W 5 -w dump.scap</code>：保存 5 个文件，每个文件只有 1000 个事件</li>
+</ul>
+<p>当使用 <code>-w</code> 保存文件的使用，还可以使用 <code>-z</code> 参数对保存的内容进行压缩，进一步减少占用的空间。</p>
+<p>读取的时候也可以使用过滤器，如果我们只关心 <code>write</code> 系统调用：</p>
+<pre class=" language-bash"><code class="language-bash">$ sysdig -r sysdig-trace-nano.scap evt.type<span class="token operator">=</span>write
+</code></pre>
+<p>而且读取的时候也可以进一步对文件进行分割，比如：</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token operator">></span> sysdig -r dump.scap -G 300 -z -w segments.scap
+</code></pre>
+<p>这个命令，就是读取 <code>dump.scap</code> 文件的内容，并且把它分割成五分钟（-G 300s）的多个文件。</p>
+<h3 id="常用的参数"><a href="#常用的参数" class="headerlink" title="常用的参数"></a>常用的参数</h3><p>除了上面介绍的过滤器参数，sysdig 还有很多可用的参数，完整的列表和解释请参考 <code>man sysdig</code> 文档。这里介绍一下比较常用的：</p>
+<ul>
+<li><code>-A --print-ascii</code>：把 buffer 中数据按照 ASCII 格式打印，方便用户阅读</li>
+<li><code>-x --print-hex</code>： 把 buffer 中数据按照十六进制格式打印</li>
+<li><code>-X --print-hex-ascii</code>： 把 buffer 中数据同时按照 ASCII 格式和十六进制格式打印</li>
+<li><code>-s 1024</code>：捕获 buffer 的数据大小，默认为 80，如果这个值设置的过大，会产生很大的文件</li>
+<li><code>-N</code>：不用把端口号转换成可读的名字，这个参数会提高处理的效率</li>
+</ul>
+<h2 id="Chisels：实用的工具箱"><a href="#Chisels：实用的工具箱" class="headerlink" title="Chisels：实用的工具箱"></a>Chisels：实用的工具箱</h2><p>虽然有了过滤器和文件的输入输出，加上 sysdig 其他的参数，我们可以按照需求去分析和监控系统了，但是很多场景需要更复杂的数据聚合。sysdig 提供了另外一个强大的功能：chisels，它们是一组预定义的功能集合，通过 Lua 脚本实现，用来分析特定的场景。</p>
+<p>可以通过 <code>sudo sysdig -cl</code> 列出支持的所有 chisels，我们来解释一些比较常用的 chisels：</p>
+<ul>
+<li><strong><code>httplog</code></strong>：输出所有的 HTTP 请求</li>
+<li><strong><code>topprocs_cpu</code></strong>：输出按照 CPU 使用率排序的进程列表</li>
+<li><strong><code>echo_fds</code></strong>：输出进程读写的数据</li>
+<li><strong><code>netstat</code></strong>：列出网络的连接情况</li>
+<li><strong><code>spy_file</code></strong>：输出文件的读写数据，可以提供某个文件名作为参数，这样就只输出该文件的读写内容</li>
+</ul>
+<p>有些 chisel 可能需要参数才能正常运行，如果要了解某个 chisel 的具体使用说明，可以用 <code>-i</code> 参数，比如要了解 <code>spy_file</code> 的用法：</p>
+<pre><code>$ sudo sysdig -i spy_file
+
+Category: I/O
+-------------
+spy_file        Echo any read/write made by any process to all files. Optionall
+                y, you can provide the name of one file to only intercept reads
+                /writes to that file.
+
+This chisel intercepts all reads and writes to all files. Instead of all files,
+ you can limit interception to one file.
+Args:
+[string] read_or_write - Specify &#39;R&#39; to capture only read event
+                s; &#39;W&#39; to capture only write events; &#39;RW&#39; to capture read and w
+                rite events. By default both read and write events are captured
+                .
+[string] spy_on_file_name - The name of the file which the chis
+                el should spy on for all read and write activity.
+</code></pre><p>文章最开始的时候，我提到过 sysdig 可以满足大部分的日常分析，它们主要就是通过 chisel 完成的。比如：</p>
+<p>按照网络的使用情况对进程进行排序：</p>
+<pre class=" language-bash"><code class="language-bash">$  sysdig -c topprocs_net
+</code></pre>
+<p>按照建立连接数量对进程进行排序：</p>
+<pre class=" language-bash"><code class="language-bash">$ sysdig -c fdcount_by fd.sport <span class="token string">"evt.type=accept"</span>  
+</code></pre>
+<p>查看系统中用户执行的命令：</p>
+<pre class=" language-bash"><code class="language-bash">$ sysdig -r sysdig.pcap -c spy_users
+</code></pre>
+<p>更多的使用案例，可以参考 <a href="https://github.com/draios/sysdig/wiki/Sysdig-Examples" target="_blank" rel="noopener">Sysdig Example</a> 这篇 wiki。</p>
+<p>在 linux 机器上，这些 chisel 保存在 <code>/usr/share/sysdig/chisels</code> 文件夹中，每个 chisel 对应一个 lua 脚本文件。如果提供的这些 chisel 还不能满足需求，用户也可以根据需求<a href="https://github.com/draios/sysdig/wiki/writing-a-sysdig-chisel,-a-tutorial" target="_blank" rel="noopener">编写自己的 chisel</a>。</p>
+<h2 id="对容器的支持"><a href="#对容器的支持" class="headerlink" title="对容器的支持"></a>对容器的支持</h2><p>sysdig 另外一个优势是它对容器（docker 和 kubernetes）的良好支持，这对于目前采用了容器化的系统管理员来说是很好的福利。</p>
+<p>使用 <code>-pc</code> 参数就能自动在打印的事件中添加上容器的信息（容器名、容器 id 等），比如捕获 container 名字为 <code>zen_knuth</code> 的所有系统活动：</p>
+<pre class=" language-bash"><code class="language-bash">$ sysdig -pc container.name<span class="token operator">=</span>zen_knuth
+</code></pre>
+<p>对容器的分析和原来的一样，只要通过 <code>container.name=apache</code> 指定要分析的容器名字就行，比如查看某个容器的网络连接：</p>
+<pre class=" language-bash"><code class="language-bash">$ sysdig -pc -c topconns container.name<span class="token operator">=</span>wordpress1
+</code></pre>
+<p>要集成 kubernetes 系统监控的话，使用 <code>-k http://master_ip:8080</code> 参数，后面是 apiserver 的地址，如果 apiserver 需要认证的话，需要指定 <code>-K filename</code> 来说明 apiserver CA 证书的文件地址。关于 kubernetes 的监控和分析不是这篇文章的重点，读者可以参数 sysdig 的博客或者其他文档。</p>
+<h2 id="Csysdig：图形化的-sysdig"><a href="#Csysdig：图形化的-sysdig" class="headerlink" title="Csysdig：图形化的 sysdig"></a>Csysdig：图形化的 sysdig</h2><p>sysdig 还提供了另外一个图形化的工具：Csysdig，它的界面和 top/htop 命令相似，并且可以接受用户的交互。</p>
+<p><img src="https://assets.digitalocean.com/articles/sysdig_ubuntu_1604/LEhCwvI.jpg" alt=""></p>
+<p>和 sysdig 一样，csysdig 可以实时捕获系统事件，也可以读取之前保存的文件。</p>
+<h2 id="更多文档"><a href="#更多文档" class="headerlink" title="更多文档"></a>更多文档</h2><p>这篇文章介绍的都出入门的、基础概念性的知识，如果读者希望进一步了解 sysdig，不妨继续阅读下面这些文章：</p>
+<ul>
+<li><a href="https://sysdig.com/blog/linux-troubleshooting-cheatsheet/" target="_blank" rel="noopener">sysdig 和传统的 strace、htop、lsof、tcpdump、iftop命令的比较</a></li>
+<li><a href="https://sysdig.com/blog/interpreting-sysdig-output/" target="_blank" rel="noopener">理解 sysdig 的输出</a></li>
+<li><a href="https://twitter.com/search?q=%23digoftheday%20sysdig&amp;src=typd" target="_blank" rel="noopener">sysdig twitter 账号 #digoftheday </a></li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>这篇文章主要参考了一下的博客、文章和资料：</p>
+<ul>
+<li><a href="https://github.com/draios/sysdig/wiki/Sysdig-User-Guide" target="_blank" rel="noopener">Sysdig User Guide</a></li>
+<li><a href="https://sysdig.com/blog/linux-troubleshooting-cheatsheet/" target="_blank" rel="noopener">Linux Troubleshooting Cheatsheet: strace, htop, lsof, tcpdump, iftop &amp; sysdig</a></li>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-monitor-your-ubuntu-16-04-system-with-sysdig" target="_blank" rel="noopener">DigitalOcean: How To Monitor Your Ubuntu 16.04 System with Sysdig</a></li>
+<li><a href="https://sysdig.com/blog/sysdig-vs-dtrace-vs-strace-a-technical-discussion/" target="_blank" rel="noopener">Sysdig vs DTrace vs Strace: a Technical Discussion</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/linux/1607_caoyq_sysdig/index.html" target="_blank" rel="noopener">用 Sysdig 监控服务器和 Docker 容器</a></li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="linux lsof 命令使用指南" href="/2017/05/16/linux-lsof-primer/">
+        ← linux lsof 命令使用指南
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="使用 curl 命令分析请求的耗时情况" href="/2017/04/11/use-curl-to-analyze-request/">
+        使用 curl 命令分析请求的耗时情况 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#sysdig-简介"><span class="toc-text">sysdig 简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#整合"><span class="toc-text">整合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#强大"><span class="toc-text">强大</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#灵活"><span class="toc-text">灵活</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#工作原理"><span class="toc-text">工作原理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sysdig-基本用法"><span class="toc-text">sysdig 基本用法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本格式"><span class="toc-text">基本格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤"><span class="toc-text">过滤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自定义输出格式"><span class="toc-text">自定义输出格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#保存到文件"><span class="toc-text">保存到文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常用的参数"><span class="toc-text">常用的参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Chisels：实用的工具箱"><span class="toc-text">Chisels：实用的工具箱</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对容器的支持"><span class="toc-text">对容器的支持</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Csysdig：图形化的-sysdig"><span class="toc-text">Csysdig：图形化的 sysdig</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更多文档"><span class="toc-text">更多文档</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">使用 sysdig 进行监控和调试 linux 机器</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>docker 镜像介绍 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="docker 镜像介绍 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2016/04/06/docker-images/">
+
+	
+	<meta property="article:published_time" content="2016-04-06T00:04:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2016/04/06/docker-images/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2016-04-05T16:00:00.000Z" itemprop="datePublished">
+                    2016-04-6
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">docker 镜像介绍</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p>这篇文章主要讲讲 docker 中镜像有关的知识，将涉及到下面几个方面：</p>
+<ul>
+<li>docker images 命令的使用</li>
+<li>docker 和 registry 交互的过程，pull 命令到底做了什么</li>
+<li>docker storage driver</li>
+<li>aufs 的格式和实际的组织结构</li>
+<li>Dockerfile 原语和 docker 镜像之间的关系</li>
+</ul>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><img src="http://7xi8kv.com5.z0.glb.qiniucdn.com/%E4%B8%80%E5%9B%BE%E7%9C%8B%E5%B0%BDDocker%E5%AE%B9%E5%99%A8%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F.png" alt="一图看尽 docker 镜像"></p>
+<ul>
+<li>docker 镜像代表了容器的文件系统里的内容，是容器的基础，镜像一般是通过 Dockerfile 生成的</li>
+<li>docker 的镜像是分层的，所有的镜像（除了基础镜像）都是在之前镜像的基础上加上自己这层的内容生成的</li>
+<li>每一层镜像的元数据都是存在 json 文件中的，除了静态的文件系统之外，还会包含动态的数据</li>
+</ul>
+<h2 id="使用镜像：docker-image-命令"><a href="#使用镜像：docker-image-命令" class="headerlink" title="使用镜像：docker image 命令"></a>使用镜像：docker image 命令</h2><p>docker client 提供了各种命令和 daemon 交互，来完成各种任务，其中和镜像有关的命令有：</p>
+<ul>
+<li><code>docker images</code> ：列出 docker host 机器上的镜像，可以使用 <code>-f</code>  进行过滤</li>
+<li><code>docker build</code>：从 Dockerfile 中构建出一个镜像</li>
+<li><code>docker history</code>：列出某个镜像的历史</li>
+<li><code>docker import</code>：从 tarball 中创建一个新的文件系统镜像</li>
+<li><code>docker pull</code>：从 docker registry 拉去镜像</li>
+<li><code>docker push</code>：把本地镜像推送到 registry</li>
+<li><code>docker rmi</code>： 删除镜像</li>
+<li><code>docker save</code>：把镜像保存为 tar 文件</li>
+<li><code>docker search</code>：在 docker hub 上搜索镜像</li>
+<li><code>docker tag</code>：为镜像打上 tag 标记</li>
+</ul>
+<p>从上面这么多命令中，我们就可以看出来，docker 镜像在整个体系中的重要性。</p>
+<h2 id="下载镜像：pull-和-push-镜像到底在做什么？"><a href="#下载镜像：pull-和-push-镜像到底在做什么？" class="headerlink" title="下载镜像：pull 和 push 镜像到底在做什么？"></a>下载镜像：pull 和 push 镜像到底在做什么？</h2><p>如果了解 docker 结构的话，你会知道 docker 是典型的 C/S 架构。平时经常使用的 <code>docker pull</code>， <code>docker run</code> 都是客户端的命令，最终这些命令会发送到 server 端（docker daemon 启动的时候会启动docker server）进行处理。下载镜像还会和 Registry 打交道，下面我们就说说使用 <code>docker pull</code> 的时候，docker 到底在做些什么！</p>
+<p><img src="http://cdn.infoqstatic.com/statics_s1_20160405-0343u1/resource/articles/docker-source-code-analysis-part1/zh/resources/001.jpg" alt=""></p>
+<p>docker client 组织配置和参数，把 pull 指令发送给 docker server，server 端接收到指令之后会交给对应的 handler。handler 会新开一个 CmdPull job 运行，这个 job 在 docker daemon 启动的时候被注册进来，所以控制权就到了 docker daemon 这边。docker daemon 是怎么根据传过来的 registry 地址、repo 名、image 名和tag 找到要下载的镜像呢？具体流程如下：</p>
+<ol>
+<li>获取 repo 下面所有的镜像 id：<code>GET /repositories/{repo}/images</code></li>
+<li>获取 repo 下面所有 tag 的信息: <code>GET /repositories/{repo}/tags</code></li>
+<li>根据 tag 找到对应的镜像 uuid，并下载该镜像<ul>
+<li>获取该镜像的 history 信息，并依次下载这些镜像层: <code>GET /images/{image_id}/ancestry</code></li>
+<li>如果这些镜像层已经存在，就 skip，不存在的话就继续</li>
+<li>获取镜像层的 json 信息：<code>GET /images/{image_id}/json</code></li>
+<li>下载镜像内容： <code>GET /images/{image_id}/layer</code></li>
+<li>下载完成后，把下载的内容存放到本地的 UnionFS 系统</li>
+<li>在 TagStore 添加刚下载的镜像信息</li>
+</ul>
+</li>
+</ol>
+<h2 id="存储镜像：docker-storage-介绍"><a href="#存储镜像：docker-storage-介绍" class="headerlink" title="存储镜像：docker storage 介绍"></a>存储镜像：docker storage 介绍</h2><p>在上一个章节提到下载的镜像会保存起来，这一节就讲讲到底是怎么存的。</p>
+<h3 id="UnionFS-和-aufs"><a href="#UnionFS-和-aufs" class="headerlink" title="UnionFS 和 aufs"></a>UnionFS 和 aufs</h3><p>如果对 docker 有所了解的话，会听说过 UnionFS 的概念，这是 docker 实现层级镜像的基础。在 wikipedia 是这么解释的：</p>
+<blockquote>
+<p>Unionfs is a filesystem service for Linux, FreeBSD and NetBSD which<br>implements a union mount for other file systems. It allows files and<br>directories of separate file systems, known as branches, to be<br>transparently overlaid, forming a single coherent file system.<br>Contents of directories which have the same path within the merged<br>branches will be seen together in a single merged directory, within<br>the new, virtual filesystem.</p>
+</blockquote>
+<p>简单来说，就是用多个文件夹和文件（这些是系统文件系统的概念）存放内容，对上（应用层）提供虚拟的文件访问。<br>比如 docker 中有镜像的概念，应用层看来只是一个文件，可以读取、删除，在底层却是通过 UnionFS 系统管理各个镜像层的内容和关系。</p>
+<p>docker 负责镜像的模块是 <code>Graph</code>，对上提供一致和方便的接口，在底层通过调用不同的 driver 来实现。常用的 driver 包括 aufs、devicemapper，这样的好处是：用户可以选择甚至实现自己的 driver。</p>
+<h3 id="aufs-镜像在机器上的存储结构"><a href="#aufs-镜像在机器上的存储结构" class="headerlink" title="aufs 镜像在机器上的存储结构"></a>aufs 镜像在机器上的存储结构</h3><p>NOTE：</p>
+<ul>
+<li>只下载了 ubuntu:14.04 镜像</li>
+<li>docker version：1.6.3</li>
+<li>image driver：aufs</li>
+</ul>
+<p>使用 docker history 查看镜像历史：</p>
+<pre><code>root@cizixs-ThinkPad-T450:~# docker images
+REPOSITORY                TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+172.16.1.41:5000/ubuntu   14.04               2d24f826cb16        13 months ago       188.3 MB
+root@cizixs-ThinkPad-T450:~# docker history 2d24
+IMAGE               CREATED              CREATED BY                                      SIZE
+2d24f826cb16        13 months ago        /bin/sh -c #(nop) CMD [/bin/bash]               0 B
+117ee323aaa9        13 months ago        /bin/sh -c sed -i &#39;s/^#\s*\(deb.*universe\)$/   1.895 kB
+1c8294cc5160        13 months ago        /bin/sh -c echo &#39;#!/bin/sh&#39; &gt; /usr/sbin/polic   194.5 kB
+fa4fd76b09ce        13 months ago        /bin/sh -c #(nop) ADD file:0018ff77d038472f52   188.1 MB
+511136ea3c5a        2.811686 years ago                                                   0 B
+</code></pre><p>可以看到，ubuntu:14.04 一共有五层镜像。aufs 数据存放在 /var/lib/docker/aufs 目录下：</p>
+<pre><code>root@cizixs-ThinkPad-T450:/var/lib/docker/aufs# tree -L 1
+.
+├── diff
+├── layers
+└── mnt
+</code></pre><p>一共有三个文件夹，每个文件夹下面都是以镜像 id 命令的文件夹，保存了每个镜像的信息。先来介绍一下这三个文件夹</p>
+<ul>
+<li>layers：显示了每个镜像有哪些层构成</li>
+<li>diff：每个镜像的和之前镜像的区别，就是这一层的内容</li>
+<li>mnt：UnionFS 对外提供的 mount point，因为 UnionFS 底层是多个文件夹和文件，对上层要提供统一的文件服务，是通过 mount 的形式实现的。每个运行的容器都会在这个目录下有一个文件夹</li>
+</ul>
+<p>比如 diff 文件夹是这样的：</p>
+<pre><code>root@cizixs-ThinkPad-T450:/var/lib/docker/aufs# ls diff/2d24f826cb16146e2016ff349a8a33ed5830f3b938d45c0f82943f4ab8c097e7/
+root@cizixs-ThinkPad-T450:/var/lib/docker/aufs# ls diff/117ee323aaa9d1b136ea55e4421f4ce413dfc6c0cc6b2186dea6c88d93e1ad7c/
+etc
+root@cizixs-ThinkPad-T450:/var/lib/docker/aufs# ls diff/1c8294cc516082dfbb731f062806b76b82679ce38864dd87635f08869c993e45/
+etc  sbin  usr  var
+root@cizixs-ThinkPad-T450:/var/lib/docker/aufs# ls diff/fa4fd76b09ce9b87bfdc96515f9a5dd5121c01cc996cf5379050d8e13d4a864b/
+bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+root@cizixs-ThinkPad-T450:/var/lib/docker/aufs# ls diff/511136ea3c5a64f264b78b5433614aec563103b4d4702f3ba7d4d2698e22c158/
+</code></pre><p>除了这些实际的数据之外，docker 还为每个镜像层保存了 json 格式的元数据，存储在 <code>/var/lib/docker/graph/&lt;image_id&gt;/json</code>，比如：</p>
+<pre><code>root@cizixs-ThinkPad-T450:/var/lib/docker# cat graph/2d24f826cb16146e2016ff349a8a33ed5830f3b938d45c0f82943f4ab8c097e7/json | jq &#39;.&#39;
+{
+  &quot;id&quot;: &quot;2d24f826cb16146e2016ff349a8a33ed5830f3b938d45c0f82943f4ab8c097e7&quot;,
+  &quot;parent&quot;: &quot;117ee323aaa9d1b136ea55e4421f4ce413dfc6c0cc6b2186dea6c88d93e1ad7c&quot;,
+  &quot;created&quot;: &quot;2015-02-21T02:11:06.735146646Z&quot;,
+  &quot;container&quot;: &quot;c9a3eda5951d28aa8dbe5933be94c523790721e4f80886d0a8e7a710132a38ec&quot;,
+  &quot;container_config&quot;: {
+    &quot;Hostname&quot;: &quot;43bd710ec89a&quot;,
+    &quot;Domainname&quot;: &quot;&quot;,
+    &quot;User&quot;: &quot;&quot;,
+    &quot;Memory&quot;: 0,
+    &quot;MemorySwap&quot;: 0,
+    &quot;CpuShares&quot;: 0,
+    &quot;Cpuset&quot;: &quot;&quot;,
+    &quot;AttachStdin&quot;: false,
+    &quot;AttachStdout&quot;: false,
+    &quot;AttachStderr&quot;: false,
+    &quot;PortSpecs&quot;: null,
+    &quot;ExposedPorts&quot;: null,
+    &quot;Tty&quot;: false,
+    &quot;OpenStdin&quot;: false,
+    &quot;StdinOnce&quot;: false,
+    &quot;Env&quot;: [
+      &quot;PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&quot;
+    ],
+    &quot;Cmd&quot;: [
+      &quot;/bin/sh&quot;,
+      &quot;-c&quot;,
+      &quot;#(nop) CMD [/bin/bash]&quot;
+    ],
+    &quot;Image&quot;: &quot;117ee323aaa9d1b136ea55e4421f4ce413dfc6c0cc6b2186dea6c88d93e1ad7c&quot;,
+    &quot;Volumes&quot;: null,
+    &quot;WorkingDir&quot;: &quot;&quot;,
+    &quot;Entrypoint&quot;: null,
+    &quot;NetworkDisabled&quot;: false,
+    &quot;MacAddress&quot;: &quot;&quot;,
+    &quot;OnBuild&quot;: [],
+    &quot;Labels&quot;: null
+  },
+  &quot;docker_version&quot;: &quot;1.4.1&quot;,
+  &quot;config&quot;: {
+    &quot;Hostname&quot;: &quot;43bd710ec89a&quot;,
+    &quot;Domainname&quot;: &quot;&quot;,
+    &quot;User&quot;: &quot;&quot;,
+    &quot;Memory&quot;: 0,
+    &quot;MemorySwap&quot;: 0,
+    &quot;CpuShares&quot;: 0,
+    &quot;Cpuset&quot;: &quot;&quot;,
+    &quot;AttachStdin&quot;: false,
+    &quot;AttachStdout&quot;: false,
+    &quot;AttachStderr&quot;: false,
+    &quot;PortSpecs&quot;: null,
+    &quot;ExposedPorts&quot;: null,
+    &quot;Tty&quot;: false,
+    &quot;OpenStdin&quot;: false,
+    &quot;StdinOnce&quot;: false,
+    &quot;Env&quot;: [
+      &quot;PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&quot;
+    ],
+    &quot;Cmd&quot;: [
+      &quot;/bin/bash&quot;
+    ],
+    &quot;Image&quot;: &quot;117ee323aaa9d1b136ea55e4421f4ce413dfc6c0cc6b2186dea6c88d93e1ad7c&quot;,
+    &quot;Volumes&quot;: null,
+    &quot;WorkingDir&quot;: &quot;&quot;,
+    &quot;Entrypoint&quot;: null,
+    &quot;NetworkDisabled&quot;: false,
+    &quot;MacAddress&quot;: &quot;&quot;,
+    &quot;OnBuild&quot;: [],
+    &quot;Labels&quot;: null
+  },
+  &quot;architecture&quot;: &quot;amd64&quot;,
+  &quot;os&quot;: &quot;linux&quot;,
+  &quot;Size&quot;: 0
+}
+</code></pre><p>除了 json 之外，还有一个文件 <code>/var/lib/docker/graph/&lt;image_id&gt;/layersize</code> 保存了镜像层的大小。</p>
+<h2 id="创建镜像：镜像的-cache-机制"><a href="#创建镜像：镜像的-cache-机制" class="headerlink" title="创建镜像：镜像的 cache 机制"></a>创建镜像：镜像的 cache 机制</h2><p>在使用 <code>docker build</code> 创建新的镜像的时候，docker 会使用到 cache 机制，来提高执行的效率。为了理解这个问题，我们先看一下 build 命令都做了哪些东西吧。</p>
+<p>我们来看一个简单的 Dockerfile：</p>
+<pre><code>FROM ubuntu:14.04
+RUN apt-get update
+ADD run.sh /  
+VOLUME /data  
+CMD [&quot;./run.sh&quot;]  
+</code></pre><p>这个文件虽然简单，却包含了很多命令：RUN、ADD、VOLUME、CMD 涉及到很多概念。</p>
+<p><strong>一般情况下，对于每条命令，docker 都会生成一层镜像。</strong> cache 的作用也很容易猜测，如果在构建某个镜像层的时候，发现这个镜像层已经存在了，就直接使用，而不是重新构建。这里最重要的问题在于：<strong>怎么知道要构建的镜像层已经存在了？</strong> 下面就重点解释这个问题。</p>
+<p>docker daemon 读到 <code>FROM</code> 命令的时候，会在本地查找对应的镜像，如果没有找到，会从 registry 去取，当然也会取到包含 metadata 的 json 文件。然后到了 <code>RUN</code> 命令，如果没有 cache 的话，这个命令会做什么呢？</p>
+<p>我们已经知道，每层镜像都是由文件系统内容和 metadata 构成的。</p>
+<p>文件系统的内容，就是执行 <code>apt-get update</code> 命令导致的文件变动，会保存到 <code>/var/lib/docker/aufs/diff/&lt;image_id&gt;/</code>，比如这里的命令主要会修改 /var/lib 和 /var/cache 下面和 apt 有关的内容：</p>
+<pre><code>root@cizixs-ThinkPad-T450:/var/lib/docker# tree -L 2 aufs/diff/e7ae26691ff649c55296adf7c0e51b746e22abefa6b30310b94bbb9cfa6fce63/
+aufs/diff/e7ae26691ff649c55296adf7c0e51b746e22abefa6b30310b94bbb9cfa6fce63/
+├── tmp
+└── var
+    ├── cache
+    └── lib
+</code></pre><p>我们来看一下 json 文件的内容，最重要的改变就是 container_config.Cmd 变成了：</p>
+<pre><code>&quot;Cmd&quot;: [
+  &quot;/bin/sh&quot;,
+  &quot;-c&quot;,
+  &quot;apt-get update&quot;
+],
+</code></pre><p>也就是说，如果下次再构建镜像的时候，我们发现新的镜像层 parent 还是 ubuntu:14.04，并且 json 文件中 cmd 要更改的内容也一致，那么就认为这两层镜像是相同的，不需要重新构建。好了，那么构建的时候，daemon 一定会遍历本地所有镜像，如果发现镜像一致就使用已经构建好的镜像。</p>
+<h3 id="ADD-和-COPY-文件"><a href="#ADD-和-COPY-文件" class="headerlink" title="ADD 和 COPY 文件"></a>ADD 和 COPY 文件</h3><p>如果 Dockerfile 中有 ADD 或者 COPY 命令，那么怎么判断镜像是否相同呢？第一个想法肯定是文件名，但即使文件名不变，那么文件也是可以变的；那就再加上文件大小，不过两个同名并且大小相同的文件也不一定内容完全一样啊！最保险的办法就是用 hash 了，嗯！docker 就是这个干的，我们来看一下 ADD 这层镜像的 json 文件变化：</p>
+<pre><code>&quot;Cmd&quot;: [
+  &quot;/bin/sh&quot;,
+  &quot;-c&quot;,
+  &quot;#(nop) ADD file:9fb96e5dd9ce3e03665523c164bbe775d64cc5d8cc8623fbcf5a01a63e9223ab in /&quot;
+],
+</code></pre><p>看到没，ADD 的时候只有一串 hash 字符串，hash 算法的实现，如果感兴趣可以自己研究一下。</p>
+<h3 id="喂！这样真的就万无一失了吗？"><a href="#喂！这样真的就万无一失了吗？" class="headerlink" title="喂！这样真的就万无一失了吗？"></a>喂！这样真的就万无一失了吗？</h3><p>看完上面的内容，大多数同学会觉得 cache 机制真好， 很节省时间，也能节省空间。但是这里还有一个问题，有些命令是依赖外部的，比如 <code>apt-get update</code> 或者 <code>curl http://some.url.com/</code>，如果外部内容发生了改变，docker 就没有办法侦测到，去做相应的处理了。所以它提供了 <code>--no-cache</code> 参数来强制不要使用 cache 机制，所以说这部分内容是要用户自己维护的。</p>
+<p>除此之外，还需要在编写 Dockerfile 的时候考虑到 cache，这一点在官方提供的 <a href="https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/" target="_blank" rel="noopener">dockerfile best practice</a> 也有提及。</p>
+<h2 id="运行镜像：docker-镜像和-docker-容器"><a href="#运行镜像：docker-镜像和-docker-容器" class="headerlink" title="运行镜像：docker 镜像和 docker 容器"></a>运行镜像：docker 镜像和 docker 容器</h2><p>我们都知道 docker 容器就是运行态的docker 镜像，但是有一个问题：docker 镜像里面保存的都是静态的东西，而容器里面的东西是动态的，那么这些动态的东西是如何管理的呢？比如说：</p>
+<ul>
+<li>docker 容器里该运行那些进程？</li>
+<li>怎么把 docker 镜像转换成docker 容器？</li>
+<li>docker 容器里面 ip、hostname 这些东西使如何动态生成的？</li>
+</ul>
+<p>这就是上面提到的 json 文件的功能，哪些信息会存放在 json 文件呢？答案就是：除了文件系统的内容外，其他都是，比如：</p>
+<ul>
+<li>ENV FOO=BAR: 环境变量，</li>
+<li>VOLUME /some/path：容器使用的 volume，乍看上去这是文件系统的一部分，其实这部分内容不是确定的，在构建镜像的时候数据卷可以是不存在的，会在容器运行的时候动态地添加。所以这部分内容不能放到镜像层文件中</li>
+<li>EXPOSE 80：expose 命令记录了容器运行的时候要暴露给外部的端口，这也是运行时状态，不是文件系统的一部分</li>
+<li>CMD [“./myscript.sh”]：CMD 命令记录了 docker 容器的执行入口，这不是文件系统的一部分</li>
+</ul>
+<p>好了，既然我们已经知道这些东西是怎么存储的，那么实际运行容器的时候这些内容是怎么被加载到容器里的呢？答案就是 docker daemon，这个实际管理容器实现的家伙。</p>
+<p>我们知道，在容器实际运行过程中，每个容器就是 docker daemon 的子进程：</p>
+<pre class=" language-bash"><code class="language-bash">root      3249  0.1  6.6 985212 33288 ?        Ssl  04:53   0:19 /usr/bin/docker daemon --insecure-registry 172.16.1.41:5000 --exec-opt native.cgroupdriver<span class="token operator">=</span>cgroupfs --bip<span class="token operator">=</span>10.12.240.1/20 --mtu<span class="token operator">=</span>1500 --ip-masq<span class="token operator">=</span>false
+root      3597  0.0  0.1   3816   632 ?        Ssl  04:55   0:00  \_ /pause
+root      3633  0.0  0.1   3816   504 ?        Ssl  04:55   0:00  \_ /pause
+root      3695  0.0  0.1   3816   516 ?        Ssl  04:55   0:00  \_ /pause
+root      3710  0.0  0.1   3816   528 ?        Ssl  04:55   0:00  \_ /pause
+root      3745  0.0  0.1   3816   504 ?        Ssl  04:55   0:00  \_ /pause
+polkitd   3793  0.0  0.2  36524  1280 ?        Ssl  04:55   0:07  \_ redis-server *:6379
+root      3847  0.0  0.0   4184   184 ?        Ss   04:55   0:00  \_ /bin/sh -c /run.sh
+root      3872  0.0  0.0  17668   360 ?        S    04:55   0:00  <span class="token operator">|</span>   \_ /bin/bash /run.sh
+root      3873  0.0  0.3  42824  1752 ?        Sl   04:55   0:01  <span class="token operator">|</span>       \_ redis-server *:6379
+root      3865  0.0  1.5 166256  8024 ?        Ss   04:55   0:00  \_ apache2 -DFOREGROUND
+33        3881  0.0  1.0 166280  5140 ?        S    04:55   0:00  <span class="token operator">|</span>   \_ apache2 -DFOREGROUND
+33        3882  0.0  1.0 166280  5140 ?        S    04:55   0:00  <span class="token operator">|</span>   \_ apache2 -DFOREGROUND
+33        3883  0.0  1.0 166280  5140 ?        S    04:55   0:00  <span class="token operator">|</span>   \_ apache2 -DFOREGROUND
+33        3884  0.0  1.0 166280  5140 ?        S    04:55   0:00  <span class="token operator">|</span>   \_ apache2 -DFOREGROUND
+33        3885  0.0  1.0 166280  5140 ?        S    04:55   0:00  <span class="token operator">|</span>   \_ apache2 -DFOREGROUND
+root      3939  0.0  0.7  90264  4016 ?        Ss   04:55   0:00  \_ nginx: master process nginx
+33        3947  0.0  0.3  90632  1660 ?        S    04:55   0:00      \_ nginx: worker process
+33        3948  0.0  0.3  90632  1660 ?        S    04:55   0:00      \_ nginx: worker process
+33        3949  0.0  0.3  90632  1660 ?        S    04:55   0:00      \_ nginx: worker process
+33        3950  0.0  0.3  90632  1660 ?        S    04:55   0:00      \_ nginx: worker process
+</code></pre>
+<p>也是说，docker daemon 会读取镜像的信息，作为容器的 rootfs，然后读取 json 文件中的动态信息作为运行时状态。</p>
+<h2 id="删除镜像：清理镜像之道"><a href="#删除镜像：清理镜像之道" class="headerlink" title="删除镜像：清理镜像之道"></a>删除镜像：清理镜像之道</h2><p>镜像是按照 UnionFS 的格式存放在本地的，删除也很容易理解，就是把对应镜像层的本地文件（夹）删除。docker 也提供了 <code>docker rmi</code> 这个命令来处理。</p>
+<p>不过需要注意一点：镜像也是有“引用”这个概念的，只有当该镜像层没有被引用的时候，才能删除。“引用”就是被打上 tag，同一个 uuid 的镜像是可以被打上不同的 tag 的。我们来看一个<a href="https://docs.docker.com/engine/reference/commandline/rmi/" target="_blank" rel="noopener">官方提供的例子</a>：</p>
+<pre><code>$ docker images
+REPOSITORY                TAG                 IMAGE ID            CREATED             SIZE
+test1                     latest              fd484f19954f        23 seconds ago      7 B (virtual 4.964 MB)
+test                      latest              fd484f19954f        23 seconds ago      7 B (virtual 4.964 MB)
+test2                     latest              fd484f19954f        23 seconds ago      7 B (virtual 4.964 MB)
+
+$ docker rmi fd484f19954f
+Error: Conflict, cannot delete image fd484f19954f because it is tagged in multiple repositories, use -f to force
+2013/12/11 05:47:16 Error: failed to remove one or more images
+
+$ docker rmi test1
+Untagged: test1:latest
+$ docker rmi test2
+Untagged: test2:latest
+
+$ docker images
+REPOSITORY                TAG                 IMAGE ID            CREATED             SIZE
+test                      latest              fd484f19954f        23 seconds ago      7 B (virtual 4.964 MB)
+$ docker rmi test
+Untagged: test:latest
+Deleted: fd484f19954f4920da7ff372b5067f5b7ddb2fd3830cecd17b96ea9e286ba5b8
+</code></pre><p>删除有 tag 的镜像时，会先有 untag 的操作。如果删除的镜像还有其他 tag，必须先把所有的 tag 删除后才能继续，当然你也可以使用 <code>-f</code> 参数来强制删除。</p>
+<p>另外一个要注意的是：<strong>如果一个镜像有很多层，并且中间层没有被引用，那么在删除这个镜像的时候，所有没有被引用的镜像都会被删除。</strong></p>
+<h2 id="管理镜像：docker-registry-的工作原理"><a href="#管理镜像：docker-registry-的工作原理" class="headerlink" title="管理镜像：docker registry 的工作原理"></a>管理镜像：docker registry 的工作原理</h2><h2 id="docker-1-10-的新变化"><a href="#docker-1-10-的新变化" class="headerlink" title="docker 1.10 的新变化"></a>docker 1.10 的新变化</h2><h3 id="docker-镜像的-uuid-是怎么生成的？"><a href="#docker-镜像的-uuid-是怎么生成的？" class="headerlink" title="docker 镜像的 uuid 是怎么生成的？"></a>docker 镜像的 uuid 是怎么生成的？</h3><p>在 1.10 之前，docker 镜像的 uuid 是随机生产的；在 1.10 引入了 Content addressable storage 的概念，uuid 是通过 SHA256 hash 算法生产的，主要好处有两点：可以作为镜像内容的验证，不同镜像可以共享镜像层。<strong>需要注意的是：容器的 uuid 还是随机生成的，因为容器不存在共享的情况。</strong></p>
+<h3 id="image-的存储"><a href="#image-的存储" class="headerlink" title="image 的存储"></a>image 的存储</h3><p>上面讲到的镜像存储方式在 1.10 版本之前是正确的，但是 docker 1.10 引入了新的方式。<strong>所以 docker image id 和 aufs 的文件目录的名字不是对应的！</strong></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="http://docs.daocloud.io/allen-docker" target="_blank" rel="noopener">allen 谈 docker 系列</a></li>
+<li><a href="https://docs.docker.com/engine/userguide/storagedriver/imagesandcontainers/" target="_blank" rel="noopener">docker official document on image and container</a></li>
+<li><a href="https://docs.docker.com/engine/userguide/storagedriver/aufs-driver/" target="_blank" rel="noopener">Docker and aufs in practice</a></li>
+<li><a href="https://blog.docker.com/2016/01/docker-1-10-rc/" target="_blank" rel="noopener">Docker 1.10 Release Candidate Now Available</a></li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="Python BaseHTTPServer 介绍" href="/2016/05/20/python-httpserver/">
+        ← Python BaseHTTPServer 介绍
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="nova compute service 启动过程" href="/2016/02/25/nova-service-insight/">
+        nova compute service 启动过程 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用镜像：docker-image-命令"><span class="toc-text">使用镜像：docker image 命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#下载镜像：pull-和-push-镜像到底在做什么？"><span class="toc-text">下载镜像：pull 和 push 镜像到底在做什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#存储镜像：docker-storage-介绍"><span class="toc-text">存储镜像：docker storage 介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#UnionFS-和-aufs"><span class="toc-text">UnionFS 和 aufs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#aufs-镜像在机器上的存储结构"><span class="toc-text">aufs 镜像在机器上的存储结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建镜像：镜像的-cache-机制"><span class="toc-text">创建镜像：镜像的 cache 机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ADD-和-COPY-文件"><span class="toc-text">ADD 和 COPY 文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#喂！这样真的就万无一失了吗？"><span class="toc-text">喂！这样真的就万无一失了吗？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行镜像：docker-镜像和-docker-容器"><span class="toc-text">运行镜像：docker 镜像和 docker 容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除镜像：清理镜像之道"><span class="toc-text">删除镜像：清理镜像之道</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#管理镜像：docker-registry-的工作原理"><span class="toc-text">管理镜像：docker registry 的工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker-1-10-的新变化"><span class="toc-text">docker 1.10 的新变化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-镜像的-uuid-是怎么生成的？"><span class="toc-text">docker 镜像的 uuid 是怎么生成的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#image-的存储"><span class="toc-text">image 的存储</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">docker 镜像介绍</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

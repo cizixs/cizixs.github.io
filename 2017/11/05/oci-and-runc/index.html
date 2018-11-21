@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>OCI 和 runc：容器标准化和 docker | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="OCI 和 runc：容器标准化和 docker | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2017/11/05/oci-and-runc/">
+
+	
+	<meta property="article:published_time" content="2017-11-05T00:11:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2017/11/05/oci-and-runc/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2017-11-04T16:00:00.000Z" itemprop="datePublished">
+                    2017-11-5
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">OCI 和 runc：容器标准化和 docker</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <h2 id="OCI-和容器标准"><a href="#OCI-和容器标准" class="headerlink" title="OCI 和容器标准"></a>OCI 和容器标准</h2><p>容器技术随着 docker 的出现炙手可热，所有的技术公司都积极拥抱容器，促进了 docker 容器的繁荣发展。<strong>容器</strong>一词虽然口口相传，但却没有统一的定义，这不仅是个技术概念的问题，也给整个社区带来一个阴影：容器技术的标准到底是什么？由谁来决定？</p>
+<p>很多人可能觉得 docker 已经成为了容器的事实标准，那我们以它作为标准问题就解决了。事情并没有那么简单，首先是否表示容器完全等同于 docker，不允许存在其他的容器运行时（比如 coreOS 推出的 rkt）；其次容器上层抽象（容器集群调度，比如 kubernetes、mesos 等）和 docker 紧密耦合，docker 接口的变化将会导致它们无法使用。</p>
+<p>总的来说，如果容器以 docker 作为标准，那么 docker 接口的变化将导致社区中所有相关工具都要更新，不然就无法使用；如果没有标准，这将导致容器实现的碎片化，出现大量的冲突和冗余。这两种情况都是社区不愿意看到的事情，OCI（Open Container Initiative） 就是在这个背景下出现的，它的使命就是推动容器标准化，容器能运行在任何的硬件和系统上，相关的组件也不必绑定在任何的容器运行时上。</p>
+<p>官网上对 OCI 的说明如下：</p>
+<blockquote>
+<p>An open governance structure for the express purpose of creating open industry standards around container formats and runtime.<br>– Open Containers Official Site</p>
+</blockquote>
+<p>OCI 由 docker、coreos 以及其他容器相关公司创建于 2015 年，目前主要有两个标准文档：<a href="https://github.com/opencontainers/runtime-spec" target="_blank" rel="noopener">容器运行时标准</a> （runtime spec）和 <a href="https://github.com/opencontainers/runtime-spec" target="_blank" rel="noopener">容器镜像标准</a>（image spec）。</p>
+<p>这两个协议通过 OCI runtime filesytem bundle 的标准格式连接在一起，OCI 镜像可以通过工具转换成 bundle，然后 OCI 容器引擎能够识别这个 bundle 来运行容器。</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNc79gy1fl7l7qihpmj30vi0lj756.jpg" alt=""></p>
+<p>下面，我们来介绍这两个 OCI 标准。因为标准本身细节很多，而且还在不断维护和更新，如果不是容器的实现者，没有必须对每个细节都掌握。所以我以介绍概要为主，给大家有个主观的认知。</p>
+<h3 id="image-spec"><a href="#image-spec" class="headerlink" title="image spec"></a>image spec</h3><p>OCI 容器镜像主要包括几块内容：</p>
+<ul>
+<li><a href="https://github.com/opencontainers/image-spec/blob/master/layer.md" target="_blank" rel="noopener">文件系统</a>：以 layer 保存的文件系统，每个 layer 保存了和上层之间变化的部分，layer 应该保存哪些文件，怎么表示增加、修改和删除的文件等</li>
+<li><a href="https://github.com/opencontainers/image-spec/blob/master/config.md" target="_blank" rel="noopener">config 文件</a>：保存了文件系统的层级信息（每个层级的 hash 值，以及历史信息），以及容器运行时需要的一些信息（比如环境变量、工作目录、命令参数、mount 列表），指定了镜像在某个特定平台和系统的配置。比较接近我们使用  <code>docker inspect &lt;image_id&gt;</code> 看到的内容</li>
+<li><a href="https://github.com/opencontainers/image-spec/blob/master/manifest.md" target="_blank" rel="noopener">manifest 文件</a>：镜像的 config 文件索引，有哪些 layer，额外的 annotation 信息，manifest 文件中保存了很多和当前平台有关的信息</li>
+<li><a href="https://github.com/opencontainers/image-spec/blob/master/image-index.md" target="_blank" rel="noopener">index 文件</a>：可选的文件，指向不同平台的 manifest 文件，这个文件能保证一个镜像可以跨平台使用，每个平台拥有不同的 manifest 文件，使用 index 作为索引</li>
+</ul>
+<h3 id="runtime-spec"><a href="#runtime-spec" class="headerlink" title="runtime spec"></a>runtime spec</h3><p>OCI 对容器 runtime 的标准主要是指定容器的运行状态，和 runtime 需要提供的命令。下图可以是容器状态转换图：</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fl7l8q0xl4j30uf0iaq4s.jpg" alt=""></p>
+<ul>
+<li>init 状态：这个是我自己添加的状态，并不在标准中，表示没有容器存在的初始状态</li>
+<li>creating：使用 <code>create</code> 命令创建容器，这个过程称为创建中</li>
+<li>created：容器创建出来，但是还没有运行，表示镜像和配置没有错误，容器能够运行在当前平台</li>
+<li>running：容器的运行状态，里面的进程处于 up 状态，正在执行用户设定的任务</li>
+<li>stopped：容器运行完成，或者运行出错，或者 <code>stop</code> 命令之后，容器处于暂停状态。这个状态，容器还有很多信息保存在平台中，并没有完全被删除</li>
+</ul>
+<h2 id="runc"><a href="#runc" class="headerlink" title="runc"></a>runc</h2><p>runc 是 docker 捐赠给 OCI 的一个符合标准的 runtime 实现，目前 docker 引擎内部也是基于 runc 构建的。这部分我们就分析 runc 这个项目，加深对 OCI 的理解。</p>
+<h3 id="使用-runc-运行-busybox-容器"><a href="#使用-runc-运行-busybox-容器" class="headerlink" title="使用 runc 运行 busybox 容器"></a>使用 runc 运行 busybox 容器</h3><p>先来准备一个工作目录，下面所有的操作都是在这个目录下执行的，比如 <code>mycontainer</code>：</p>
+<pre><code># mkdir mycontainer
+</code></pre><p>接下来，准备容器镜像的文件系统，我们选择从 docker 镜像中提取：</p>
+<pre><code># mkdir rootfs
+# docker export $(docker create busybox) | tar -C rootfs -xvf -
+# ls rootfs 
+bin  dev  etc  home  proc  root  sys  tmp  usr  var
+</code></pre><p>有了 rootfs 之后，我们还要按照 OCI 标准有一个配置文件 config.json 说明如何运行容器，包括要运行的命令、权限、环境变量等等内容，<code>runc</code> 提供了一个命令可以自动帮我们生成：</p>
+<pre><code># runc spec
+# ls
+config.json  rootfs
+</code></pre><p>这样就构成了一个 <a href="https://github.com/opencontainers/runtime-spec/blob/master/bundle.md" target="_blank" rel="noopener">OCI runtime bundle</a> 的内容，这个 bundle 非常简单，就上面两个内容：config.json 文件和 rootfs 文件系统。<code>config.json</code> 里面的内容很长，这里就不贴出来了，我们也不会对其进行修改，直接使用这个默认生成的文件。有了这些信息，runc 就能知道怎么怎么运行容器了，我们先来看看简单的方法 <code>runc run</code>（这个命令需要 root 权限），这个命令类似于 <code>docker run</code>，它会创建并启动一个容器：</p>
+<pre><code>➜  runc run simplebusybox
+/ # ls
+bin   dev   etc   home  proc  root  sys   tmp   usr   var
+/ # hostname
+runc
+/ # whoami
+root
+/ # pwd
+/
+/ # ip addr
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+/ # ps aux
+PID   USER     TIME   COMMAND
+    1 root       0:00 sh
+   11 root       0:00 ps aux
+</code></pre><p>最后一个参数是容器的名字，需要在主机上保证唯一性。运行之后直接进入到了容器的 <code>sh</code> 交互界面，和通过 <code>docker run</code> 看到的效果非常类似。但是这个容器并没有配置网络方面的内容，只是有一个默认的 <code>lo</code> 接口，因此无法和外部通信，但其他功能都正常。</p>
+<p>此时，另开一个终端，可以查看运行的容器信息：</p>
+<pre><code>➜ runc list
+ID              PID         STATUS      BUNDLE                                    CREATED                          OWNER
+simplebusybox   18073       running     /home/cizixs/Workspace/runc/mycontainer   2017-11-02T06:54:52.023379345Z   root
+</code></pre><p>目前，在我的机器上，runc 会把容器的运行信息保存在 <code>/run/runc</code> 目录下：</p>
+<pre><code>➜ tree /run/runc/                     
+/run/runc/
+└── simplebusybox
+    └── state.json
+
+1 directory, 1 file
+</code></pre><p>除了 run 命令之外，我们也能通过create、start、stop、kill 等命令对容器状态进行更精准的控制。继续实验，因为接下来要在后台模式运行容器，所以需要对 <code>config.json</code> 进行修改。改动有两处，把 <code>terminal</code> 的值改成 <code>false</code>，修改 <code>args</code> 命令行参数为 <code>sleep 20</code>：</p>
+<pre><code>&quot;process&quot;: {
+        &quot;terminal&quot;: false,
+        &quot;user&quot;: {
+            &quot;uid&quot;: 0,
+            &quot;gid&quot;: 0
+        },
+        &quot;args&quot;: [
+            &quot;sleep&quot;, &quot;20&quot;
+        ],
+        ...
+}
+</code></pre><p>接着，用 runc 子命令来控制容器的运行，实现各个容器状态的转换：</p>
+<pre><code>// 使用 create 创建出容器，此时容器并没有运行，只是准备好了所有的运行环境
+// 通过 list 命令可以查看此时容器的状态为 `created`
+➜  runc create mycontainerid
+➜  runc list
+ID              PID         STATUS      BUNDLE                                    CREATED                          OWNER
+mycontainerid   15871       created     /home/cizixs/Workspace/runc/mycontainer   2017-11-02T08:05:50.658423519Z   root
+
+
+// 运行容器，此时容器会在后台运行，状态变成了 `running`
+➜  runc start mycontainerid
+➜  runc list
+ID              PID         STATUS      BUNDLE                                    CREATED                          OWNER
+mycontainerid   15871       running     /home/cizixs/Workspace/runc/mycontainer   2017-11-02T08:05:50.658423519Z   root
+
+// 等待一段时间（20s）容器退出后，可以看到容器状态变成了 `stopped`
+➜  runc list
+ID              PID         STATUS      BUNDLE                                    CREATED                          OWNER
+mycontainerid   0           stopped     /home/cizixs/Workspace/runc/mycontainer   2017-11-02T08:05:50.658423519Z   root
+
+// 删除容器，容器的信息就不存在了
+➜  runc delete mycontainerid
+➜  runc list
+ID          PID         STATUS      BUNDLE      CREATED     OWNER
+</code></pre><p>把以上命令分开来虽然让事情变得复杂了，但是也有很多好处。可以类比 unix 系统 fork-exec 模式，在两者动作之间，用户可以做很多工作。比如把 create 和 start 分开，在创建出来容器之后，可以使用插件为容器配置多主机网络，或者准备存储设置等。</p>
+<h3 id="runc-代码实现"><a href="#runc-代码实现" class="headerlink" title="runc 代码实现"></a>runc 代码实现</h3><p>看完了 runc 命令演示，这部分来深入分析 runc 的代码实现。要想理解 runc 是怎么创建 linux 容器的，需要熟悉 <a href="http://cizixs.com/2017/08/29/linux-namespace">namespace</a> 和 <a href="http://cizixs.com/2017/08/25/linux-cgroup">cgroup</a>、 go 语言 、常见的系统调用。</p>
+<p>分析的代码对应的 commit id 如下，这个代码是非常接近 v1.0.0 版本的：</p>
+<pre><code>➜  runc git:(master) git rev-parse HEAD
+0232e38342a8d230c2745b67c17050b2be70c6bc
+</code></pre><p><code>runc</code> 的代码结构如下（略去了部分内容）：</p>
+<pre><code>➜  runc git:(master) tree -L 1 -F --dirsfirst                  
+.
+├── contrib/
+├── libcontainer/
+├── man/
+├── script/
+├── tests/
+├── vendor/
+├── checkpoint.go
+├── create.go
+├── delete.go
+├── Dockerfile
+├── events.go
+├── exec.go
+├── init.go
+├── kill.go
+├── LICENSE
+├── list.go
+├── main.go
+├── Makefile
+├── notify_socket.go
+├── pause.go
+├── PRINCIPLES.md
+├── ps.go
+├── README.md
+├── restore.go
+├── rlimit_linux.go
+├── run.go
+├── signalmap.go
+├── signalmap_mipsx.go
+├── signals.go
+├── spec.go
+├── start.go
+├── state.go
+├── tty.go
+├── update.go
+├── utils.go
+└── utils_linux.go
+</code></pre><p><code>main.go</code> 是入口文件，根目录下很多 <code>.go</code> 文件是对应的命令（比如 <code>run.go</code> 对应 <code>runc run</code> 命令的实现），其他是一些功能性文件。</p>
+<p>最核心的目录是 <code>libcontainer</code>，它是启动容器进程的最终执行者，<code>runc</code> 可以理解为对 <code>libcontainer</code> 的封装，以符合 OCI 的方式读取配置和文件，调用 libcontainer 完成真正的工作。如果熟悉 docker 的话，可能会知道 libcontainer 本来是 docker 引擎的核心代码，用以取代之前 lxc driver。</p>
+<p>我们会追寻 <code>runc run</code> 命令的执行过程，看看代码的调用和实现。</p>
+<p><code>main.go</code> 使用 <code>github.com/urfave/cli</code> 库进行命令行解析，主要的思路是先声明各种参数解析、命令执行函数，运行的时候 <code>cli</code> 会解析命令行传过来的参数，把它们变成定义好的变量，调用指定的命令来运行。</p>
+<pre><code>func main() {
+    app := cli.NewApp()
+    app.Name = &quot;runc&quot;
+    ...
+
+    app.Commands = []cli.Command{
+        checkpointCommand,
+        createCommand,
+        deleteCommand,
+        eventsCommand,
+        execCommand,
+        initCommand,
+        killCommand,
+        listCommand,
+        pauseCommand,
+        psCommand,
+        restoreCommand,
+        resumeCommand,
+        runCommand,
+        specCommand,
+        startCommand,
+        stateCommand,
+        updateCommand,
+    }
+    ...
+
+    if err := app.Run(os.Args); err != nil {
+        fatal(err)
+    }
+}
+</code></pre><p>从上面可以看到命令函数列表，也就是 <code>runc</code> 支持的所有命令，命令行会实现命令的转发，我们关心的 <code>runCommand</code> 定义在 <code>run.go</code> 文件，它的执行逻辑是：</p>
+<pre><code>Action: func(context *cli.Context) error {
+    if err := checkArgs(context, 1, exactArgs); err != nil {
+        return err
+    }
+    if err := revisePidFile(context); err != nil {
+        return err
+    }
+    spec, err := setupSpec(context)
+
+    status, err := startContainer(context, spec, CT_ACT_RUN, nil)
+    if err == nil {
+        os.Exit(status)
+    }
+    return err
+},
+</code></pre><p>可以看到整个过程分为了四步：</p>
+<ol>
+<li>检查参数个数是否符合要求</li>
+<li>如果指定了 pid-file，把路径转换为绝对路径</li>
+<li>根据配置读取 <code>config.json</code> 文件中的内容，转换成 spec 结构对象</li>
+<li>然后根据配置启动容器</li>
+</ol>
+<p>其中 spec 的定义在 <code>github.com/opencontainers/runtime-spec/specs-go/config.go#Spec</code>，其实就是对应了 OCI bundle 中 <code>config.json</code> 的字段，最重要的内容在 <code>startContainer</code> 函数中：</p>
+<p><code>utils_linux.go#startContainer</code></p>
+<pre><code>func startContainer(context *cli.Context, spec *specs.Spec, action CtAct, criuOpts *libcontainer.CriuOpts) (int, error) {
+    id := context.Args().First()
+    if id == &quot;&quot; {
+        return -1, errEmptyID
+    }
+    ......
+
+    container, err := createContainer(context, id, spec)
+    if err != nil {
+        return -1, err
+    }
+    ......
+
+    r := &amp;runner{
+        enableSubreaper: !context.Bool(&quot;no-subreaper&quot;),
+        shouldDestroy:   true,
+        container:       container,
+        listenFDs:       listenFDs,
+        notifySocket:    notifySocket,
+        consoleSocket:   context.String(&quot;console-socket&quot;),
+        detach:          context.Bool(&quot;detach&quot;),
+        pidFile:         context.String(&quot;pid-file&quot;),
+        preserveFDs:     context.Int(&quot;preserve-fds&quot;),
+        action:          action,
+        criuOpts:        criuOpts,
+    }
+    return r.run(spec.Process)
+}
+</code></pre><p>这个函数的内容也不多，主要分成两部分：</p>
+<ol>
+<li>调用 <code>createContainer</code> 创建出来容器，这个容器只是一个逻辑上的概念，保存了 namespace、cgroups、mounts、capabilities 等所有 Linux 容器需要的配置</li>
+<li>然后创建 <code>runner</code> 对象，调用 <code>r.run</code> 运行容器。这才是运行最终容器进程的地方，它会启动一个新进程，把进程放到配置的 namespaces 中，设置好 cgroups 参数以及其他内容</li>
+</ol>
+<p>我们先来看 <code>utils_linux.go#createContainer</code>：</p>
+<pre><code>func createContainer(context *cli.Context, id string, spec *specs.Spec) (libcontainer.Container, error) {
+    config, err := specconv.CreateLibcontainerConfig(&amp;specconv.CreateOpts{
+        CgroupName:       id,
+        UseSystemdCgroup: context.GlobalBool(&quot;systemd-cgroup&quot;),
+        NoPivotRoot:      context.Bool(&quot;no-pivot&quot;),
+        NoNewKeyring:     context.Bool(&quot;no-new-keyring&quot;),
+        Spec:             spec,
+        Rootless:         isRootless(),
+    })
+    ....
+
+    factory, err := loadFactory(context)
+    ....
+    return factory.Create(id, config)
+}
+</code></pre><p>它最终会返回一个 <code>libcontainer.Container</code> 对象，上面提到，这并不是一个运行的容器，而是逻辑上的容器概念，包含了 linux 上运行一个容器需要的所有配置信息。</p>
+<p>函数的内容分为两部分：</p>
+<ol>
+<li>创建 config 对象，这个配置对象的定义在 <code>libcontainer/configs/config.go#Config</code>，包含了容器运行需要的所有参数。<code>specconv.CreateLibcontainerConfig</code> 这一个函数就是把 spec 转换成 libcontainer 内部的 config 对象。这个 config 对象是平台无关的，从逻辑上定义了容器应该是什么样的配置</li>
+<li>通过 libcontainer 提供的 factory，创建满足 <code>libcontainer.Container</code>  接口的对象</li>
+</ol>
+<p><code>libcontainer.Container</code> 是个接口，定义在 <code>libcontainer/container_linux.go</code> 文件中：</p>
+<pre><code>type Container interface {
+    BaseContainer
+
+    // 下面这些接口是平台相关的，也就是 linux 平台提供的特殊功能
+
+    // 使用 criu 把容器状态保存到磁盘
+    Checkpoint(criuOpts *CriuOpts) error
+
+    // 利用 criu 从磁盘中重新 load 容器
+    Restore(process *Process, criuOpts *CriuOpts) error
+
+    // 暂停容器的执行
+    Pause() error
+
+    // 继续容器的执行
+    Resume() error
+
+    // 返回一个 channel，可以从里面读取容器的 OOM 事件
+    NotifyOOM() (&lt;-chan struct{}, error)
+
+    // 返回一个  channel，可以从里面读取容器内存压力事件
+    NotifyMemoryPressure(level PressureLevel) (&lt;-chan struct{}, error)
+}
+</code></pre><p>里面包含了 Linux 平台特有的功能，基础容器接口为 <code>BaseContainer</code>，定义在 <code>libcontainer/container.go</code> 文件中，它定义了容器通用的方法：</p>
+<pre><code>type BaseContainer interface {
+    // 返回容器 ID
+    ID() string
+
+    // 返回容器运行状态
+    Status() (Status, error)
+
+    // 返回容器详细状态信息
+    State() (*State, error)
+
+    // 返回容器的配置
+    Config() configs.Config
+
+    // 返回运行在容器里所有进程的 PID
+    Processes() ([]int, error)
+
+    // 返回容器的统计信息，主要是网络接口信息和 cgroup 中能收集的统计数据
+    Stats() (*Stats, error)
+
+    // 设置容器的配置内容，可以动态调整容器
+    Set(config configs.Config) error
+
+    // 在容器中启动一个进程
+    Start(process *Process) (err error)
+
+    // 运行容器
+    Run(process *Process) (err error)
+
+    // 销毁容器，就是删除容器
+    Destroy() error
+
+    // 给容器的 init 进程发送信号
+    Signal(s os.Signal, all bool) error
+
+    // 告诉容器在 init 结束后执行用户进程
+    Exec() error
+}
+</code></pre><p>可以看到，上面是容器应该支持的命令，包含了查询状态和创建、销毁、运行等。</p>
+<p>这里使用 factory 模式是为了支持不同平台的容器，每个平台实现自己的 factory ，根据运行平台调用不同的实现就行。不过 runc 目前只支持 linux 平台，所以我们看 <code>libcontainer/factory_linux.go</code> 中的实现：</p>
+<pre><code>func New(root string, options ...func(*LinuxFactory) error) (Factory, error) {
+    if root != &quot;&quot; {
+        if err := os.MkdirAll(root, 0700); err != nil {
+            return nil, newGenericError(err, SystemError)
+        }
+    }
+    l := &amp;LinuxFactory{
+        Root:      root,
+        InitPath:  &quot;/proc/self/exe&quot;,
+        InitArgs:  []string{os.Args[0], &quot;init&quot;},
+        Validator: validate.New(),
+        CriuPath:  &quot;criu&quot;,
+    }
+    Cgroupfs(l)
+    for _, opt := range options {
+        if opt == nil {
+            continue
+        }
+        if err := opt(l); err != nil {
+            return nil, err
+        }
+    }
+    return l, nil
+}
+
+func (l *LinuxFactory) Create(id string, config *configs.Config) (Container, error) {
+    ......
+    containerRoot := filepath.Join(l.Root, id)
+    if err := os.MkdirAll(containerRoot, 0711); err != nil {
+        return nil, newGenericError(err, SystemError)
+    }
+    ......
+
+    c := &amp;linuxContainer{
+        id:            id,
+        root:          containerRoot,
+        config:        config,
+        initPath:      l.InitPath,
+        initArgs:      l.InitArgs,
+        criuPath:      l.CriuPath,
+        newuidmapPath: l.NewuidmapPath,
+        newgidmapPath: l.NewgidmapPath,
+        cgroupManager: l.NewCgroupsManager(config.Cgroups, nil),
+    }
+    ......
+    c.state = &amp;stoppedState{c: c}
+    return c, nil
+}
+</code></pre><p><code>New</code> 创建了一个 linux 平台的 factory，从 <code>LinuxFactory</code> 的 fields 可以看到，它里面保存了和 linux 平台相关的信息。</p>
+<p><code>Create</code> 返回的是 <code>linuxContainer</code> 对象，它是 <code>libcontainer.Container</code> 接口的实现。有了 <code>libcontainer.Container</code> 对象之后，回到 <code>utils_linux.go#Runner</code> 中看它是如何运行容器的：</p>
+<pre><code>func (r *runner) run(config *specs.Process) (int, error) {
+
+    // 根据 OCI specs.Process 生成 libcontainer.Process 对象
+    // 如果出错，运行 destroy 清理产生的中间文件
+    process, err := newProcess(*config)
+    if err != nil {
+        r.destroy()
+        return -1, err
+    }
+
+    ......
+    var (
+        detach = r.detach || (r.action == CT_ACT_CREATE)
+    )
+    handler := newSignalHandler(r.enableSubreaper, r.notifySocket)
+
+    // 根据是否进入到容器终端来配置 tty，标准输入、标准输出和标准错误输出
+    tty, err := setupIO(process, rootuid, rootgid, config.Terminal, detach, r.consoleSocket)
+    defer tty.Close()
+
+    switch r.action {
+    case CT_ACT_CREATE:
+        err = r.container.Start(process)
+    case CT_ACT_RESTORE:
+        err = r.container.Restore(process, r.criuOpts)
+    case CT_ACT_RUN:
+        err = r.container.Run(process)
+    default:
+        panic(&quot;Unknown action&quot;)
+    }
+
+    ......
+    status, err := handler.forward(process, tty, detach)
+    if detach {
+        return 0, nil
+    }
+    r.destroy()
+    return status, err
+}
+</code></pre><p><code>runner</code> 是一层封装，主要工作是配置容器的 IO，根据命令去调用响应的方法。<code>newProcess(*config)</code> 将 OCI spec 中的 process 对象转换成 libcontainer 中的 process，process 的定义在 <code>libcontainer/process.go#Process</code>，包括进程的命令、参数、环境变量、用户、标准输入输出等。</p>
+<p>有了 <code>process</code>，下一步就是运行这个进程 <code>r.container.Run(process)</code>，<code>Run</code> 会调用内部的 <code>libcontainer/container_linux.go#start()</code> 方法：</p>
+<pre><code>func (c *linuxContainer) start(process *Process, isInit bool) error {
+    parent, err := c.newParentProcess(process, isInit)
+
+    if err := parent.start(); err != nil {
+        return newSystemErrorWithCause(err, &quot;starting container process&quot;)
+    }
+
+    c.created = time.Now().UTC()
+    if isInit {
+        ...... 
+        for i, hook := range c.config.Hooks.Poststart {
+            if err := hook.Run(s); err != nil {
+                return newSystemErrorWithCausef(err, &quot;running poststart hook %d&quot;, i)
+            }
+        }
+    } 
+    return nil
+}
+</code></pre><p>运行容器进程，在容器进程完全起来之前，需要利用父进程和容器进程进行通信，因此这里封装了一个 <code>paerentProcess</code> 的概念，</p>
+<pre><code>func (c *linuxContainer) newParentProcess(p *Process, doInit bool) (parentProcess, error) {
+    parentPipe, childPipe, err := utils.NewSockPair(&quot;init&quot;)
+    cmd, err := c.commandTemplate(p, childPipe)
+    ......
+    return c.newInitProcess(p, cmd, parentPipe, childPipe)
+}
+</code></pre><p><code>parentPipe</code> 和 <code>childPipe</code> 就是父进程和创建出来的容器 init 进程通信的管道，这个管道用于在 init 容器进程启动之后做一些配置工作，非常重要，后面会看到它们的使用。</p>
+<p>最终创建的 parentProcess 是 <code>libcontainer/process_linux.go#initProcess</code> 对象，</p>
+<pre><code>type initProcess struct {
+    cmd             *exec.Cmd
+    parentPipe      *os.File
+    childPipe       *os.File
+    config          *initConfig
+    manager         cgroups.Manager
+    intelRdtManager intelrdt.Manager
+    container       *linuxContainer
+    fds             []string
+    process         *Process
+    bootstrapData   io.Reader
+    sharePidns      bool
+}
+</code></pre><ul>
+<li><code>cmd</code> 是 init 程序，也就是说启动的容器子进程是 <code>runc init</code>，后面我们会说明它的作用</li>
+<li><code>paerentPipe</code> 和 <code>childPipe</code> 是父子进程通信的管道</li>
+<li><code>bootstrapDta</code> 中保存了容器 init 初始化需要的数据</li>
+<li><code>process</code> 会保存容器 init 进程，用于父进程获取容器进程信息和与之交互</li>
+</ul>
+<p>有了 <code>parentProcess</code>，接下来它的 <code>start()</code> 方法会被调用：</p>
+<pre><code>func (p *initProcess) start() error {
+    defer p.parentPipe.Close()
+    err := p.cmd.Start()
+    p.process.ops = p
+    p.childPipe.Close()
+
+    // 把容器 pid 加入到 cgroup 中
+    if err := p.manager.Apply(p.pid()); err != nil {
+        return newSystemErrorWithCause(err, &quot;applying cgroup configuration for process&quot;)
+    }
+
+    // 给容器进程发送初始化需要的数据
+    if _, err := io.Copy(p.parentPipe, p.bootstrapData); err != nil {
+        return newSystemErrorWithCause(err, &quot;copying bootstrap data to pipe&quot;)
+    }
+
+    // 等待容器进程完成 namespace 的配置
+    if err := p.execSetns(); err != nil {
+        return newSystemErrorWithCause(err, &quot;running exec setns process for init&quot;)
+    }
+
+    // 创建网络 interface
+    if err := p.createNetworkInterfaces(); err != nil {
+        return newSystemErrorWithCause(err, &quot;creating network interfaces&quot;)
+    }
+
+    // 给容器进程发送进程配置信息
+    if err := p.sendConfig(); err != nil {
+        return newSystemErrorWithCause(err, &quot;sending config to init process&quot;)
+    }
+
+    // 和容器进程进行同步
+    // 容器 init 进程已经准备好环境，准备运行容器中的用户进程
+    // 所以这里会运行 prestart 的钩子函数
+    ierr := parseSync(p.parentPipe, func(sync *syncT) error {
+        ......
+        return nil
+    })
+
+    // Must be done after Shutdown so the child will exit and we can wait for it.
+    if ierr != nil {
+        p.wait()
+        return ierr
+    }
+    return nil
+}
+</code></pre><p>这里可以看到管道的用处：父进程把 bootstrapData 发送给子进程，子进程根据这些数据配置 namespace、cgroups，apparmor 等参数；等待子进程完成配置，进行同步。</p>
+<p>容器子进程会做哪些事情呢？用同样的方法，可以找到 runc init 程序运行的逻辑代码在 <code>libcontainer/standard_init_linux.go#Init()</code>，它做的事情包括：</p>
+<ol>
+<li>配置 namespace</li>
+<li>配置网络和路由规则</li>
+<li>准备 rootfs</li>
+<li>配置 console</li>
+<li>配置 hostname</li>
+<li>配置 apparmor profile</li>
+<li>配置 sysctl 参数</li>
+<li>初始化 seccomp 配置</li>
+<li>配置 user namespace</li>
+</ol>
+<p>上面这些就是 linux 容器的大部分配置，完成这些之后，它就调用 <code>Exec</code> 执行用户程序：</p>
+<pre><code>if err := syscall.Exec(name, l.config.Args[0:], os.Environ()); err != nil {
+    return newSystemErrorWithCause(err, &quot;exec user process&quot;)
+}
+</code></pre><p> <strong>NOTE</strong>：其实，init 在执行自身的逻辑之前，会被 libcontainer/nsenter 劫持，nsenter 是 C 语言编写的代码，目的是为容器配置 namespace，它会从 init pipe 中读取 namespace 的信息，调用setns 把当前进程加入到指定的 namespace 中。</p>
+<p>之后，它会调用 clone 创建一个新的进程，初始化完成之后，把子进程的进程号发送到管道中，nsenter 完成任务退出，子进程会返回，让 init 接管，对容器进行初始化。</p>
+<p>至此，容器的所有内容都 ok，而且容器里的用户进程也启动了。</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79gy1fl7mqae7ylj31kw138tn7.jpg" alt=""></p>
+<p>runc 的代码调用关系如上图所示，可以在新页面打开查看大图。主要逻辑分成三块：</p>
+<ul>
+<li>最上面的红色是命令行封装，这是根据 OCI 标准实现的接口，它能读取 OCI 标准的容器 bundle，并实现了 OCI 指定 run、start、create 等命令</li>
+<li>中间的紫色部分就是 libcontainer，它是 runc 的核心内容，是对 linux namespace、cgroups 技术的封装</li>
+<li>右下角的绿色部分是真正的创建容器子进程的部分</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://www.opencontainers.org/faq" target="_blank" rel="noopener">OCI FAQ page</a></li>
+<li><a href="http://dockone.io/article/776" target="_blank" rel="noopener">OCI标准和runC原理解读</a></li>
+<li><a href="http://www.infoq.com/cn/articles/docker-container-management-libcontainer-depth-analysis" target="_blank" rel="noopener">Docker背后的容器管理——Libcontainer深度解析</a></li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="etcd go 语言 v2 客户端开发介绍" href="/2017/12/03/etcd-v2-go-client/">
+        ← etcd go 语言 v2 客户端开发介绍
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="使用 tc netem 模拟网络异常" href="/2017/10/23/tc-netem-for-terrible-network/">
+        使用 tc netem 模拟网络异常 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#OCI-和容器标准"><span class="toc-text">OCI 和容器标准</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#image-spec"><span class="toc-text">image spec</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#runtime-spec"><span class="toc-text">runtime spec</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#runc"><span class="toc-text">runc</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用-runc-运行-busybox-容器"><span class="toc-text">使用 runc 运行 busybox 容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#runc-代码实现"><span class="toc-text">runc 代码实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">OCI 和 runc：容器标准化和 docker</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

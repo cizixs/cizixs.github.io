@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>kubelet scheduler 源码分析：调度器的工作原理 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="kubelet scheduler 源码分析：调度器的工作原理 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2017/07/19/kubernetes-scheduler-source-code-analysis/">
+
+	
+	<meta property="article:published_time" content="2017-07-19T00:07:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2017/07/19/kubernetes-scheduler-source-code-analysis/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2017-07-18T16:00:00.000Z" itemprop="datePublished">
+                    2017-07-19
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">kubelet scheduler 源码分析：调度器的工作原理</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <p><strong>TL;DR</strong></p>
+<h2 id="1-kubernetes-Scheduler-简介"><a href="#1-kubernetes-Scheduler-简介" class="headerlink" title="1. kubernetes Scheduler 简介"></a>1. kubernetes Scheduler 简介</h2><p>kubernetes Scheduler 运行在 master 节点，它的核心功能是监听 apiserver 来获取 <code>PodSpec.NodeName</code> 为空的 pod，然后为每个这样的 pod 创建一个 binding 指示 pod 应该调度到哪个节点上。</p>
+<p>从哪里读取还没有调度的 pod 呢？当然是 apiserver。怎么知道 pod 没有调度呢？我们在 <a href="http://cizixs.com/2016/11/07/kubernetes-intro-api-server">介绍 APIServer </a>的文章讲到，可以通过 <code>spec.nodeName</code> 指定 pod 要部署在特定的节点上。调度器也是一样，它会向 apiserver 请求 <code>spec.nodeName</code> 字段为空的 pod，然后调度得到结果之后，把结果写入 apiserver。</p>
+<p>虽然调度的原理说起来很简单，但是要编写一个优秀的调度器却不容易，因为要考虑的东西很多：</p>
+<ul>
+<li>尽可能地将 workload 平均到不同的节点，减少单个节点宕机造成的损失</li>
+<li>可扩展性。随着集群规模的增加，怎么保证调度器不会成为性能的瓶颈</li>
+<li>高可用。调度器能做组成集群，任何一个调度器出现问题，不会影响整个集群的调度</li>
+<li>灵活性。不同的用户有不同的调度需求，一个优秀的调度器还要允许用户能配置不同的调度算法</li>
+<li>资源合理和高效利用。调度器应该尽可能地提高集群的资源利用率，防止资源的浪费</li>
+</ul>
+<p>文章的最后，我们来分析一下 kubernetes 的调度器是否能做到这几点。</p>
+<p>之前 <a href="http://cizixs.com/2017/03/10/kubernetes-intro-scheduler">kubernetes 调度简介的文章</a>，我们介绍了调度分为两个过程：<code>predicate</code> 和 <code>priority</code>。这篇文章就继续深入到源码层面来解析 kubernetes 调度的过程。</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fhcxmspuz7j31260h6my6.jpg" alt=""></p>
+<p>和其他组件不同，scheduler 的代码在 <code>plugin/</code> 目录下：<code>plugin/cmd/kube-scheduler/</code> 是代码的 main 函数入口，<code>plugin/pkg/scheduler/</code> 是具体调度算法。从这个目录结构也可以看出来，kube-scheduler 是作为插件接入到集群中的，它的最终形态一定是用户可以很容易地去定制化和二次开发的。</p>
+<h2 id="2-代码分析"><a href="#2-代码分析" class="headerlink" title="2. 代码分析"></a>2. 代码分析</h2><h3 id="2-1-启动流程"><a href="#2-1-启动流程" class="headerlink" title="2.1 启动流程"></a>2.1 启动流程</h3><p>虽然放到了 <code>plugin/</code> 目录下，<code>kube-scheduler</code> 的启动过程和其他组件还是一样的，它会新建一个  <code>SchedulerServer</code>，这是一个保存了 scheduler 启动所需要配置信息的结构体，然后解析命令行的参数，对结构体中的内容进行赋值，最后运行 <code>app.Run(s)</code> 把 scheduler 跑起来。</p>
+<p><code>plugin/cmd/kube-scheduler/scheduler.go</code>：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    s <span class="token operator">:=</span> options<span class="token punctuation">.</span><span class="token function">NewSchedulerServer</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    s<span class="token punctuation">.</span><span class="token function">AddFlags</span><span class="token punctuation">(</span>pflag<span class="token punctuation">.</span>CommandLine<span class="token punctuation">)</span>
+
+    flag<span class="token punctuation">.</span><span class="token function">InitFlags</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    logs<span class="token punctuation">.</span><span class="token function">InitLogs</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">defer</span> logs<span class="token punctuation">.</span><span class="token function">FlushLogs</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    verflag<span class="token punctuation">.</span><span class="token function">PrintAndExitIfRequested</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    app<span class="token punctuation">.</span><span class="token function">Run</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>app.Runs(s)</code> 根据配置信息构建出来各种实例，然后运行 scheduler 的核心逻辑，这个函数会一直运行，不会退出。</p>
+<p><code>plugin/cmd/kube-scheduler/app/server.go</code>：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">Run</span><span class="token punctuation">(</span>s <span class="token operator">*</span>options<span class="token punctuation">.</span>SchedulerServer<span class="token punctuation">)</span> <span class="token builtin">error</span> <span class="token punctuation">{</span>
+    <span class="token operator">...</span><span class="token operator">...</span>
+    configFactory <span class="token operator">:=</span> factory<span class="token punctuation">.</span><span class="token function">NewConfigFactory</span><span class="token punctuation">(</span>leaderElectionClient<span class="token punctuation">,</span> s<span class="token punctuation">.</span>SchedulerName<span class="token punctuation">,</span> s<span class="token punctuation">.</span>HardPodAffinitySymmetricWeight<span class="token punctuation">,</span> s<span class="token punctuation">.</span>FailureDomains<span class="token punctuation">)</span>
+    config<span class="token punctuation">,</span> err <span class="token operator">:=</span> <span class="token function">createConfig</span><span class="token punctuation">(</span>s<span class="token punctuation">,</span> configFactory<span class="token punctuation">)</span>
+
+    <span class="token operator">...</span><span class="token operator">...</span>
+    sched <span class="token operator">:=</span> scheduler<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span>config<span class="token punctuation">)</span>
+
+    run <span class="token operator">:=</span> <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token boolean">_</span> <span class="token operator">&lt;-</span><span class="token keyword">chan</span> <span class="token keyword">struct</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        sched<span class="token punctuation">.</span><span class="token function">Run</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">select</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token operator">...</span><span class="token operator">...</span>
+    <span class="token comment" spellcheck="true">// 多个 kube-scheduler 部署高可用集群会用到 leader election 功能</span>
+    <span class="token operator">...</span><span class="token operator">...</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>Run</code> 方法的主要逻辑是这样的：根据传递过来的参数创建 scheduler 需要的配置（主要是需要的各种结构体），然后调用 scheduler 的接口创建一个新的 scheduler 对象，最后运行这个对象开启调度代码。需要注意的是，<code>config</code> 这个对象也是在 <code>configFactory</code> 的基础上创建出来的。</p>
+<p>了解 <code>config</code> 的创建和内容对后面了解调度器的工作原理非常重要，所以我们先来分下它的代码。</p>
+<h3 id="2-2-Config-的创建"><a href="#2-2-Config-的创建" class="headerlink" title="2.2 Config 的创建"></a>2.2 Config 的创建</h3><p><code>factory.NewConfigFactory</code> 方法会创建一个 <code>ConfigFactory</code> 的对象，这个对象里面主要是一些 <code>ListAndWatch</code>，用来从 apiserver 中同步各种资源的内容，用作调度时候的参考。此外，还有两个特别重要的结构体成员：<code>PodQueue</code> 和 <code>PodLister</code>，<code>PodQueue</code> 队列中保存了<strong>还没有调度</strong>的 pod，<code>PodLister</code> 同步未调度的 Pod 和 Pod 的状态信息。</p>
+<p><code>plugin/pkg/scheduler/factory/factory.go</code>：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">NewConfigFactory</span><span class="token punctuation">(</span>client clientset<span class="token punctuation">.</span>Interface<span class="token punctuation">,</span> schedulerName <span class="token builtin">string</span><span class="token punctuation">,</span> hardPodAffinitySymmetricWeight <span class="token builtin">int</span><span class="token punctuation">,</span> failureDomains <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token operator">*</span>ConfigFactory <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// schedulerCache 保存了 pod 和 node 的信息，是调度过程中两者信息的 source of truth</span>
+    schedulerCache <span class="token operator">:=</span> schedulercache<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span><span class="token number">30</span><span class="token operator">*</span>time<span class="token punctuation">.</span>Second<span class="token punctuation">,</span> stopEverything<span class="token punctuation">)</span>
+
+    informerFactory <span class="token operator">:=</span> informers<span class="token punctuation">.</span><span class="token function">NewSharedInformerFactory</span><span class="token punctuation">(</span>client<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+    pvcInformer <span class="token operator">:=</span> informerFactory<span class="token punctuation">.</span><span class="token function">PersistentVolumeClaims</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    c <span class="token operator">:=</span> <span class="token operator">&amp;</span>ConfigFactory<span class="token punctuation">{</span>
+        Client<span class="token punctuation">:</span>             client<span class="token punctuation">,</span>
+        PodQueue<span class="token punctuation">:</span>           cache<span class="token punctuation">.</span><span class="token function">NewFIFO</span><span class="token punctuation">(</span>cache<span class="token punctuation">.</span>MetaNamespaceKeyFunc<span class="token punctuation">)</span><span class="token punctuation">,</span>
+        ScheduledPodLister<span class="token punctuation">:</span> <span class="token operator">&amp;</span>cache<span class="token punctuation">.</span>StoreToPodLister<span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+        informerFactory<span class="token punctuation">:</span>    informerFactory<span class="token punctuation">,</span>
+
+        <span class="token comment" spellcheck="true">// ConfigFactory 中非常重要的一部分就是各种 `Lister`，用来从获取各种资源列表，它们会和 apiserver 保持实时同步</span>
+        NodeLister<span class="token punctuation">:</span>                     <span class="token operator">&amp;</span>cache<span class="token punctuation">.</span>StoreToNodeLister<span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+        PVLister<span class="token punctuation">:</span>                       <span class="token operator">&amp;</span>cache<span class="token punctuation">.</span>StoreToPVFetcher<span class="token punctuation">{</span>Store<span class="token punctuation">:</span> cache<span class="token punctuation">.</span><span class="token function">NewStore</span><span class="token punctuation">(</span>cache<span class="token punctuation">.</span>MetaNamespaceKeyFunc<span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+        PVCLister<span class="token punctuation">:</span>                      pvcInformer<span class="token punctuation">.</span><span class="token function">Lister</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        pvcPopulator<span class="token punctuation">:</span>                   pvcInformer<span class="token punctuation">.</span><span class="token function">Informer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">GetController</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        ServiceLister<span class="token punctuation">:</span>                  <span class="token operator">&amp;</span>cache<span class="token punctuation">.</span>StoreToServiceLister<span class="token punctuation">{</span>Indexer<span class="token punctuation">:</span> cache<span class="token punctuation">.</span><span class="token function">NewIndexer</span><span class="token punctuation">(</span>cache<span class="token punctuation">.</span>MetaNamespaceKeyFunc<span class="token punctuation">,</span> cache<span class="token punctuation">.</span>Indexers<span class="token punctuation">{</span>cache<span class="token punctuation">.</span>NamespaceIndex<span class="token punctuation">:</span> cache<span class="token punctuation">.</span>MetaNamespaceIndexFunc<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+        ControllerLister<span class="token punctuation">:</span>               <span class="token operator">&amp;</span>cache<span class="token punctuation">.</span>StoreToReplicationControllerLister<span class="token punctuation">{</span>Indexer<span class="token punctuation">:</span> cache<span class="token punctuation">.</span><span class="token function">NewIndexer</span><span class="token punctuation">(</span>cache<span class="token punctuation">.</span>MetaNamespaceKeyFunc<span class="token punctuation">,</span> cache<span class="token punctuation">.</span>Indexers<span class="token punctuation">{</span>cache<span class="token punctuation">.</span>NamespaceIndex<span class="token punctuation">:</span> cache<span class="token punctuation">.</span>MetaNamespaceIndexFunc<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+        ReplicaSetLister<span class="token punctuation">:</span>               <span class="token operator">&amp;</span>cache<span class="token punctuation">.</span>StoreToReplicaSetLister<span class="token punctuation">{</span>Indexer<span class="token punctuation">:</span> cache<span class="token punctuation">.</span><span class="token function">NewIndexer</span><span class="token punctuation">(</span>cache<span class="token punctuation">.</span>MetaNamespaceKeyFunc<span class="token punctuation">,</span> cache<span class="token punctuation">.</span>Indexers<span class="token punctuation">{</span>cache<span class="token punctuation">.</span>NamespaceIndex<span class="token punctuation">:</span> cache<span class="token punctuation">.</span>MetaNamespaceIndexFunc<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+        schedulerCache<span class="token punctuation">:</span>                 schedulerCache<span class="token punctuation">,</span>
+        StopEverything<span class="token punctuation">:</span>                 stopEverything<span class="token punctuation">,</span>
+        SchedulerName<span class="token punctuation">:</span>                  schedulerName<span class="token punctuation">,</span>
+        HardPodAffinitySymmetricWeight<span class="token punctuation">:</span> hardPodAffinitySymmetricWeight<span class="token punctuation">,</span>
+        FailureDomains<span class="token punctuation">:</span>                 failureDomains<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">// PodLister 和其他 Lister 创建方式不同，它就是 `schedulerCache`</span>
+    c<span class="token punctuation">.</span>PodLister <span class="token operator">=</span> schedulerCache
+
+    <span class="token comment" spellcheck="true">// ScheduledPodLister 保存了已经调度的 pod， 即 `Spec.NodeName` 不为空且状态不是 Failed 或者 Succeeded 的 pod</span>
+    <span class="token comment" spellcheck="true">// Informer 是对 reflector 的一层封装，reflect 把 ListWatcher 的结果实时更新到 store 中，而 informer 在每次更新的时候会调用对应的 handler 函数。</span>
+    <span class="token comment" spellcheck="true">// 这里的 handler 函数把 store 中的 pod 数据更新到 schedulerCache 中</span>
+    c<span class="token punctuation">.</span>ScheduledPodLister<span class="token punctuation">.</span>Indexer<span class="token punctuation">,</span> c<span class="token punctuation">.</span>scheduledPodPopulator <span class="token operator">=</span> cache<span class="token punctuation">.</span><span class="token function">NewIndexerInformer</span><span class="token punctuation">(</span>
+        c<span class="token punctuation">.</span><span class="token function">createAssignedNonTerminatedPodLW</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token operator">&amp;</span>api<span class="token punctuation">.</span>Pod<span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token number">0</span><span class="token punctuation">,</span>
+        cache<span class="token punctuation">.</span>ResourceEventHandlerFuncs<span class="token punctuation">{</span>
+            AddFunc<span class="token punctuation">:</span>    c<span class="token punctuation">.</span>addPodToCache<span class="token punctuation">,</span>
+            UpdateFunc<span class="token punctuation">:</span> c<span class="token punctuation">.</span>updatePodInCache<span class="token punctuation">,</span>
+            DeleteFunc<span class="token punctuation">:</span> c<span class="token punctuation">.</span>deletePodFromCache<span class="token punctuation">,</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        cache<span class="token punctuation">.</span>Indexers<span class="token punctuation">{</span>cache<span class="token punctuation">.</span>NamespaceIndex<span class="token punctuation">:</span> cache<span class="token punctuation">.</span>MetaNamespaceIndexFunc<span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">// 同上，把 node 的数据实时同步到 schedulerCache</span>
+    c<span class="token punctuation">.</span>NodeLister<span class="token punctuation">.</span>Store<span class="token punctuation">,</span> c<span class="token punctuation">.</span>nodePopulator <span class="token operator">=</span> cache<span class="token punctuation">.</span><span class="token function">NewInformer</span><span class="token punctuation">(</span>
+        c<span class="token punctuation">.</span><span class="token function">createNodeLW</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token operator">&amp;</span>api<span class="token punctuation">.</span>Node<span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token number">0</span><span class="token punctuation">,</span>
+        cache<span class="token punctuation">.</span>ResourceEventHandlerFuncs<span class="token punctuation">{</span>
+            AddFunc<span class="token punctuation">:</span>    c<span class="token punctuation">.</span>addNodeToCache<span class="token punctuation">,</span>
+            UpdateFunc<span class="token punctuation">:</span> c<span class="token punctuation">.</span>updateNodeInCache<span class="token punctuation">,</span>
+            DeleteFunc<span class="token punctuation">:</span> c<span class="token punctuation">.</span>deleteNodeFromCache<span class="token punctuation">,</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">)</span>
+
+    <span class="token operator">...</span><span class="token operator">...</span>
+
+    <span class="token keyword">return</span> c
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>ConfigFactory</code> 里面保存了各种 Lister，它们用来获取 kubernetes 中各种资源的信息，并且 <code>schedulerCache</code> 中保存了调度过程中需要用到的 pods 和 nodes 的最新信息。</p>
+<p>然后，<code>createConfig(s, configFactory)</code> 根据配置参数和 <code>configFactory</code> 创建出真正被 scheduler 使用的 config 对象。</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">createConfig</span><span class="token punctuation">(</span>s <span class="token operator">*</span>options<span class="token punctuation">.</span>SchedulerServer<span class="token punctuation">,</span> configFactory <span class="token operator">*</span>factory<span class="token punctuation">.</span>ConfigFactory<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token operator">*</span>scheduler<span class="token punctuation">.</span>Config<span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token boolean">_</span><span class="token punctuation">,</span> err <span class="token operator">:=</span> os<span class="token punctuation">.</span><span class="token function">Stat</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>PolicyConfigFile<span class="token punctuation">)</span><span class="token punctuation">;</span> err <span class="token operator">==</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> <span class="token punctuation">(</span>
+            policy     schedulerapi<span class="token punctuation">.</span>Policy
+            configData <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span>
+        <span class="token punctuation">)</span>
+        configData<span class="token punctuation">,</span> err <span class="token operator">:=</span> ioutil<span class="token punctuation">.</span><span class="token function">ReadFile</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>PolicyConfigFile<span class="token punctuation">)</span>
+        <span class="token operator">...</span><span class="token operator">...</span>
+        <span class="token keyword">if</span> err <span class="token operator">:=</span> runtime<span class="token punctuation">.</span><span class="token function">DecodeInto</span><span class="token punctuation">(</span>latestschedulerapi<span class="token punctuation">.</span>Codec<span class="token punctuation">,</span> configData<span class="token punctuation">,</span> <span class="token operator">&amp;</span>policy<span class="token punctuation">)</span><span class="token punctuation">;</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> fmt<span class="token punctuation">.</span><span class="token function">Errorf</span><span class="token punctuation">(</span><span class="token string">"invalid configuration: %v"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">return</span> configFactory<span class="token punctuation">.</span><span class="token function">CreateFromConfig</span><span class="token punctuation">(</span>policy<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> configFactory<span class="token punctuation">.</span><span class="token function">CreateFromProvider</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>AlgorithmProvider<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>createConfig</code> 根据不同的配置有两种方式来创建 <code>scheduler.Config</code>：</p>
+<ol>
+<li>通过 policy 文件：用户编写调度器用到的 policy 文件，控制调度器使用哪些 predicates 和 priorities 函数</li>
+<li>通过 algorithm provider：已经在代码中提前编写好的 provider，也就是 predicates 和 priorities 函数的组合</li>
+</ol>
+<p>这两种方法殊途同归，最终都是获取到 predicates 和 priorities 的名字，然后调用 <code>CreateFromKeys</code> 创建 Config 对象：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token punctuation">(</span>f <span class="token operator">*</span>ConfigFactory<span class="token punctuation">)</span> <span class="token function">CreateFromKeys</span><span class="token punctuation">(</span>predicateKeys<span class="token punctuation">,</span> priorityKeys sets<span class="token punctuation">.</span>String<span class="token punctuation">,</span> extenders <span class="token punctuation">[</span><span class="token punctuation">]</span>algorithm<span class="token punctuation">.</span>SchedulerExtender<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token operator">*</span>scheduler<span class="token punctuation">.</span>Config<span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+    <span class="token comment" spellcheck="true">// 获取所有的 predicates 函数</span>
+    predicateFuncs<span class="token punctuation">,</span> err <span class="token operator">:=</span> f<span class="token punctuation">.</span><span class="token function">GetPredicates</span><span class="token punctuation">(</span>predicateKeys<span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">// priority 返回的不是函数，而是 priorityConfigs。一是因为 priority 还包含了权重，二是因为 priority 的实现在迁移到 map-reduce 的方式</span>
+    priorityConfigs<span class="token punctuation">,</span> err <span class="token operator">:=</span> f<span class="token punctuation">.</span><span class="token function">GetPriorityFunctionConfigs</span><span class="token punctuation">(</span>priorityKeys<span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">// 两种 MetaProducer 都是用来获取调度中用到的 metadata 信息，比如 affinity、toleration，pod ports（用到的端口）、resource request（请求的资源）等</span>
+    priorityMetaProducer<span class="token punctuation">,</span> err <span class="token operator">:=</span> f<span class="token punctuation">.</span><span class="token function">GetPriorityMetadataProducer</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    predicateMetaProducer<span class="token punctuation">,</span> err <span class="token operator">:=</span> f<span class="token punctuation">.</span><span class="token function">GetPredicateMetadataProducer</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">// 运行各种 informer 的内部逻辑，从 apiserver 同步资源数据到 Lister 和 cache 中</span>
+    f<span class="token punctuation">.</span><span class="token function">Run</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">// 构造出 schedulerAlgorithm 对象，它最核心的方法是 `Schedule` 方法，我们会在下文说到</span>
+    algo <span class="token operator">:=</span> scheduler<span class="token punctuation">.</span><span class="token function">NewGenericScheduler</span><span class="token punctuation">(</span>f<span class="token punctuation">.</span>schedulerCache<span class="token punctuation">,</span> predicateFuncs<span class="token punctuation">,</span> predicateMetaProducer<span class="token punctuation">,</span> priorityConfigs<span class="token punctuation">,</span> priorityMetaProducer<span class="token punctuation">,</span> extenders<span class="token punctuation">)</span>
+    <span class="token operator">...</span><span class="token operator">...</span>
+
+    <span class="token comment" spellcheck="true">// 返回最终的 Config 对象</span>
+    <span class="token keyword">return</span> <span class="token operator">&amp;</span>scheduler<span class="token punctuation">.</span>Config<span class="token punctuation">{</span>
+        SchedulerCache<span class="token punctuation">:</span> f<span class="token punctuation">.</span>schedulerCache<span class="token punctuation">,</span>
+        NodeLister<span class="token punctuation">:</span>          f<span class="token punctuation">.</span>NodeLister<span class="token punctuation">.</span><span class="token function">NodeCondition</span><span class="token punctuation">(</span><span class="token function">getNodeConditionPredicate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        Algorithm<span class="token punctuation">:</span>           algo<span class="token punctuation">,</span>
+        Binder<span class="token punctuation">:</span>              <span class="token operator">&amp;</span>binder<span class="token punctuation">{</span>f<span class="token punctuation">.</span>Client<span class="token punctuation">}</span><span class="token punctuation">,</span>
+        PodConditionUpdater<span class="token punctuation">:</span> <span class="token operator">&amp;</span>podConditionUpdater<span class="token punctuation">{</span>f<span class="token punctuation">.</span>Client<span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token comment" spellcheck="true">// NextPod 就是从 PodQueue 中取出 下一个未调度的 pod</span>
+        NextPod<span class="token punctuation">:</span> <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">*</span>api<span class="token punctuation">.</span>Pod <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> f<span class="token punctuation">.</span><span class="token function">getNextPod</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token comment" spellcheck="true">// 调度出错时的处理函数，会把 pod 重新加入到 podQueue 中，等待下一次调度</span>
+        Error<span class="token punctuation">:</span>          f<span class="token punctuation">.</span><span class="token function">makeDefaultErrorFunc</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>podBackoff<span class="token punctuation">,</span> f<span class="token punctuation">.</span>PodQueue<span class="token punctuation">)</span><span class="token punctuation">,</span>
+        StopEverything<span class="token punctuation">:</span> f<span class="token punctuation">.</span>StopEverything<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token boolean">nil</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>Config</code> 的定义在文件 <code>plugins/pkg/scheduler/scheduler.go</code> 中。它把调度器的逻辑分成几个组件，提供了这些功能：</p>
+<ul>
+<li><code>NextPod()</code> 方法能返回下一个需要调度的 pod</li>
+<li><code>Algorithm.Schedule()</code> 方法能计算出某个 pod 在节点中的结果</li>
+<li><code>Error()</code> 方法能够在出错的时候重新把 pod 放到调度队列中进行重试</li>
+<li><code>schedulerCache</code> 能够暂时保存调度中的 pod 信息，占用着 pod 需要的资源，保证资源不会冲突</li>
+<li><code>Binder.Bind</code> 在调度成功之后把调度结果发送到 apiserver 中保存起来</li>
+</ul>
+<p>后面可以看到 <code>Scheduler</code> 对象就是组合这些逻辑组件来完成最终的调度任务的。</p>
+<p><code>Config</code> 中的逻辑组件中，负责调度 pod 的是 <code>Algorithm.Schedule()</code> 方法。其对应的值是 <code>GenericScheduler</code>，<code>GenericScheduler</code> 是 Scheduler 的一种实现，也是 kube-scheduler 默认使用的调度器，它只负责单个 pod 的调度并返回结果：</p>
+<p><code>plugin/pkg/scheduler/generic_scheduler.go</code></p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">NewGenericScheduler</span><span class="token punctuation">(</span>
+    cache schedulercache<span class="token punctuation">.</span>Cache<span class="token punctuation">,</span>
+    predicates <span class="token keyword">map</span><span class="token punctuation">[</span><span class="token builtin">string</span><span class="token punctuation">]</span>algorithm<span class="token punctuation">.</span>FitPredicate<span class="token punctuation">,</span>
+    predicateMetaProducer algorithm<span class="token punctuation">.</span>MetadataProducer<span class="token punctuation">,</span>
+    prioritizers <span class="token punctuation">[</span><span class="token punctuation">]</span>algorithm<span class="token punctuation">.</span>PriorityConfig<span class="token punctuation">,</span>
+    priorityMetaProducer algorithm<span class="token punctuation">.</span>MetadataProducer<span class="token punctuation">,</span>
+    extenders <span class="token punctuation">[</span><span class="token punctuation">]</span>algorithm<span class="token punctuation">.</span>SchedulerExtender<span class="token punctuation">)</span> algorithm<span class="token punctuation">.</span>ScheduleAlgorithm <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token operator">&amp;</span>genericScheduler<span class="token punctuation">{</span>
+        cache<span class="token punctuation">:</span>                 cache<span class="token punctuation">,</span>
+        predicates<span class="token punctuation">:</span>            predicates<span class="token punctuation">,</span>
+        predicateMetaProducer<span class="token punctuation">:</span> predicateMetaProducer<span class="token punctuation">,</span>
+        prioritizers<span class="token punctuation">:</span>          prioritizers<span class="token punctuation">,</span>
+        priorityMetaProducer<span class="token punctuation">:</span>  priorityMetaProducer<span class="token punctuation">,</span>
+        extenders<span class="token punctuation">:</span>             extenders<span class="token punctuation">,</span>
+        cachedNodeInfoMap<span class="token punctuation">:</span>     <span class="token function">make</span><span class="token punctuation">(</span><span class="token keyword">map</span><span class="token punctuation">[</span><span class="token builtin">string</span><span class="token punctuation">]</span><span class="token operator">*</span>schedulercache<span class="token punctuation">.</span>NodeInfo<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>调度算法的接口只有一个方法：<code>Schedule</code>，第一个参数是要调度的 pod，第二个参数是能够获取 node 列表的接口对象。它返回一个节点的名字，表示 pod 将会调度到这台节点上。</p>
+<p><code>plugin/pkg/scheduler/algorithm/scheduler_interface.go</code></p>
+<pre><code>type ScheduleAlgorithm interface {
+    Schedule(*api.Pod, NodeLister) (selectedMachine string, err error)
+}
+</code></pre><p><code>Config</code> 创建出来之后，就是 scheduler 的创建和运行，执行最核心的调度逻辑，不断为所有需要调度的 pod 选择合适的节点：</p>
+<pre><code>sched := scheduler.New(config)
+
+run := func(_ &lt;-chan struct{}) {
+    sched.Run()
+    select {}
+}
+</code></pre><p>总结起来，<code>configFactory</code>、<code>config</code> 和 <code>scheduler</code> 三者的关系如下图所示：</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fhozonecbkj30ov0gbjsn.jpg" alt=""></p>
+<ul>
+<li><code>configFactory</code> 对应工厂模式的工厂模型，根据不同的配置和参数生成 <code>config</code>，当然事先会准备好 <code>config</code> 需要的各种数据</li>
+<li><code>config</code> 是调度器中最重要的组件，里面实现了调度的各个组件逻辑</li>
+<li><code>scheduler</code> 使用 <code>config</code> 提供的功能来完成调度</li>
+</ul>
+<p>如果把调度对比成做菜，那么构建 <code>config</code> 就相当于准备食材和调料、洗菜、对食材进行预处理。做菜就是把准备的食材变成美味佳肴的过程！</p>
+<h3 id="2-3-调度的逻辑"><a href="#2-3-调度的逻辑" class="headerlink" title="2.3 调度的逻辑"></a>2.3 调度的逻辑</h3><p>接着上面分析，看看 <code>scheduler</code> 创建和运行的过程。其对应的代码在 <code>plugin/pkg/scheduler/scheduler.go</code> 文件中：</p>
+<pre class=" language-go"><code class="language-go"><span class="token comment" spellcheck="true">// Scheduler 结构体本身非常简单，它把所有的东西都放到了 `Config` 对象中</span>
+<span class="token keyword">type</span> Scheduler <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+    config <span class="token operator">*</span>Config
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// 创建 scheduler 就是把 config 放到结构体中</span>
+<span class="token keyword">func</span> <span class="token function">New</span><span class="token punctuation">(</span>c <span class="token operator">*</span>Config<span class="token punctuation">)</span> <span class="token operator">*</span>Scheduler <span class="token punctuation">{</span>
+    s <span class="token operator">:=</span> <span class="token operator">&amp;</span>Scheduler<span class="token punctuation">{</span>
+        config<span class="token punctuation">:</span> c<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> s
+<span class="token punctuation">}</span>
+
+<span class="token keyword">func</span> <span class="token punctuation">(</span>s <span class="token operator">*</span>Scheduler<span class="token punctuation">)</span> <span class="token function">Run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">go</span> wait<span class="token punctuation">.</span><span class="token function">Until</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>scheduleOne<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> s<span class="token punctuation">.</span>config<span class="token punctuation">.</span>StopEverything<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">func</span> <span class="token punctuation">(</span>s <span class="token operator">*</span>Scheduler<span class="token punctuation">)</span> <span class="token function">scheduleOne</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    pod <span class="token operator">:=</span> s<span class="token punctuation">.</span>config<span class="token punctuation">.</span><span class="token function">NextPod</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    dest<span class="token punctuation">,</span> err <span class="token operator">:=</span> s<span class="token punctuation">.</span>config<span class="token punctuation">.</span>Algorithm<span class="token punctuation">.</span><span class="token function">Schedule</span><span class="token punctuation">(</span>pod<span class="token punctuation">,</span> s<span class="token punctuation">.</span>config<span class="token punctuation">.</span>NodeLister<span class="token punctuation">)</span>
+    <span class="token operator">...</span><span class="token operator">...</span>
+
+    <span class="token comment" spellcheck="true">// assumed 表示已经为 pod 选择了 host，但是还没有在 apiserver 中创建绑定</span>
+    <span class="token comment" spellcheck="true">// 这个状态的 pod 会单独保存在 schedulerCache 中，并暂时占住了节点上的资源</span>
+    assumed <span class="token operator">:=</span> <span class="token operator">*</span>pod
+    assumed<span class="token punctuation">.</span>Spec<span class="token punctuation">.</span>NodeName <span class="token operator">=</span> dest
+    <span class="token keyword">if</span> err <span class="token operator">:=</span> s<span class="token punctuation">.</span>config<span class="token punctuation">.</span>SchedulerCache<span class="token punctuation">.</span><span class="token function">AssumePod</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>assumed<span class="token punctuation">)</span><span class="token punctuation">;</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">// 异步对 pod 进行 bind 操作</span>
+    <span class="token keyword">go</span> <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        b <span class="token operator">:=</span> <span class="token operator">&amp;</span>api<span class="token punctuation">.</span>Binding<span class="token punctuation">{</span>
+            ObjectMeta<span class="token punctuation">:</span> api<span class="token punctuation">.</span>ObjectMeta<span class="token punctuation">{</span>Namespace<span class="token punctuation">:</span> pod<span class="token punctuation">.</span>Namespace<span class="token punctuation">,</span> Name<span class="token punctuation">:</span> pod<span class="token punctuation">.</span>Name<span class="token punctuation">}</span><span class="token punctuation">,</span>
+            Target<span class="token punctuation">:</span> api<span class="token punctuation">.</span>ObjectReference<span class="token punctuation">{</span>
+                Kind<span class="token punctuation">:</span> <span class="token string">"Node"</span><span class="token punctuation">,</span>
+                Name<span class="token punctuation">:</span> dest<span class="token punctuation">,</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">}</span>
+
+        err <span class="token operator">:=</span> s<span class="token punctuation">.</span>config<span class="token punctuation">.</span>Binder<span class="token punctuation">.</span><span class="token function">Bind</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span>
+        <span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// 绑定失败，删除 pod 的信息，占用的节点资源也被释放，可以让其他 pod 使用</span>
+            <span class="token keyword">if</span> err <span class="token operator">:=</span> s<span class="token punctuation">.</span>config<span class="token punctuation">.</span>SchedulerCache<span class="token punctuation">.</span><span class="token function">ForgetPod</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>assumed<span class="token punctuation">)</span><span class="token punctuation">;</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+                glog<span class="token punctuation">.</span><span class="token function">Errorf</span><span class="token punctuation">(</span><span class="token string">"scheduler cache ForgetPod failed: %v"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+            <span class="token punctuation">}</span>
+            s<span class="token punctuation">.</span>config<span class="token punctuation">.</span>PodConditionUpdater<span class="token punctuation">.</span><span class="token function">Update</span><span class="token punctuation">(</span>pod<span class="token punctuation">,</span> <span class="token operator">&amp;</span>api<span class="token punctuation">.</span>PodCondition<span class="token punctuation">{</span>
+                Type<span class="token punctuation">:</span>   api<span class="token punctuation">.</span>PodScheduled<span class="token punctuation">,</span>
+                Status<span class="token punctuation">:</span> api<span class="token punctuation">.</span>ConditionFalse<span class="token punctuation">,</span>
+                Reason<span class="token punctuation">:</span> <span class="token string">"BindingRejected"</span><span class="token punctuation">,</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span>
+            <span class="token keyword">return</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>scheduler.Run</code> 就是不断调用 <code>scheduler.scheduleOne()</code> 每次调度一个 pod。</p>
+<p>对应的调度逻辑如下图所示：</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fhozbohy5aj30nt0yp75g.jpg" alt=""></p>
+<p>接下来我们逐步分解和解释。</p>
+<h4 id="2-3-1-下一个需要调度的-pod"><a href="#2-3-1-下一个需要调度的-pod" class="headerlink" title="2.3.1 下一个需要调度的 pod"></a>2.3.1 下一个需要调度的 pod</h4><p><code>NextPod</code> 函数就是 <code>configFactory.getNextPod()</code>，它从未调度的队列中返回下一个应该由当前调度器调度的 pod。</p>
+<p>它从 <code>configFactory.PodQueue</code> 中 pop 出来一个应该由当前调度器调度的 pod。当前 pod 可以通过 <code>scheduler.alpha.kubernetes.io/name</code> annotation 来设置调度器的名字，如果调度器名字发现这个名字和自己一致就认为 pod 应该由自己调度。如果对应的值为空，则默认调度器会进行调度。</p>
+<p><code>PodQueue</code> 是一个先进先出的队列： <code>PodQueue:           cache.NewFIFO(cache.MetaNamespaceKeyFunc)</code>，这个 FIFO 的实现代码在 <code>pkg/client/cache/fifo.go</code> 文件中。<code>PodQueue</code> 的内容是 reflector 从 apiserver 实时同步过来的，里面保存了需要调度的 pod（<code>spec.nodeName</code> 为空，而且状态不是 success 或者 failed）：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token punctuation">(</span>f <span class="token operator">*</span>ConfigFactory<span class="token punctuation">)</span> <span class="token function">Run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// Watch and queue pods that need scheduling.</span>
+    cache<span class="token punctuation">.</span><span class="token function">NewReflector</span><span class="token punctuation">(</span>f<span class="token punctuation">.</span><span class="token function">createUnassignedNonTerminatedPodLW</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>api<span class="token punctuation">.</span>Pod<span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> f<span class="token punctuation">.</span>PodQueue<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">RunUntil</span><span class="token punctuation">(</span>f<span class="token punctuation">.</span>StopEverything<span class="token punctuation">)</span>
+    <span class="token operator">...</span><span class="token operator">...</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">func</span> <span class="token punctuation">(</span>factory <span class="token operator">*</span>ConfigFactory<span class="token punctuation">)</span> <span class="token function">createUnassignedNonTerminatedPodLW</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">*</span>cache<span class="token punctuation">.</span>ListWatch <span class="token punctuation">{</span>
+    selector <span class="token operator">:=</span> fields<span class="token punctuation">.</span><span class="token function">ParseSelectorOrDie</span><span class="token punctuation">(</span><span class="token string">"spec.nodeName=="</span> <span class="token operator">+</span> <span class="token string">""</span> <span class="token operator">+</span> <span class="token string">",status.phase!="</span> <span class="token operator">+</span> <span class="token function">string</span><span class="token punctuation">(</span>api<span class="token punctuation">.</span>PodSucceeded<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">",status.phase!="</span> <span class="token operator">+</span> <span class="token function">string</span><span class="token punctuation">(</span>api<span class="token punctuation">.</span>PodFailed<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> cache<span class="token punctuation">.</span><span class="token function">NewListWatchFromClient</span><span class="token punctuation">(</span>factory<span class="token punctuation">.</span>Client<span class="token punctuation">.</span><span class="token function">Core</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">RESTClient</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"pods"</span><span class="token punctuation">,</span> api<span class="token punctuation">.</span>NamespaceAll<span class="token punctuation">,</span> selector<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h4 id="2-3-2-调度单个-pod"><a href="#2-3-2-调度单个-pod" class="headerlink" title="2.3.2 调度单个 pod"></a>2.3.2 调度单个 pod</h4><p>拿到 pod 之后，就调用具体的调度算法选择一个节点。</p>
+<pre class=" language-go"><code class="language-go">dest<span class="token punctuation">,</span> err <span class="token operator">:=</span> s<span class="token punctuation">.</span>config<span class="token punctuation">.</span>Algorithm<span class="token punctuation">.</span><span class="token function">Schedule</span><span class="token punctuation">(</span>pod<span class="token punctuation">,</span> s<span class="token punctuation">.</span>config<span class="token punctuation">.</span>NodeLister<span class="token punctuation">)</span>
+</code></pre>
+<p>上面已经讲过，默认的调度算法就是 <code>generic_scheduler</code>，它的代码在 <code>plugin/pkg/scheduler/generic_scheduler.go</code> 文件：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token punctuation">(</span>g <span class="token operator">*</span>genericScheduler<span class="token punctuation">)</span> <span class="token function">Schedule</span><span class="token punctuation">(</span>pod <span class="token operator">*</span>api<span class="token punctuation">.</span>Pod<span class="token punctuation">,</span> nodeLister algorithm<span class="token punctuation">.</span>NodeLister<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">string</span><span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+    <span class="token comment" spellcheck="true">// 第一步：从 nodeLister 中获取 node 的信息</span>
+    nodes<span class="token punctuation">,</span> err <span class="token operator">:=</span> nodeLister<span class="token punctuation">.</span><span class="token function">List</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token operator">...</span><span class="token operator">...</span>
+
+    <span class="token comment" spellcheck="true">// schedulerCache 中保存了调度用到的 pod 和 node 的最新数据，用里面的数据更新 `cachedNodeInfoMap`，作为调度过程中节点信息的参考</span>
+    err <span class="token operator">=</span> g<span class="token punctuation">.</span>cache<span class="token punctuation">.</span><span class="token function">UpdateNodeNameToInfoMap</span><span class="token punctuation">(</span>g<span class="token punctuation">.</span>cachedNodeInfoMap<span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">// 第二步：执行 predicate，过滤符合调度条件的节点</span>
+    filteredNodes<span class="token punctuation">,</span> failedPredicateMap<span class="token punctuation">,</span> err <span class="token operator">:=</span> <span class="token function">findNodesThatFit</span><span class="token punctuation">(</span>pod<span class="token punctuation">,</span> g<span class="token punctuation">.</span>cachedNodeInfoMap<span class="token punctuation">,</span> nodes<span class="token punctuation">,</span> g<span class="token punctuation">.</span>predicates<span class="token punctuation">,</span> g<span class="token punctuation">.</span>extenders<span class="token punctuation">,</span> g<span class="token punctuation">.</span>predicateMetaProducer<span class="token punctuation">)</span>
+
+    <span class="token keyword">if</span> <span class="token function">len</span><span class="token punctuation">(</span>filteredNodes<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>FitError<span class="token punctuation">{</span>
+            Pod<span class="token punctuation">:</span>              pod<span class="token punctuation">,</span>
+            FailedPredicates<span class="token punctuation">:</span> failedPredicateMap<span class="token punctuation">,</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">// 第三步：执行 priority，为符合条件的节点排列优先级</span>
+    metaPrioritiesInterface <span class="token operator">:=</span> g<span class="token punctuation">.</span><span class="token function">priorityMetaProducer</span><span class="token punctuation">(</span>pod<span class="token punctuation">,</span> g<span class="token punctuation">.</span>cachedNodeInfoMap<span class="token punctuation">)</span>
+    priorityList<span class="token punctuation">,</span> err <span class="token operator">:=</span> <span class="token function">PrioritizeNodes</span><span class="token punctuation">(</span>pod<span class="token punctuation">,</span> g<span class="token punctuation">.</span>cachedNodeInfoMap<span class="token punctuation">,</span> metaPrioritiesInterface<span class="token punctuation">,</span> g<span class="token punctuation">.</span>prioritizers<span class="token punctuation">,</span> filteredNodes<span class="token punctuation">,</span> g<span class="token punctuation">.</span>extenders<span class="token punctuation">)</span>
+    <span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">,</span> err
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">// 第四步：从最终的结果中选择一个节点</span>
+    <span class="token keyword">return</span> g<span class="token punctuation">.</span><span class="token function">selectHost</span><span class="token punctuation">(</span>priorityList<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>调度算法的过程分为四步骤：</p>
+<ol>
+<li>获取必要的数据，这个当然就是 pod 和 nodes 信息。pod 是作为参数传递过来的，nodes 有两类，一个是通过 <code>nodeLister</code> 获取的节点信息，一类是 <code>cachedNodeInfoMap</code>。后一类节点信息中额外保存了资源的使用情况，比如节点上有多少调度的 pod、已经申请的资源、还可以分配的资源等</li>
+<li>执行过滤操作。根据当前 pod 和 nodes 信息，过滤掉不适合运行 pod 的节点</li>
+<li>执行优先级排序操作。对适合 pod 运行的节点进行优先级排序</li>
+<li>选择节点。从最终优先级最高的节点中选择出来一个作为 pod 调度的结果</li>
+</ol>
+<p>下面的几个部分就来讲讲<strong>过滤</strong>和<strong>优先级排序</strong>的过程。</p>
+<h4 id="2-3-3-过滤（Predicate）：移除不合适的节点"><a href="#2-3-3-过滤（Predicate）：移除不合适的节点" class="headerlink" title="2.3.3 过滤（Predicate）：移除不合适的节点"></a>2.3.3 过滤（Predicate）：移除不合适的节点</h4><p>调度器的输入是一个 pod（多个 pod 调度可以通过遍历来实现） 和多个节点，输出是一个节点，表示 pod 将被调度到这个节点上。</p>
+<p>如何找到<strong>最合适</strong> pod 运行的节点呢？第一步就是移除不符合调度条件的节点，这个过程 kubernetes 称为 <code>Predicate</code>，这个单词在这里怎么翻译成中文我也不是很确定，<a href="https://www.merriam-webster.com/dictionary/predicate" target="_blank" rel="noopener">韦氏词典</a>给出了这样的定义：</p>
+<blockquote>
+<p>something that is affirmed or denied of the subject in a proposition in logic.</p>
+<ul>
+<li>merriam webster</li>
+</ul>
+</blockquote>
+<p>这个过程用 <code>filter</code> 对我来说会更直观，容易理解，所以下面我们都将这一过程称作<strong>过滤</strong>。</p>
+<p>过滤调用的函数是 <code>findNodesThatFit</code>，代码在 <code>plugins/pkg/scheduler/generic_scheduler.go</code> 文件中：</p>
+<pre><code>func findNodesThatFit(
+    pod *api.Pod,
+    nodeNameToInfo map[string]*schedulercache.NodeInfo,
+    nodes []*api.Node,
+    predicateFuncs map[string]algorithm.FitPredicate,
+    extenders []algorithm.SchedulerExtender,
+    metadataProducer algorithm.MetadataProducer,
+) ([]*api.Node, FailedPredicateMap, error) {
+    // filtered 保存通过过滤的节点
+    var filtered []*api.Node
+
+    // failedPredicateMap 保存过滤失败的节点，即不适合 pod 运行的节点
+    failedPredicateMap := FailedPredicateMap{}
+
+    if len(predicateFuncs) == 0 {
+        filtered = nodes
+    } else {
+        filtered = make([]*api.Node, len(nodes))
+        errs := []error{}
+        var predicateResultLock sync.Mutex
+        var filteredLen int32
+
+        // meta 函数可以查询 pod 和 node 的信息
+        meta := metadataProducer(pod, nodeNameToInfo)
+
+        // 检查单个 node 能否运行某个 pod
+        checkNode := func(i int) {
+            nodeName := nodes[i].Name
+            fits, failedPredicates, err := podFitsOnNode(pod, meta, nodeNameToInfo[nodeName], predicateFuncs)
+            ......
+            if fits {
+                filtered[atomic.AddInt32(&amp;filteredLen, 1)-1] = nodes[i]
+            } else {
+                predicateResultLock.Lock()
+                failedPredicateMap[nodeName] = failedPredicates
+                predicateResultLock.Unlock()
+            }
+        }
+        // 使用 workQueue 来并行运行检查，并发数最大是 16
+        workqueue.Parallelize(16, len(nodes), checkNode)
+        filtered = filtered[:filteredLen]
+        if len(errs) &gt; 0 {
+            return []*api.Node{}, FailedPredicateMap{}, errors.NewAggregate(errs)
+        }
+    }
+
+    // 在基本过滤的基础上，继续执行 extender 的过滤逻辑
+    .....
+
+    return filtered, failedPredicateMap, nil
+}
+</code></pre><p>上面这段代码主要的工作是对 pod 过滤工作进行并发控制、错误处理和结果保存。没有通过过滤的节点信息保存在 <code>failedPredicateMap</code> 字典中，key 是节点名，value 是失败原因的列表；通过过滤的节点保存在 <code>filtered</code> 数组中。</p>
+<p>对于每个 pod，都要检查能否调度到集群中的所有节点上（只包括可调度的节点），而且多个判断逻辑之间是独立的，也就是说 pod 是否能否调度到某个 node 上和其他 node 无关（至少目前是这样的，如果这个假设不再成立，并发要考虑协调的问题），所以可以使用并发来提高性能。并发是通过 <code>workQueue</code> 来实现的，最大并发数量是 16，这个数字是 hard code。</p>
+<p>pod 和 node 是否匹配是调用是 <code>podFitsOnNode</code> 函数来判断的：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">podFitsOnNode</span><span class="token punctuation">(</span>pod <span class="token operator">*</span>api<span class="token punctuation">.</span>Pod<span class="token punctuation">,</span> meta <span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> info <span class="token operator">*</span>schedulercache<span class="token punctuation">.</span>NodeInfo<span class="token punctuation">,</span> predicateFuncs <span class="token keyword">map</span><span class="token punctuation">[</span><span class="token builtin">string</span><span class="token punctuation">]</span>algorithm<span class="token punctuation">.</span>FitPredicate<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">bool</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>algorithm<span class="token punctuation">.</span>PredicateFailureReason<span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> failedPredicates <span class="token punctuation">[</span><span class="token punctuation">]</span>algorithm<span class="token punctuation">.</span>PredicateFailureReason
+    <span class="token keyword">for</span> <span class="token boolean">_</span><span class="token punctuation">,</span> predicate <span class="token operator">:=</span> <span class="token keyword">range</span> predicateFuncs <span class="token punctuation">{</span>
+        fit<span class="token punctuation">,</span> reasons<span class="token punctuation">,</span> err <span class="token operator">:=</span> <span class="token function">predicate</span><span class="token punctuation">(</span>pod<span class="token punctuation">,</span> meta<span class="token punctuation">,</span> info<span class="token punctuation">)</span>
+        <span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+            err <span class="token operator">:=</span> fmt<span class="token punctuation">.</span><span class="token function">Errorf</span><span class="token punctuation">(</span><span class="token string">"SchedulerPredicates failed due to %v, which is unexpected."</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+            <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>algorithm<span class="token punctuation">.</span>PredicateFailureReason<span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> err
+        <span class="token punctuation">}</span>
+        <span class="token keyword">if</span> <span class="token operator">!</span>fit <span class="token punctuation">{</span>
+            failedPredicates <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>failedPredicates<span class="token punctuation">,</span> reasons<span class="token operator">...</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> <span class="token function">len</span><span class="token punctuation">(</span>failedPredicates<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">,</span> failedPredicates<span class="token punctuation">,</span> <span class="token boolean">nil</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>它会循环调用所有的 <code>predicateFuncs</code> 定义的过滤方法，并返回节点是否满足调度条件，以及可能的错误信息。每个 predicate 函数的类型是这样的：</p>
+<p><code>plugin/pkg/scheduler/algorithm/types.go</code></p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">type</span> FitPredicate <span class="token keyword">func</span><span class="token punctuation">(</span>pod <span class="token operator">*</span>api<span class="token punctuation">.</span>Pod<span class="token punctuation">,</span> meta <span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> nodeInfo <span class="token operator">*</span>schedulercache<span class="token punctuation">.</span>NodeInfo<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">bool</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>PredicateFailureReason<span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span>
+</code></pre>
+<p>它接受三个参数：</p>
+<ol>
+<li>pod：要调度的 pod</li>
+<li>meta：获取过滤过程中 pod 以及调度参数的函数</li>
+<li>nodeInfo：要过滤的 node 信息</li>
+</ol>
+<p>具体的 predicate 实现都在 <code>plugin/pkg/scheduler/algorithm/predicates/predicates.go</code>：</p>
+<ol>
+<li><code>NoVolumeZoneConflict</code>：pod 请求的 volume 是否能在节点所在的 Zone 使用。通过匹配 node 和 PV 的 <code>failure-domain.beta.kubernetes.io/zone</code> 和 <code>failure-domain.beta.kubernetes.io/region</code> 来决定</li>
+<li><code>MaxEBSVolumeCount</code>：请求的 volumes 是否超过 EBS（Elastic Block Store） 支持的最大值，默认是 39</li>
+<li><code>MaxGCEPDVolumeCount</code>：请求的 volumes 是否超过 GCE 支持的最大值，默认是 16</li>
+<li><code>MatchInterPodAffinity</code>：根据 inter-pod affinity 来决定 pod 是否能调度到节点上。这个过滤方法会看 pod 是否和当前节点的某个 pod 互斥。关于亲和性和互斥性，可以查看<a href="http://cizixs.com/2017/05/17/kubernetes-scheulder-affinity">之前的文章</a>。</li>
+<li><code>NoDiskConflict</code>：检查 pod 请求的 volume 是否就绪和冲突。如果主机上已经挂载了某个卷，则使用相同卷的 pod 不能调度到这个主机上。kubernetes 使用的 volume 类型不同，过滤逻辑也不同。比如不同云主机的 volume 使用限制不同：GCE 允许多个 pods 使用同时使用 volume，前提是它们是只读的；AWS 不允许 pods 使用同一个 volume；Ceph RBD 不允许 pods 共享同一个 monitor</li>
+<li><code>GeneralPredicates</code>：普通过滤函数，主要考虑 kubernetes 资源是否能够满足，比如 CPU 和 Memory 是否足够，端口是否冲突、selector 是否匹配<ul>
+<li><code>PodFitsResources</code>：检查主机上的资源是否满足 pod 的需求。资源的计算是根据主机上运行 pod 请求的资源作为参考的，而不是以实际运行的资源数量</li>
+<li><code>PodFitsHost</code>：如果 pod 指定了 <code>spec.NodeName</code>，看节点的名字是否何它匹配，只有匹配的节点才能运行 pod</li>
+<li><code>PodFitsHostPorts</code>：检查 pod 申请的主机端口是否已经被其他 pod 占用，如果是，则不能调度</li>
+<li><code>PodSelectorMatches</code>：检查主机的标签是否满足 pod 的 selector。包括 NodeAffinity 和 nodeSelector 中定义的标签。</li>
+</ul>
+</li>
+<li><code>PodToleratesNodeTaints</code>：根据 <a href="http://blog.kubernetes.io/2017/03/advanced-scheduling-in-kubernetes.html" target="_blank" rel="noopener">taints 和 toleration</a> 的关系判断 pod 是否可以调度到节点上</li>
+<li><code>CheckNodeMemoryPressure</code>：检查 pod 能否调度到内存有压力的节点上。如有节点有内存压力， guaranteed pod（request 和 limit 相同） 不能调度到节点上。相关资料请查看 <a href="https://github.com/kubernetes/community/blob/master/contributors/design-proposals/resource-qos.md" target="_blank" rel="noopener">Resource QoS Design</a></li>
+<li><code>CheckNodeDiskPressure</code>：检查 pod 能否调度到磁盘有压力的节点上，目前所有的 pod 都不能调度到磁盘有压力的节点上</li>
+</ol>
+<p>每个过滤函数的逻辑都不复杂，只需要了解相关的概念就能读懂。这篇文章只讲解 <code>PodFitsResources</code> 的实现，也就是判断节点上的资源是否能满足 pod 的请求。</p>
+<p><code>plugin/pkg/scheduler/algorithm/predicates/predicates.go</code>:</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">PodFitsResources</span><span class="token punctuation">(</span>pod <span class="token operator">*</span>api<span class="token punctuation">.</span>Pod<span class="token punctuation">,</span> meta <span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> nodeInfo <span class="token operator">*</span>schedulercache<span class="token punctuation">.</span>NodeInfo<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">bool</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>algorithm<span class="token punctuation">.</span>PredicateFailureReason<span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    node <span class="token operator">:=</span> nodeInfo<span class="token punctuation">.</span><span class="token function">Node</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">var</span> predicateFails <span class="token punctuation">[</span><span class="token punctuation">]</span>algorithm<span class="token punctuation">.</span>PredicateFailureReason
+
+    <span class="token comment" spellcheck="true">// 判断节点上 pod 数量是否超过限制</span>
+    allowedPodNumber <span class="token operator">:=</span> nodeInfo<span class="token punctuation">.</span><span class="token function">AllowedPodNumber</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> <span class="token function">len</span><span class="token punctuation">(</span>nodeInfo<span class="token punctuation">.</span><span class="token function">Pods</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token number">1</span> <span class="token operator">></span> allowedPodNumber <span class="token punctuation">{</span>
+        predicateFails <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>predicateFails<span class="token punctuation">,</span> <span class="token function">NewInsufficientResourceError</span><span class="token punctuation">(</span>api<span class="token punctuation">.</span>ResourcePods<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token function">int64</span><span class="token punctuation">(</span><span class="token function">len</span><span class="token punctuation">(</span>nodeInfo<span class="token punctuation">.</span><span class="token function">Pods</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">int64</span><span class="token punctuation">(</span>allowedPodNumber<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">// 获取 pod 请求的资源，目前支持 CPU、Memory 和 GPU</span>
+    <span class="token keyword">var</span> podRequest <span class="token operator">*</span>schedulercache<span class="token punctuation">.</span>Resource
+    <span class="token keyword">if</span> predicateMeta<span class="token punctuation">,</span> ok <span class="token operator">:=</span> meta<span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token operator">*</span>predicateMetadata<span class="token punctuation">)</span><span class="token punctuation">;</span> ok <span class="token punctuation">{</span>
+        podRequest <span class="token operator">=</span> predicateMeta<span class="token punctuation">.</span>podRequest
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        podRequest <span class="token operator">=</span> <span class="token function">GetResourceRequest</span><span class="token punctuation">(</span>pod<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token operator">...</span><span class="token operator">...</span>
+
+    <span class="token comment" spellcheck="true">// 判断如果 pod 放到节点上，是否超过节点可分配的资源</span>
+    allocatable <span class="token operator">:=</span> nodeInfo<span class="token punctuation">.</span><span class="token function">AllocatableResource</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> allocatable<span class="token punctuation">.</span>MilliCPU <span class="token operator">&lt;</span> podRequest<span class="token punctuation">.</span>MilliCPU<span class="token operator">+</span>nodeInfo<span class="token punctuation">.</span><span class="token function">RequestedResource</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>MilliCPU <span class="token punctuation">{</span>
+        predicateFails <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>predicateFails<span class="token punctuation">,</span> <span class="token function">NewInsufficientResourceError</span><span class="token punctuation">(</span>api<span class="token punctuation">.</span>ResourceCPU<span class="token punctuation">,</span> podRequest<span class="token punctuation">.</span>MilliCPU<span class="token punctuation">,</span> nodeInfo<span class="token punctuation">.</span><span class="token function">RequestedResource</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>MilliCPU<span class="token punctuation">,</span> allocatable<span class="token punctuation">.</span>MilliCPU<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> allocatable<span class="token punctuation">.</span>Memory <span class="token operator">&lt;</span> podRequest<span class="token punctuation">.</span>Memory<span class="token operator">+</span>nodeInfo<span class="token punctuation">.</span><span class="token function">RequestedResource</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>Memory <span class="token punctuation">{</span>
+        predicateFails <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>predicateFails<span class="token punctuation">,</span> <span class="token function">NewInsufficientResourceError</span><span class="token punctuation">(</span>api<span class="token punctuation">.</span>ResourceMemory<span class="token punctuation">,</span> podRequest<span class="token punctuation">.</span>Memory<span class="token punctuation">,</span> nodeInfo<span class="token punctuation">.</span><span class="token function">RequestedResource</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>Memory<span class="token punctuation">,</span> allocatable<span class="token punctuation">.</span>Memory<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> allocatable<span class="token punctuation">.</span>NvidiaGPU <span class="token operator">&lt;</span> podRequest<span class="token punctuation">.</span>NvidiaGPU<span class="token operator">+</span>nodeInfo<span class="token punctuation">.</span><span class="token function">RequestedResource</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>NvidiaGPU <span class="token punctuation">{</span>
+        predicateFails <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>predicateFails<span class="token punctuation">,</span> <span class="token function">NewInsufficientResourceError</span><span class="token punctuation">(</span>api<span class="token punctuation">.</span>ResourceNvidiaGPU<span class="token punctuation">,</span> podRequest<span class="token punctuation">.</span>NvidiaGPU<span class="token punctuation">,</span> nodeInfo<span class="token punctuation">.</span><span class="token function">RequestedResource</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>NvidiaGPU<span class="token punctuation">,</span> allocatable<span class="token punctuation">.</span>NvidiaGPU<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">for</span> rName<span class="token punctuation">,</span> rQuant <span class="token operator">:=</span> <span class="token keyword">range</span> podRequest<span class="token punctuation">.</span>OpaqueIntResources <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> allocatable<span class="token punctuation">.</span>OpaqueIntResources<span class="token punctuation">[</span>rName<span class="token punctuation">]</span> <span class="token operator">&lt;</span> rQuant<span class="token operator">+</span>nodeInfo<span class="token punctuation">.</span><span class="token function">RequestedResource</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>OpaqueIntResources<span class="token punctuation">[</span>rName<span class="token punctuation">]</span> <span class="token punctuation">{</span>
+            predicateFails <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>predicateFails<span class="token punctuation">,</span> <span class="token function">NewInsufficientResourceError</span><span class="token punctuation">(</span>rName<span class="token punctuation">,</span> podRequest<span class="token punctuation">.</span>OpaqueIntResources<span class="token punctuation">[</span>rName<span class="token punctuation">]</span><span class="token punctuation">,</span> nodeInfo<span class="token punctuation">.</span><span class="token function">RequestedResource</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>OpaqueIntResources<span class="token punctuation">[</span>rName<span class="token punctuation">]</span><span class="token punctuation">,</span> allocatable<span class="token punctuation">.</span>OpaqueIntResources<span class="token punctuation">[</span>rName<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token operator">...</span><span class="token operator">...</span>
+    <span class="token keyword">return</span> <span class="token function">len</span><span class="token punctuation">(</span>predicateFails<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">,</span> predicateFails<span class="token punctuation">,</span> <span class="token boolean">nil</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>有了前面准备的所有内容，判断节点资源是否满足就简单。只需要把 pod 请求的各种资源和节点上可用的资源比较大小。需要注意的是，如果 pod 没有添加要申请的资源，那么其对应的值为零，也就是说不会受到资源不足影响，同时也不会受资源限制。</p>
+<p>节点上可分配资源是 kubelet 发送给 apiserver 的，而已经请求的资源数量是上面运行的 pods 资源的总和。主要的逻辑就是判断如果 pod 调度到节点上，那么所有 pods 请求的资源总和是否超过节点可用的资源数量，只要有任何一个资源超标，就认为无法调度到 node 上。</p>
+<h4 id="2-3-4-优先级（Priority）：为合适的节点排序"><a href="#2-3-4-优先级（Priority）：为合适的节点排序" class="headerlink" title="2.3.4 优先级（Priority）：为合适的节点排序"></a>2.3.4 优先级（Priority）：为合适的节点排序</h4><p>过滤结束后，剩下的节点都是 pod 可以调度到上面的。如果过滤阶段就把所有的节点 pass 了，那么久直接返回调度错误；如果剩下多个节点，那么我们还要从这些可用的节点中选择一个。</p>
+<p>虽然随机选择一个节点进行调度理论上也可以（毕竟它们都满足调度条件），但是我们还是希望能找到<strong>最合适的节点</strong>。什么是最合适呢？当然要根据需求来决定，但是有一些比较通用性的要求，比如 workload 在集群中要尽量均衡。不同的节点对 pod 的合适程度是不同的，优先级过程就是负责尽量找出更合适的节点的。</p>
+<p>对每个节点，priority 函数都会计算出来一个 0-10 之间的数字，表示 pod 放到该节点的合适程度，其中 10 表示非常合适，0 表示非常不合适。每个不同的优先级函数都有一个权重值，这个值为正数，最终的值为权重和优先级函数结果的乘积，而一个节点的权重就是所有优先级函数结果的加和。比如有两种优先级函数 <code>priorityFunc1</code> 和 <code>priorityFunc2</code>，对应的权重分别为 <code>weight1</code> 和 <code>weight2</code>，那么节点 A 的最终得分是：</p>
+<pre><code>finalScoreNodeA = (weight1 * priorityFunc1) + (weight2 * priorityFunc2)
+</code></pre><p>而权重最高的节点自然就是最合适的调度结果，优先级步骤对应函数 <code>PrioritizeNodes</code>：</p>
+<pre><code>func PrioritizeNodes(
+    pod *api.Pod,
+    nodeNameToInfo map[string]*schedulercache.NodeInfo,
+    meta interface{},
+    priorityConfigs []algorithm.PriorityConfig,
+    nodes []*api.Node,
+    extenders []algorithm.SchedulerExtender,
+) (schedulerapi.HostPriorityList, error) {
+    // 如果没有配置 priority，那么所有节点权重相同，最后的结果类似于随机选择一个节点
+    ......
+
+    var (
+        mu   = sync.Mutex{}
+        wg   = sync.WaitGroup{}
+        errs []error
+    )
+
+    // results 是个二维表格，保存着每个节点对应每个优先级函数的得分
+    results := make([]schedulerapi.HostPriorityList, 0, len(priorityConfigs))
+
+    // 原来的计算方法，通过 `priorityConfig.Function` 计算分值。
+    // 每次取出一个优先级函数，计算所有节点的值
+    for i, priorityConfig := range priorityConfigs {
+        if priorityConfig.Function != nil {
+            wg.Add(1)
+            go func(index int, config algorithm.PriorityConfig) {
+                defer wg.Done()
+                results[index], err = config.Function(pod, nodeNameToInfo, nodes)
+            }(i, priorityConfig)
+        } else {
+            results[i] = make(schedulerapi.HostPriorityList, len(nodes))
+        }
+    }
+    // 以后会使用的计算方式，通过 map-reduce 的方式来计算分值
+    processNode := func(index int) {
+        nodeInfo := nodeNameToInfo[nodes[index].Name]
+        var err error
+        for i := range priorityConfigs {
+            if priorityConfigs[i].Function != nil {
+                continue
+            }
+            results[i][index], err = priorityConfigs[i].Map(pod, meta, nodeInfo)
+        }
+    }
+    // 并发去计算结果
+    workqueue.Parallelize(16, len(nodes), processNode)
+
+    for i, priorityConfig := range priorityConfigs {
+        if priorityConfig.Reduce == nil {
+            continue
+        }
+        wg.Add(1)
+        go func(index int, config algorithm.PriorityConfig) {
+            defer wg.Done()
+            if err := config.Reduce(pod, meta, nodeNameToInfo, results[index]); err != nil {
+                appendError(err)
+            }
+        }(i, priorityConfig)
+    }
+    // 等待所有计算结束
+    wg.Wait()
+    if len(errs) != 0 {
+        return schedulerapi.HostPriorityList{}, errors.NewAggregate(errs)
+    }
+
+    // 计算分值的总和，得到最终的结果
+    result := make(schedulerapi.HostPriorityList, 0, len(nodes))
+    for i := range nodes {
+        result = append(result, schedulerapi.HostPriority{Host: nodes[i].Name, Score: 0})
+        for j := range priorityConfigs {
+            result[i].Score += results[j][i].Score * priorityConfigs[j].Weight
+        }
+    }
+
+    ......
+    return result, nil
+}
+</code></pre><p>要想获得所有节点最终的权重分值，就要先计算每个优先级函数对应该节点的分值，然后计算总和。因此不管过程如何，如果有 N 个节点，M 个优先级函数，一定会计算 M*N 个中间值，构成一个二维表格：</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79gy1fhpajksubhj316a0lo0uc.jpg" alt=""></p>
+<p>最后，会把表格中按照节点把优先级函数的权重列表相加，得到最终节点的分值。上面的代码就是这个过程，当然中间过程可以并发计算，以加快速度。</p>
+<p>目前，kubernetes scheduler 提供了很多实用的优先级函数：</p>
+<ul>
+<li><code>LeastRequestedPriority</code>：最低请求优先级。根据 CPU 和内存的使用率来决定优先级，使用率越低优先级越高，也就是说优先调度到资源利用率低的节点，这个优先级函数能起到把负载尽量平均分到集群的节点上。默认权重为 1</li>
+<li><code>BalancedResourceAllocation</code>：资源平衡分配。这个优先级函数会把 pod 分配到 CPU 和 memory 利用率差不多的节点（计算的时候会考虑当前 pod 一旦分配到节点的情况）。默认权重为 1</li>
+<li><code>SelectorSpreadPriority</code>：尽量把同一个 service、replication controller、replica set 的 pod 分配到不同的节点，这些资源都是通过 selector 来选择 pod 的，所以名字才是这样的。默认权重为 1</li>
+<li><code>CalculateAntiAffinityPriority</code>：尽量把同一个 service 下面某个 label 相同的 pod 分配到不同的节点</li>
+<li><code>ImageLocalityPriority</code>：根据镜像是否已经存在的节点上来决定优先级，节点上存在要使用的镜像，而且镜像越大，优先级越高。这个函数会尽量把 pod 分配到下载镜像花销最少的节点</li>
+<li><code>NodeAffinityPriority</code>：NodeAffinity，默认权重为 1</li>
+<li><code>InterPodAffinityPriority</code>：根据 pod 之间的亲和性决定 node 的优先级，默认权重为 1</li>
+<li><code>NodePreferAvoidPodsPriority</code>：默认权重是 10000，把这个权重设置的那么大，就以为这一旦该函数的结果不为 0，就由它决定排序结果</li>
+<li><code>TaintTolerationPriority</code>：默认权重是 1</li>
+</ul>
+<p>不同的优先级函数计算出来节点的权重值是个 [0-10] 的值，也就是它们本身就要做好规范化。如果认为某个优先级函数非常重要，那就增加它的 weight。</p>
+<p>对于优先级函数，我们只讲解 <code>LeastRequestedPriority</code> 和 <code>BalancedResourceAllocation</code> 的实现，因为它们两个和资源密切相关。</p>
+<p><strong>最小资源请求</strong>优先级函数会计算每个节点的资源利用率，它目前只考虑 CPU 和内存两种资源，而且两者权重相同，具体的资源公式为：</p>
+<pre><code>score = (CPU Usage rate * 10 + Memory Usage Rate * 10 )/2
+</code></pre><p>利用率的计算一样，都是 <code>(capacity - requested)/capacity</code>，capacity 指节点上资源的容量，比如 CPU 的核数，内存的大小；requested 表示节点当前所有 pod 请求对应资源的总和。</p>
+<p>代码就不放出来了，就是做一个算术运算，对应的文件在：<code>plugin/pkg/scheduler/algorithm/priorities/lease_requested.go</code>。</p>
+<p><strong>平衡资源优先级函数</strong>会计算 CPU 和内存的平衡度，并尽量选择更均衡的节点。它会分别计算 CPU 和内存的，计算公式为：</p>
+<pre><code>10 - abs(cpuFraction - memoryFraction)*10
+</code></pre><p>对应的 cpuFraction 和 memoryFraction 就是资源利用率，计算公式都是 <code>requested/capacity</code>。这种方法不推荐单独使用，一定要和最小资源请求一起使用。<strong>最小资源请求</strong>能尽量选择资源使用率低的节点，而这个方法会尽量考虑资源使用率比较平衡的节点。它能避免这样的情况：节点上 CPU 已经使用完了，剩下很多内存空间可用，但是因为 CPU 不再满足任何 pod 的请求，因此无法调度任何 pod，导致内存资源白白浪费。</p>
+<p>这种实现主要参考了 <em>an energy efficient virtual machine placement algorithm with balanced resource utilization</em> 论文提出的方法，感兴趣的可以自行搜索阅读。</p>
+<h4 id="2-3-5-选择节点作为调度结果"><a href="#2-3-5-选择节点作为调度结果" class="headerlink" title="2.3.5 选择节点作为调度结果"></a>2.3.5 选择节点作为调度结果</h4><p>优先级阶段不会移除任何的节点，只是对节点添加了一个分值，根据分值排序，分值最高的就是最终的结果。</p>
+<p>如果分值最高的节点有多个，就“随机”选择一个。这个步骤就是 <code>selectHost</code> 的逻辑：</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token punctuation">(</span>g <span class="token operator">*</span>genericScheduler<span class="token punctuation">)</span> <span class="token function">selectHost</span><span class="token punctuation">(</span>priorityList schedulerapi<span class="token punctuation">.</span>HostPriorityList<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">string</span><span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 没有节点，直接返回错误</span>
+    <span class="token keyword">if</span> <span class="token function">len</span><span class="token punctuation">(</span>priorityList<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">,</span> fmt<span class="token punctuation">.</span><span class="token function">Errorf</span><span class="token punctuation">(</span><span class="token string">"empty priorityList"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">// 根据权重分值从高到低排序</span>
+    sort<span class="token punctuation">.</span><span class="token function">Sort</span><span class="token punctuation">(</span>sort<span class="token punctuation">.</span><span class="token function">Reverse</span><span class="token punctuation">(</span>priorityList<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">// 找到所有最高分值的节点</span>
+    maxScore <span class="token operator">:=</span> priorityList<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>Score
+    firstAfterMaxScore <span class="token operator">:=</span> sort<span class="token punctuation">.</span><span class="token function">Search</span><span class="token punctuation">(</span><span class="token function">len</span><span class="token punctuation">(</span>priorityList<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">func</span><span class="token punctuation">(</span>i <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token builtin">bool</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> priorityList<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>Score <span class="token operator">&lt;</span> maxScore <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">// “随机”选择一个：其实是类似于 roundrobin 方法，记录一个 lastNodeIndex 不断加一，对可用节点数取模</span>
+    g<span class="token punctuation">.</span>lastNodeIndexLock<span class="token punctuation">.</span><span class="token function">Lock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    ix <span class="token operator">:=</span> <span class="token function">int</span><span class="token punctuation">(</span>g<span class="token punctuation">.</span>lastNodeIndex <span class="token operator">%</span> <span class="token function">uint64</span><span class="token punctuation">(</span>firstAfterMaxScore<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    g<span class="token punctuation">.</span>lastNodeIndex<span class="token operator">++</span>
+    g<span class="token punctuation">.</span>lastNodeIndexLock<span class="token punctuation">.</span><span class="token function">Unlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">// 返回结果</span>
+    <span class="token keyword">return</span> priorityList<span class="token punctuation">[</span>ix<span class="token punctuation">]</span><span class="token punctuation">.</span>Host<span class="token punctuation">,</span> <span class="token boolean">nil</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>这个过程非常简单，没有需要过多解释的地方，代码关键步骤已经写上了注释。</p>
+<h2 id="3-自定义调度器"><a href="#3-自定义调度器" class="headerlink" title="3. 自定义调度器"></a>3. 自定义调度器</h2><p>如果对调度没有特殊的要求，使用 kube-schduler 的默认调度就能满足大部分的需求。如果默认调度不能满足需求，就要对调度进行自定义。这部分介绍几种用户可以自定义调度逻辑的方法！</p>
+<h3 id="3-1-修改-policy-文件"><a href="#3-1-修改-policy-文件" class="headerlink" title="3.1 修改 policy 文件"></a>3.1 修改 policy 文件</h3><p>kube-scheduler 在启动的时候可以通过 <code>--policy-config-file</code> 参数可以指定调度策略文件，用户可以根据需要组装 predicates 和 priority 函数。选择不同的过滤函数和优先级函数、控制优先级函数的权重、调整过滤函数的顺序都会影响调度过程。</p>
+<p>可以参考官方给出的 policy 文件实例：</p>
+<pre><code>{
+&quot;kind&quot; : &quot;Policy&quot;,
+&quot;apiVersion&quot; : &quot;v1&quot;,
+&quot;predicates&quot; : [
+    {&quot;name&quot; : &quot;PodFitsHostPorts&quot;},
+    {&quot;name&quot; : &quot;PodFitsResources&quot;},
+    {&quot;name&quot; : &quot;NoDiskConflict&quot;},
+    {&quot;name&quot; : &quot;NoVolumeZoneConflict&quot;},
+    {&quot;name&quot; : &quot;MatchNodeSelector&quot;},
+    {&quot;name&quot; : &quot;HostName&quot;}
+    ],
+&quot;priorities&quot; : [
+    {&quot;name&quot; : &quot;LeastRequestedPriority&quot;, &quot;weight&quot; : 1},
+    {&quot;name&quot; : &quot;BalancedResourceAllocation&quot;, &quot;weight&quot; : 1},
+    {&quot;name&quot; : &quot;ServiceSpreadingPriority&quot;, &quot;weight&quot; : 1},
+    {&quot;name&quot; : &quot;EqualPriority&quot;, &quot;weight&quot; : 1}
+    ],
+&quot;hardPodAffinitySymmetricWeight&quot; : 10
+}
+</code></pre><h3 id="3-2-编写自己的-priority-和-predicate-函数"><a href="#3-2-编写自己的-priority-和-predicate-函数" class="headerlink" title="3.2 编写自己的 priority 和 predicate 函数"></a>3.2 编写自己的 priority 和 predicate 函数</h3><p>前一种方法就是对已有的调度模块（过滤函数和优先级函数）进行组合，如果有特殊的需求这些模块本身无法满足，用户还可以编写自己的过滤函数和优先级函数。</p>
+<p>过滤函数的接口已经说过：</p>
+<p><code>plugin/pkg/scheduler/algorithm/types.go</code></p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">type</span> FitPredicate <span class="token keyword">func</span><span class="token punctuation">(</span>pod <span class="token operator">*</span>v1<span class="token punctuation">.</span>Pod<span class="token punctuation">,</span> meta <span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> nodeInfo <span class="token operator">*</span>schedulercache<span class="token punctuation">.</span>NodeInfo<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">bool</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>PredicateFailureReason<span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span>
+</code></pre>
+<p>用户只需要在 <code>plugin/pkg/scheduler/algorithm/predicates/predicates.go</code> 文件中编写对象实现这个接口就行。</p>
+<p>编写完过滤函数还要把它用起来，下一步就是把它进行注册，让 kube-scheduler 启动的时候知道它的存在，注册部分可以在 <code>plugin/pkg/scheduler/algorithmprovider/defaults/defaults.go</code> 完成，可以参考其他过滤函数的注册代码：</p>
+<pre class=" language-go"><code class="language-go">factory<span class="token punctuation">.</span><span class="token function">RegisterFitPredicate</span><span class="token punctuation">(</span><span class="token string">"PodFitsHostPorts"</span><span class="token punctuation">,</span> predicates<span class="token punctuation">.</span>PodFitsHostPorts<span class="token punctuation">)</span>
+</code></pre>
+<p>最后，可以在 <code>--policy-config-file</code> 把自定义的过滤函数写进去，kube-scheduler 运行的时候就能执行你编写调度器的逻辑了。</p>
+<p>自定义优先级函数的过程和这个过滤函数类似，就不赘述了。</p>
+<h3 id="3-3-编写自己的调度器"><a href="#3-3-编写自己的调度器" class="headerlink" title="3.3 编写自己的调度器"></a>3.3 编写自己的调度器</h3><p>除了在 kube-scheduler 已有的框架中进行定制化外，kubernetes 还允许你重头编写自己的调度器组件，并在创建资源的时候使用它。多个调度器可以同时运行和工作，只要名字不冲突就行。</p>
+<p>使用某个调度器就是在 pod 的 <code>spec.schedulername</code> 字段中填写上调度器的名字。kubernetes 提供的调度器名字是 <code>default</code>，如果自定义的调度器名字是 <code>my-scheduler</code>，那么只有当 <code>spec.schedulername</code> 字段是 <code>my-scheduler</code> 才会被后者调度。</p>
+<p><strong>NOTE</strong>：调取器的名字并没有统一保存在 apiserver 中进行统一管理，而是每个调取器去 apiserver 中获取和自己名字一直的 pod 来调度。也就是说，调度器是自己管理名字的，因此做到不冲突而且逻辑正确是每个调度器的工作。</p>
+<p>虽然 kube-scheduler 的实现看起来很复杂，但是调度器最核心的逻辑是非常简单的。它从 apiserver 获取没有调度的 pod 信息和 node 信息，然后从节点中选择一个作为调度结果，然后向 apiserver 中写入 binding 资源。比如下面就是用 bash 编写的最精简调度器：</p>
+<pre class=" language-go"><code class="language-go">#<span class="token operator">!</span><span class="token operator">/</span>bin<span class="token operator">/</span>bash
+SERVER<span class="token operator">=</span><span class="token string">'localhost:8001'</span>
+while <span class="token boolean">true</span><span class="token punctuation">;</span>
+do
+    <span class="token keyword">for</span> PODNAME in $<span class="token punctuation">(</span>kubectl <span class="token operator">--</span>server $SERVER get pods <span class="token operator">-</span>o json <span class="token operator">|</span> jq <span class="token string">'.items[] | select(.spec.schedulerName == "my-scheduler") | select(.spec.nodeName == null) | .metadata.name'</span> <span class="token operator">|</span> tr <span class="token operator">-</span>d <span class="token string">'"'</span><span class="token punctuation">)</span>
+<span class="token punctuation">;</span>
+    do
+        NODES<span class="token operator">=</span><span class="token punctuation">(</span>$<span class="token punctuation">(</span>kubectl <span class="token operator">--</span>server $SERVER get nodes <span class="token operator">-</span>o json <span class="token operator">|</span> jq <span class="token string">'.items[].metadata.name'</span> <span class="token operator">|</span> tr <span class="token operator">-</span>d <span class="token string">'"'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        NUMNODES<span class="token operator">=</span>$<span class="token punctuation">{</span>#NODES<span class="token punctuation">[</span>@<span class="token punctuation">]</span><span class="token punctuation">}</span>
+        CHOSEN<span class="token operator">=</span>$<span class="token punctuation">{</span>NODES<span class="token punctuation">[</span>$<span class="token punctuation">[</span> $RANDOM <span class="token operator">%</span> $NUMNODES <span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">}</span>
+        curl <span class="token operator">--</span>header <span class="token string">"Content-Type:application/json"</span> <span class="token operator">--</span>request POST <span class="token operator">--</span>data <span class="token string">'{"apiVersion":"v1", "kind": "Binding", "metadata": {"name": "'</span>$PODNAME<span class="token string">'"}, "target": {"apiVersion": "v1", "kind"
+: "Node", "name": "'</span>$CHOSEN<span class="token string">'"}}'</span> http<span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>$SERVER<span class="token operator">/</span>api<span class="token operator">/</span>v1<span class="token operator">/</span>namespaces<span class="token operator">/</span><span class="token keyword">default</span><span class="token operator">/</span>pods<span class="token operator">/</span>$PODNAME<span class="token operator">/</span>binding<span class="token operator">/</span>
+        echo <span class="token string">"Assigned $PODNAME to $CHOSEN"</span>
+    done
+    sleep <span class="token number">1</span>
+done
+</code></pre>
+<p>它通过 <code>kubectl</code> 命令从 apiserver 获取未调度的 pod（<code>spec.schedulerName</code> 是 <code>my-scheduler</code>，并且<code>spec.nodeName</code> 为空），同样地，用 <code>kubectl</code> 从 apiserver 获取 nodes 的信息，然后随机选择一个 node 作为调度结果，并写入到 apiserver 中。</p>
+<p>当然要想编写一个生产级别的调度器，要完善的东西还很多，比如：</p>
+<ul>
+<li>调度过程中需要保证 pod 是最新的，这个例子中每次调度 pod 的时候，它在 apiserver 中的内容可能已经发生了变化</li>
+<li>调度过程需要考虑资源等因素（节点的资源利用率，存储和网络的信息等）</li>
+<li>尽量提高调度的性能（使用并发来提高调度的性能）</li>
+</ul>
+<p>虽然工作量很多，但是对于调度器要求非常高的话，编写自己的调度器也是不错的选择。</p>
+<h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h2><p>调度的过程是这样的：</p>
+<ul>
+<li>客户端通过 <code>kuberctl</code> 或者 apiserver 提交资源创建的请求，不管是 deployment、replicaset、job 还是 pod，最终都会产生要调度的 pod</li>
+<li>调度器从 apiserver 读取还没有调度的 pod 列表，循环遍历地为每个 pod 分配节点</li>
+<li>调度器会保存集群节点的信息。对每一个 pod，调度器先过滤掉不满足 pod 运行条件的节点，这个过程是 <code>Predicate</code></li>
+<li>通过过滤的节点，调度器会根据一定的算法給它们打分，确定它们的优先级顺序，并选择分数最高的节点作为结果</li>
+<li>调度器根据最终选择出来的节点，把结果写入到 apiserver（创建一个 binding 资源）</li>
+</ul>
+<p>相信阅读到这里，你对这几个步骤都已经非常清晰了。kube-scheduler 实现还是很赞的，目前已经达到生产级别的要求。但是我们还是能看到很多可以优化的地方，我能想到的一些点：</p>
+<ul>
+<li>如果过滤的结果只有一个，应该可以直接使用这个节点，而不用再经过一遍 priority 的过程</li>
+<li>目前每次只调度一个 pod，虽然中间调度过程利用并发来提高效率，但是如果能同时调度多个 pod，性能也会有提升。当然，如果要这样做，一定要考虑并发带来的共享数据的处理方法，代码的复杂性也会增加</li>
+<li>调度的时候没有考虑节点实际使用情况，只是考虑了所有 pods 请求的资源情况。大部分情况下，pod 请求的资源并不能完全被用到，如果能保证这部分资源也被充分利用就更好了。但是因为实际的资源利用率是动态的，而且会有峰值，最重要的是无法判断 pod 未来实际的资源使用情况，想做到这一点需要有更优的算法</li>
+<li>没有填写请求资源的 pod 会对集群带来影响。当前的实现中，如果 pod 没有在自己的配置中写上需要多少资源，scheduler 会把它申请的资源当做 0，这样会导致误判，导致集群不稳定。除了用户在创建的 pod 中都写上资源请求数量，目前还没有很好的方法来解决这个问题</li>
+</ul>
+<p>没有调度器是<strong>完美的</strong>，但是相信 kubernetes scheduler 会在未来得到不断优化，变得越来越好。</p>
+<h2 id="5-参考资料"><a href="#5-参考资料" class="headerlink" title="5. 参考资料"></a>5. 参考资料</h2><ul>
+<li><a href="https://github.com/kubernetes/community/blob/master/contributors/devel/scheduler.md" target="_blank" rel="noopener">The Kubernetes Scheduler</a></li>
+<li><a href="https://github.com/kelseyhightower/scheduler" target="_blank" rel="noopener">A toy kubernetes scheduler</a></li>
+<li><a href="https://deis.com/blog/2016/scheduling-your-kubernetes-pods-with-elixir/" target="_blank" rel="noopener">Scheduling your kubernetes pod with elixir</a></li>
+<li><a href="https://www.slideshare.net/kubecon/kubecon-eu-2016-a-practical-guide-to-container-scheduling" target="_blank" rel="noopener">KubeCon EU 2016: A Practical Guide to Container Scheduling</a></li>
+<li><a href="http://www.firmament.io/blog/scheduler-architectures.html" target="_blank" rel="noopener">The evolution of cluster scheduler architectures.</a></li>
+<li><a href="https://coreos.com/blog/improving-kubernetes-scheduler-performance.html" target="_blank" rel="noopener">Improving Kubernetes Scheduler Performance：CoreOS 团队如何对 kubernetes 进行性能分析和调优</a></li>
+<li><a href="https://my.oschina.net/jxcdwangtao/blog/826741" target="_blank" rel="noopener">Kubernetes Scheduler 源码分析 - Walton Wang</a></li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="【翻译】理解 TCP/IP 网络栈" href="/2017/07/27/understand-tcp-ip-network-stack/">
+        ← 【翻译】理解 TCP/IP 网络栈
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="kubelet 源码分析： 事件处理" href="/2017/06/22/kubelet-source-code-analysis-part4-event/">
+        kubelet 源码分析： 事件处理 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-kubernetes-Scheduler-简介"><span class="toc-text">1. kubernetes Scheduler 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-代码分析"><span class="toc-text">2. 代码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-启动流程"><span class="toc-text">2.1 启动流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-Config-的创建"><span class="toc-text">2.2 Config 的创建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-调度的逻辑"><span class="toc-text">2.3 调度的逻辑</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-1-下一个需要调度的-pod"><span class="toc-text">2.3.1 下一个需要调度的 pod</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-2-调度单个-pod"><span class="toc-text">2.3.2 调度单个 pod</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-3-过滤（Predicate）：移除不合适的节点"><span class="toc-text">2.3.3 过滤（Predicate）：移除不合适的节点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-4-优先级（Priority）：为合适的节点排序"><span class="toc-text">2.3.4 优先级（Priority）：为合适的节点排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-5-选择节点作为调度结果"><span class="toc-text">2.3.5 选择节点作为调度结果</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-自定义调度器"><span class="toc-text">3. 自定义调度器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-修改-policy-文件"><span class="toc-text">3.1 修改 policy 文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-编写自己的-priority-和-predicate-函数"><span class="toc-text">3.2 编写自己的 priority 和 predicate 函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-编写自己的调度器"><span class="toc-text">3.3 编写自己的调度器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-总结"><span class="toc-text">4. 总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-参考资料"><span class="toc-text">5. 参考资料</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">kubelet scheduler 源码分析：调度器的工作原理</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>

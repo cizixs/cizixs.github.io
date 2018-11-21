@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html CN>
+
+
+
+
+
+
+
+<head>
+	
+	
+	<link rel="stylesheet" href="/css/allinone.min.css"> 
+
+	
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>ARP 协议解析 | Cizixs Write Here</title>
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta name="generator" content="hexo">
+	<meta name="author" content="Cizixs Wu">
+	<meta name="description" content="">
+
+	
+	<meta name="keywords" content="">
+	
+
+	
+	<link rel="shortcut icon" href="http://cizixs.u.qiniudn.com/favicon-256.png">
+	
+
+	
+	<meta name="theme-color" content="#3c484e">
+	<meta name="msapplication-TileColor" content="#3c484e">
+	
+
+	
+
+	
+
+	<meta property="og:site_name" content="Cizixs Write Here">
+	<meta property="og:type" content="article">
+	<meta property="og:title" content="ARP 协议解析 | Cizixs Write Here">
+	<meta property="og:description" content="">
+	<meta property="og:url" content="http://cizixs.com/2017/07/31/arp-protocol/">
+
+	
+	<meta property="article:published_time" content="2017-07-31T00:07:00+08:00"/> 
+	<meta property="article:author" content="Cizixs Wu">
+	<meta property="article:published_first" content="Cizixs Write Here, /2017/07/31/arp-protocol/" />
+	
+
+	
+	
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	
+
+	
+	<script src="https://cdn.staticfile.org/highlight.js/9.10.0/highlight.min.js"></script>
+	
+
+	
+	
+<link rel="stylesheet" href="/css/prism-base16-ateliersulphurpool.light.css" type="text/css"></head>
+<body class="post-template">
+    <div class="site-wrapper">
+        
+
+
+
+
+<header class="site-header outer" style="z-index: 999">
+    <div class="inner">
+        
+<nav class="site-nav"> 
+    <div class="site-nav-left">
+        <ul class="nav">
+            <li>
+                
+                <a href="/" title="Home">Home</a>
+                
+            </li>
+            
+            
+            <li>
+                <a href="/about" title="About">About</a>
+            </li>
+            
+            <li>
+                <a href="/archives" title="Archives">Archives</a>
+            </li>
+            
+            
+        </ul> 
+    </div>
+    <div class="site-nav-right">
+        
+<div class="social-links" >
+    
+    <a class="social-link" title="weibo" href="https://weibo.com/1921727853" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1141 1024" xmlns="http://www.w3.org/2000/svg"><path d="M916.48 518.144q27.648 21.504 38.912 51.712t9.216 62.976-14.336 65.536-31.744 59.392q-34.816 48.128-78.848 81.92t-91.136 56.32-94.72 35.328-89.6 18.944-75.264 7.68-51.712 1.536-49.152-2.56-68.096-10.24-78.336-21.504-79.872-36.352-74.24-55.296-59.904-78.848q-16.384-29.696-22.016-63.488t-5.632-86.016q0-22.528 7.68-51.2t27.136-63.488 53.248-75.776 86.016-90.112q51.2-48.128 105.984-85.504t117.248-57.856q28.672-10.24 63.488-11.264t57.344 11.264q10.24 11.264 19.456 23.04t12.288 29.184q3.072 14.336 0.512 27.648t-5.632 26.624-5.12 25.6 2.048 22.528q17.408 2.048 33.792-1.536t31.744-9.216 31.232-11.776 33.28-9.216q27.648-5.12 54.784-4.608t49.152 7.68 36.352 22.016 17.408 38.4q2.048 14.336-2.048 26.624t-8.704 23.04-7.168 22.016 1.536 23.552q3.072 7.168 14.848 13.312t27.136 12.288 32.256 13.312 29.184 16.384zM658.432 836.608q26.624-16.384 53.76-45.056t44.032-64 18.944-75.776-20.48-81.408q-19.456-33.792-47.616-57.344t-62.976-37.376-74.24-19.968-80.384-6.144q-78.848 0-139.776 16.384t-105.472 43.008-72.192 60.416-38.912 68.608q-11.264 33.792-6.656 67.072t20.992 62.976 42.496 53.248 57.856 37.888q58.368 25.6 119.296 32.256t116.224 0.512 100.864-21.504 74.24-33.792zM524.288 513.024q20.48 8.192 38.912 18.432t32.768 27.648q10.24 12.288 17.92 30.72t10.752 39.424 1.536 42.496-9.728 38.912q-8.192 18.432-19.968 37.376t-28.672 35.328-40.448 29.184-57.344 18.944q-61.44 11.264-117.76-11.264t-88.064-74.752q-12.288-39.936-13.312-70.656t16.384-66.56q13.312-27.648 40.448-51.712t62.464-38.912 75.264-17.408 78.848 12.8zM361.472 764.928q37.888 3.072 57.856-18.432t21.504-48.128-15.36-47.616-52.736-16.896q-27.648 3.072-43.008 23.552t-17.408 43.52 9.728 42.496 39.424 21.504zM780.288 6.144q74.752 0 139.776 19.968t113.664 57.856 76.288 92.16 27.648 122.88q0 33.792-16.384 50.688t-35.328 17.408-35.328-14.336-16.384-45.568q0-40.96-22.528-77.824t-59.392-64.512-84.48-43.52-96.768-15.872q-31.744 0-47.104-15.36t-14.336-34.304 18.944-34.304 51.712-15.36zM780.288 169.984q95.232 0 144.384 48.64t49.152 146.944q0 30.72-10.24 43.52t-22.528 11.264-22.528-14.848-10.24-35.84q0-60.416-34.816-96.256t-93.184-35.84q-19.456 0-28.672-10.752t-9.216-23.04 9.728-23.04 28.16-10.752z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="github" href="https://github.com/cizixs" target="_blank" rel="noopener">
+        <svg viewBox="0 0 1049 1024" xmlns="http://www.w3.org/2000/svg"><path d="M524.979332 0C234.676191 0 0 234.676191 0 524.979332c0 232.068678 150.366597 428.501342 358.967656 498.035028 26.075132 5.215026 35.636014-11.299224 35.636014-25.205961 0-12.168395-0.869171-53.888607-0.869171-97.347161-146.020741 31.290159-176.441729-62.580318-176.441729-62.580318-23.467619-60.841976-58.234462-76.487055-58.234463-76.487055-47.804409-32.15933 3.476684-32.15933 3.476685-32.15933 53.019436 3.476684 80.83291 53.888607 80.83291 53.888607 46.935238 79.963739 122.553122 57.365291 152.97411 43.458554 4.345855-33.897672 18.252593-57.365291 33.028501-70.402857-116.468925-12.168395-239.022047-57.365291-239.022047-259.012982 0-57.365291 20.860106-104.300529 53.888607-140.805715-5.215026-13.037566-23.467619-66.926173 5.215027-139.067372 0 0 44.327725-13.906737 144.282399 53.888607 41.720212-11.299224 86.917108-17.383422 131.244833-17.383422s89.524621 6.084198 131.244833 17.383422C756.178839 203.386032 800.506564 217.29277 800.506564 217.29277c28.682646 72.1412 10.430053 126.029806 5.215026 139.067372 33.897672 36.505185 53.888607 83.440424 53.888607 140.805715 0 201.64769-122.553122 245.975415-239.891218 259.012982 19.121764 16.514251 35.636014 47.804409 35.636015 97.347161 0 70.402857-0.869171 126.898978-0.869172 144.282399 0 13.906737 9.560882 30.420988 35.636015 25.205961 208.601059-69.533686 358.967656-265.96635 358.967655-498.035028C1049.958663 234.676191 814.413301 0 524.979332 0z" /></svg>
+    </a>
+    
+
+    
+    <a class="social-link" title="stackoverflow" href="https://stackoverflow.com/users/1925083/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15 21h-10v-2h10v2zm6-11.665l-1.621-9.335-1.993.346 1.62 9.335 1.994-.346zm-5.964 6.937l-9.746-.975-.186 2.016 9.755.879.177-1.92zm.538-2.587l-9.276-2.608-.526 1.954 9.306 2.5.496-1.846zm1.204-2.413l-8.297-4.864-1.029 1.743 8.298 4.865 1.028-1.744zm1.866-1.467l-5.339-7.829-1.672 1.14 5.339 7.829 1.672-1.14zm-2.644 4.195v8h-12v-8h-2v10h16v-10h-2z"/></svg>
+    </a>
+    
+
+    
+
+    
+    <a class="social-link" title="twitter" href="https://twitter.com/cizixs" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+
+    </a>
+    
+
+    
+    <a class="social-link" title="instagram" href="https://www.instagram.com/cizixs/" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    
+    
+    
+</div>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+        <header class="post-full-header">
+            <section class="post-full-meta">
+                <time  class="post-full-meta-date" datetime="2017-07-30T16:00:00.000Z" itemprop="datePublished">
+                    2017-07-31
+                </time>
+                
+                <span class="date-divider">/</span>
+                
+                <a href="/categories/blog/">blog</a>&nbsp;&nbsp;
+                
+                
+            </section>
+            <h1 class="post-full-title">ARP 协议解析</h1>
+        </header>
+        <article class="post-full no-image">
+            
+            <section class="post-full-content">
+                <div id="lightgallery" class="markdown-body">
+                    <h2 id="ARP-协议简介"><a href="#ARP-协议简介" class="headerlink" title="ARP 协议简介"></a>ARP 协议简介</h2><p>ARP 的全称是  Address Resolution Protocol，直译过来是 <strong>地址解析协议</strong>。对应的 RFC 文档是 <a href="https://tools.ietf.org/html/rfc826" target="_blank" rel="noopener">RFC826</a>。它的作用是把 IP 地址转换为 MAC 地址。为什么需要做这件事呢？</p>
+<p>这是因为 TCP/IP 网络协议栈是分层的，每层负责不同的功能。IP 层（layer 3）负责路由寻路，换句话说，如果目的机器和客户端不在同一个网络，IP 层会穿过错综复杂的中间网络（互联网）找到目的机器所在的网络。</p>
+<p>当报文在某一个网络中传播时（可能源机器和目的机器本来就在同一个网络，也可能报文在路由过程中执行下一跳步骤），IP 层的功能就没有用了，这时候起作用的是 2 层网络（链路层），大多数情况下就是以太网。以太网负责把多个机器连到一起，组成一个最小单位的局域网。在以太网中，不同机器的标识是 MAC 地址，MAC 地址是机器在生产的时候厂商为机器设定的。可以使用 <code>ip link</code> 命令查看网卡的 MAC 地址，比如我的机器上这个命令的输出是：</p>
+<pre><code>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: enp0s25: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
+    link/ether 50:7b:9d:ca:08:f0 brd ff:ff:ff:ff:ff:ff
+</code></pre><p>我机器的网卡对应的 MAC 地址就是 <code>50:7b:9d:ca:08:f0</code>，这是一个 6 字节的数字，表示的时候每个字节用 <code>:</code> 分隔开，长度是 48 比特。</p>
+<p>有了 MAC 地址，同一个以太网络上的两台机器才能够通信。机器 A 需要知道机器 B 的 MAC 地址，才能发送以太网帧；交换机收到报文之后，根据目的 MAC 地址决定应该从哪个端口发送出去；目的机器读取报文的 MAC 地址才能知道报文是不是要发给自己的。</p>
+<p>最开始的时候，机器 A 只知道目的地址的 IP（用户用某种方式输入 IP 地址，或者通过 DNS 解析出来 IP 地址），不知道对方的 MAC 地址。这时候，机器 A 会发送 ARP 报文，去查询机器 B 的 MAC 地址，拿到 MAC 地址，就能完成通信的过程。</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fi242uryyqj30g90e374i.jpg" alt=""></p>
+<p>ARP 协议的内容，以及怎么拿到 MAC 地址就是这篇文章接下来要讲解的。</p>
+<h2 id="Linux-ARP-缓存"><a href="#Linux-ARP-缓存" class="headerlink" title="Linux ARP 缓存"></a>Linux ARP 缓存</h2><p>如果每次主机通信都要发送 ARP 协议去查询 MAC 地址无疑是低效的，为了提供性能最常见的做法是在系统层面保存 ARP 的结果。因为 IP 地址和 MAC 地址并不会经常变化，而且主机间第一次通信之后有很大的可能性会在短时间内再次通信， 所以 ARP 缓存能够大大提高网络效率。</p>
+<p>在 Linux 系统中，可以通过 <code>ip neighbour</code>（可以简写为 <code>ip neigh</code>） 命令管理 ARP 缓存。为了说明 Linux 系统中 ARP 的工作原理，我会在自己的机器上进行试验。试验环境如下图所示：</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fi28tjdwdmj30qh0fjmyk.jpg" alt=""></p>
+<p>我的工作机器是 A，IP 地址是 <code>172.16.13.16</code>，我会 <code>ping</code> 另外一台和 A 在同一个以太网的机器 B（IP 地址是 <code>172.16.13.18</code>），并查看 A 上 ARP 缓存的情况。</p>
+<p>两台机器在同一个子网中（连到同一台交换机上），这个可以用路由表确认：</p>
+<pre><code>➜  ~ ip route
+172.16.13.0/24 dev enp0s25  proto kernel  scope link  src 172.16.13.16  metric 100 
+</code></pre><p>在执行 <code>ping</code> 命令之前，机器 A 上并没有对方的 ARP 缓存，使用 <code>ip neigh</code> 可以列出（实际上我的机器上是有 ARP 规则的，但是这些规则都和 <code>172.16.13.18</code> 无关，因此没有打印在输出中）：</p>
+<pre><code>➜  ~ ip neigh
+</code></pre><p>执行 <code>ping</code> 命令，呼叫对方主机。<code>-c 3</code> 表示发送多少次请求，可以看到发送 3 次请求并接收到应答后 <code>ping</code> 程序就直接退出了（如果不添加 <code>-c 3</code>，ping 会一直发送请求，除非用户使用 <code>ctl + C</code> 强制退出应用）。</p>
+<pre><code>➜  ~ ping -c 3 172.16.13.18
+PING 172.16.13.18 (172.16.13.18) 56(84) bytes of data.
+64 bytes from 172.16.13.18: icmp_seq=1 ttl=64 time=0.282 ms
+64 bytes from 172.16.13.18: icmp_seq=2 ttl=64 time=0.238 ms
+64 bytes from 172.16.13.18: icmp_seq=3 ttl=64 time=0.235 ms
+
+--- 172.16.13.18 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2028ms
+</code></pre><p>此时再次查看 ARP 缓存，可以看到 <code>172.16.13.18</code> 对应的表项：</p>
+<pre><code>➜  ~ sudo ip neigh
+172.16.13.18 dev enp0s25 lladdr 50:7b:9d:e0:8b:a8 REACHABLE
+</code></pre><p>这个表项表明 <code>172.16.13.18</code> 对应的 MAC 地址是 <code>50:7b:9d:e0:8b:a8</code>，<code>dev enp0s25</code> 是说发送给 <code>172.16.13.18</code> 的报文需要通过这个 interface，<code>REACHABLE</code> 表明目标地址是可达的，状态正常，其他状态还包括：</p>
+<ul>
+<li><code>permanent</code>：这个 ARP 缓存项没有过期时间，会一直生效，直到管理员把它删除</li>
+<li><code>noarp</code>：这个 ARP 表项是有效的，不需要验证它的真实性，但是它有过期时间，过期之后会被自动删除</li>
+<li><code>stale</code>：ARP 表项虽然有效，但是可疑，需要发送验证 ARP 报文</li>
+<li><code>failed</code>：该表项不可用，ARP 请求报文没有应答</li>
+</ul>
+<p>ARP 缓存状态的详细解释可以参考<a href="https://people.cs.clemson.edu/~westall/853/notes/arpstate.pdf" target="_blank" rel="noopener">这个文档</a>。</p>
+<h2 id="ARP-协议解析"><a href="#ARP-协议解析" class="headerlink" title="ARP 协议解析"></a>ARP 协议解析</h2><p>ARP 报文格式如下图所示，对于 IP 地址转换为 MAC 地址来说，ARP 报文长度为 28 字节。</p>
+<p><img src="http://www.tcpipguide.com/free/diagrams/arpformat.png" alt=""></p>
+<p>各个字段的含义为：</p>
+<ul>
+<li><code>Hardware Type</code>：传输 ARP 报文的物理网络类型，最常见的是以太网类型，对应的值是 1。这个字段的长度是 2 字节</li>
+<li><code>Protocol Type</code>：网络报文类型，字段长度是 2 字节。最常用的是 IPv4 报文，对应的值是 2048（十六进制为 0x0800，这和以太网帧中帧类型字段使用的 IP 报文类型相同，这是有意设计的）</li>
+<li><code>Hardware Address Length</code>：物理地址长度，字段长度是 1 比特。ARP 协议报文中物理地址（MAC 地址）有多少比特，对于大部分网络来说，这个值是 6（因为 MAC 地址是 6 个字节，48 比特长）</li>
+<li><code>Protocol Address Length</code>：网络地址长度，字段长度是 1 比特。表示 ARP 协议报文中网络地址（IP 地址）有多少比特，对于大部分网络来说，这个值是 4（因为 IPv4 地址是 4 个字节，32 比特）</li>
+<li><code>Opcode</code>：ARP 报文的类型，接下来我们会看到几种不同的 ARP 报文。这个字段占用 2 个比特，值为 1 代表 ARP 请求报文，值为 2 代表 ARP 应答报文，3 代表 RARP 请求报文，4 代表 RARP 应答报文</li>
+<li><code>Sender Hardware Address</code>：当前 ARP 报文的发送方的物理地址（MAC 地址）</li>
+<li><code>Send Protocol Address</code>：当前 ARP 报文发送发的网络地址（IPv4 地址）</li>
+<li><code>Target Hardware Address</code>：当前 ARP 报文接收方的物理地址（MAC 地址），如果是 ARP 情况请，这个字段为空（因为发送方就是不知道对方的 MAC 地址从会使用 ARP 来解析）</li>
+<li><code>Target Protocol Address</code>：当前 ARP 报文接收方的网络地址（IPv4 地址）</li>
+</ul>
+<p>需要注意的是，虽然 ARP 协议目前最常用的场景是把 IP 地址转换为 MAC 地址，但是它设计之初却是为了更一般的场景。它的硬件类型、协议类型就是为了指明要转换地址的双方；而硬件地址长度和协议地址长度指定双方的地址长度（每种协议的地址长度可以会发生变化），其对应的就是头部最后面四个地址长度。</p>
+<p>也就是说，ARP 本身可以转换其他硬件地址和网络地址，而且允许它们的地址长度是可变的。这导致 ARP 协议现在看来是有点冗余的，毕竟 IPv4 和 MAC 地址长度都是固定的，没有必要在协议中指定。</p>
+<p>ARP 发送出去会被封装在以太网帧里，ARP 报文中有发送端的 MAC 地址，而以太网帧的报文头部也包含了发送端的 MAC 地址，也就是说报文中有完全重复的信息。</p>
+<h2 id="ARP-工作过程"><a href="#ARP-工作过程" class="headerlink" title="ARP 工作过程"></a>ARP 工作过程</h2><p><strong>第一步</strong>：机器 A 想和同一个以太网络的机器 B 通信，A 会现在自己的 ARP 表中查找 B 的 MAC 地址，如果能找到就直接发送以太网帧；如果没有找到，就跳到第二步<br><strong>第二步</strong>：机器 A 发送 ARP 请求报文去查询机器 B 的 MAC 地址，这是个以太网广播报文，因此交换机会广播到网络中所有的机器<br><strong>第三步</strong>：各个主机接收到 ARP 请求报文，如果发现 ARP 报文中询问的 IP 地址和自己不同，则直接丢弃；机器 B 发现 ARP 报文中询问的 IP 地址是自己的主机地址，则生成一个 ARP 应答报文，把自己的 MAC 地址填到报文中，发送给机器 A，这个报文是单播报文，不会发送给其他主机；同时机器 B 也会把机器 A 的 ARP 记录缓存起来<br><strong>第四步</strong>：机器 A 接收到 B 发来的 ARP 应答，读取报文中 B 的 MAC 地址，使用这个 MAC 地址和机器 B 进行后续的通信，同时把它缓存到系统中</p>
+<p>从机器 A <code>ping</code> 机器 B 时，用 <code>wireshark</code> 抓包，过滤出其中的 ARP，显示的结果如图：<br><img src="https://ws4.sinaimg.cn/large/006tNc79gy1fi23aa7xbbj30xa03nmxo.jpg" alt="arp 协议流程"></p>
+<p>可以看到一共有两对 ARP 请求应答的过程，我们来逐个分析。</p>
+<h3 id="ARP-请求报文"><a href="#ARP-请求报文" class="headerlink" title="ARP 请求报文"></a>ARP 请求报文</h3><p>首先是机器 A 发送的 ARP 请求，详细的报文内容如下：<br><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fi23ccvypmj30ws0e6wgn.jpg" alt="ARP 请求报文"></p>
+<p>报文列表的 <code>Info</code> 字段，对应的内容是：</p>
+<blockquote>
+<p>Who has 172.16.13.18? Tell 172.16.13.16</p>
+</blockquote>
+<p>这是 wireshark 帮我们解析 ARP 报文，并用英语表达出来。这句话生动地概括了 ARP 请求的意思：<strong>谁知道 172.16.13.18 的物理地址？告诉 172.16.13.16。</strong></p>
+<p>这个以太网帧的源地址是 <code>50:7b:9d:ca:08:f0</code>，也就是机器 A 的 MAC 地址；目的地址是 <code>ff:ff:ff:ff:ff:ff</code>，这是一个以太网广播地址，<strong>交换机</strong>会把报文发送给网络中所有的主机。</p>
+<p>以太网帧类型（Type）字段的值是 <code>0x0806</code>，表示该数据帧是个 ARP 请求或者应答。</p>
+<p>帧的长度是 42，其中包括 14 字节以太网帧头部，以及 28 字节 ARP 请求数据。</p>
+<p>以太网帧内部是 ARP 请求的具体内容，<code>Opcode</code> 为 1，表示这是 ARP 请求，发送端（也就是机器 A）的 IP 地址是 <code>172.16.13.16</code>，目的端（也就是机器 B）的 IP 地址是 <code>172.16.13.18</code>。发送端的 MAC 地址是填写的，而目的端 MAC 地址为空（全部为 0）。</p>
+<h3 id="ARP-应答报文"><a href="#ARP-应答报文" class="headerlink" title="ARP 应答报文"></a>ARP 应答报文</h3><p>第二个报文是 ARP 应答，详细报文内容如下图：<br><img src="https://ws1.sinaimg.cn/large/006tNc79gy1fi23cw2798j30xl0en76n.jpg" alt="ARP 应答报文"></p>
+<p>这个报文的 <code>info</code> 字段的信息是:</p>
+<blockquote>
+<p>172.16.13.18 is at 50:7b:9d:e0:8b:a8</p>
+</blockquote>
+<p>这也概括了 ARP 应答的意思：<code>172.16.13.18</code> 的 MAC 地址是 <code>50:7b:9d:e0:8b:a8</code>。</p>
+<p>和上个报文不同，这是一个单播报文，直接发送到机器 A，帧的目的 MAC 地址是 <code>50:7b:9d:ca:08:f0</code>。因为机器 B 能够从接收到的 ARP 请求报文中获取机器 A 的 IP 地址和 MAC 地址，可以直接发送单播。</p>
+<p><code>Opcode</code> 字段的值为 2，表示这是个 ARP 应答报文，而且 ARP 报文中四个地址都填上了对应的值（因为此时机器已经知道通信双方的所有地址）。</p>
+<p>另外一点需要注意的是，这个以太网帧的长度是 60 字节，因为它的以太网帧后面加了 18 字节的 padding（填充字符）。这是以太网帧的最小长度值，那为什么 ARP 请求报文的长度可以低于 60 呢？这和 wireshark 抓包的原理有关，wireshark 捕获的包并不是真正发送到线路上的帧，而是发送给网卡驱动的数据。因此，如果从机器 B 上抓包，会发现机器 B 接收到的这个 ARP 请求长度也是 60 字节。</p>
+<p>通过两个报文的时间可以发现，ARP 地址解析的时间在 0.2ms 左右，说明这个网络并不是非常繁忙，速度还是挺快的。</p>
+<h3 id="ARP-cache-validation-报文"><a href="#ARP-cache-validation-报文" class="headerlink" title="ARP cache validation 报文"></a>ARP cache validation 报文</h3><p>后两个 ARP 报文也是一对：请求和应答，它们是从机器 B 发来查询机器 A MAC 地址的。</p>
+<p>但是比较奇怪的是，ARP 请求报文以太网帧的目的地址居然不是广播，而是机器 A 的 MAC 地址？这和我们上面介绍的矛盾啊，为什么已经知道对方的 MAC 地址还要发送 ARP 报文去查询呢？</p>
+<p>注意到，第三个报文距离上一个的时间间隔是 5s 左右，真正的 ICMP 报文（ping 应用传输的报文）已经在这个时间间隙中发送，也就是说机器 B 已经通过 A 发送的 ARP 报文把 ARP 保存到自己的缓存中了。第三个奇怪的 ARP 报文是为了<strong>验证缓存的有效性</strong>！</p>
+<p>ARP 缓存都会有有效期，在 Linux 实现中，它会验证 ARP 缓存的有效性，并更新缓存记录的状态。因为已经知道对方的 ARP 记录，所以就没有必要再通过广播机制造成额外的网络资源浪费，这个 ARP 请求可以理解为： <strong>请问 172.16.13.16，你的 MAC 地址还是 50:7b:9d:ca:08:f0吗？</strong>。如果收到应答，说明该缓存记录有效；如果一直没有收到应答，则需要把缓存记录设置为失效或者删除，并在需要通信的时候使用正常的 ARP 请求获取对方的 MAC 地址。</p>
+<p>我们可以在 <code>RFC1122</code> 的 <code>2.3.2.1</code> 小节（ARP Cache Validation）找到对应的文档说明：</p>
+<blockquote>
+<p>IMPLEMENTATION: Four mechanisms have been used, sometimes in<br>combination, to flush out-of-date cache entries.</p>
+</blockquote>
+<blockquote>
+<p>……</p>
+</blockquote>
+<blockquote>
+<p>(2) Unicast Poll – Actively poll the remote host by periodically sending a point-to-point ARP Request to it, and delete the entry if no ARP Reply is received from N successive polls. Again, the<br>timeout should be on the order of a minute, and typically N is 2.</p>
+</blockquote>
+<p><strong>NOTE：</strong>不同系统实现 ARP 缓存的机制不同，管理缓存有效期的方法也会有差异，并不能假设所有的系统都会使用上面的方法来验证缓存的有效性。</p>
+<h3 id="如果目的-IP-对应的机器不存在？"><a href="#如果目的-IP-对应的机器不存在？" class="headerlink" title="如果目的 IP 对应的机器不存在？"></a>如果目的 IP 对应的机器不存在？</h3><p>上面试验了正常通信情况下的 ARP 报文过程，如果目标地址不存在，ARP 协议又是怎么工作的呢？</p>
+<p>我在自己的机器中做了实验，<code>ping</code> 一台不存在的主机，可以看到 <code>ping</code> 程序每隔一秒发送一个 <code>icmp</code> 报文，对应的结果是 <code>Destination Host Unreachable</code>:</p>
+<pre><code>➜  ~ ping 172.16.13.20
+PING 172.16.13.20 (172.16.13.20) 56(84) bytes of data.
+From 172.16.13.16 icmp_seq=1 Destination Host Unreachable
+From 172.16.13.16 icmp_seq=2 Destination Host Unreachable
+From 172.16.13.16 icmp_seq=3 Destination Host Unreachable
+From 172.16.13.16 icmp_seq=4 Destination Host Unreachable
+From 172.16.13.16 icmp_seq=5 Destination Host Unreachable
+From 172.16.13.16 icmp_seq=6 Destination Host Unreachable
+......
+</code></pre><p>此时，使用 wireshark 抓包，发现网络上的 ARP 报文如下所示：</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fi23dacq3qj30xi09htbb.jpg" alt="向不存在的主机发送 ping 请求"></p>
+<p>和 ICMP 报文类似，ARP 请求也会每秒都会发送，但是一直接收不到应答。</p>
+<h2 id="Gratuitous-ARP"><a href="#Gratuitous-ARP" class="headerlink" title="Gratuitous ARP"></a>Gratuitous ARP</h2><p>除了标准的 ARP 之外，还有一种特殊的 ARP 报文，称为 Gratuitous ARP（免费 ARP）。这个报文也是广播报文，它的特殊性在于，它的报文中发送端 IP 地址和接收端 IP 地址都被设置为发送该报文的主机 IP。为什么要有这样一个特殊的报文呢？因为它有用，比如：</p>
+<ul>
+<li>检测 IP 冲突。如果免费 ARP 请求接收到应答，说明当前网络上有另外一个和发送机器有相同 IP 的主机</li>
+<li>可以用来更新网络中当前机器的 ARP 缓存。如果机器重新配置了 IP 地址，那么免费 ARP 报文能够把新的 IP-MAC 匹配关系广播到网络中，接收到报文的机器更新自己的 ARP 缓存记录，这样就不会有因为 ARP 缓存失效导致的网络问题</li>
+</ul>
+<p>如果机器 A 重新配置了 IP 地址，那么 <ip-mac> 的对应关系就发生了变化，网络中保存的旧 ARP 表项都失效，无法继续使用，会导致 ping 错误。Linux 系统中可以使用 <code>arping</code> 命令行来发送 Gratuitous ARP，让网络中所有主机更新当前机器的 ARP 记录：</ip-mac></p>
+<pre><code>➜  ~  arping -A -I eth0 172.16.42.161
+</code></pre><p>这个命令就是把机器上 <code>eth0</code> 绑定的 MAC 地址和 <code>172.16.42.161</code> 作为 ARP 记录发送出去。</p>
+<h2 id="ARP-的缺陷"><a href="#ARP-的缺陷" class="headerlink" title="ARP 的缺陷"></a>ARP 的缺陷</h2><p>ARP 协议很简单，通过缓存机制和 Gratuitous ARP 能够提供便利和高效的地址解析功能。尽管如此，和所有的网络协议一样，它并不是完美的，根据上面的解析，我们知道能发现它的两个不足之处：</p>
+<ol>
+<li>ARP 报文没有任何认证，假设所有的机器都可靠而且诚信，所以 ARP 报文（尤其是应答）可以伪造。（窃听报文，或者报文转发）-&gt; ARP spoofing</li>
+<li>ARP 报文没有状态，机器可以在没有收到请求的时候直接发送应答。虽然特性能够有效地来更新 ARP 记录，也可能被恶意利用</li>
+</ol>
+<p>ARP 报文另外一个让人迷惑的地方在于它在网络协议栈的位置：它既不属于二层（数据链路层），因为它不能把用户数据发送到目的机器，而且它其实是包在以太网帧里面；但它也不是三层（网络层），因为它没有在网络中寻路的功能。<strong>它是介于二层和三层之间，更像是润滑剂的功能，帮助二层和三层正常工作。</strong></p>
+<p>这是网络协议栈非常重要的一个特性，<strong>网络协议是非常实用性的</strong>。每个协议的产生为为了解决某个现实的问题，因为历史局限和现实设计问题，它可能并不完美，但是不妨碍它为我们提供服务。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://www.tummy.com/articles/networking-basics-how-arp-works/" target="_blank" rel="noopener">Networking Basics: How ARP Works</a></li>
+<li><a href="http://www.omnisecu.com/tcpip/address-resolution-protocol-arp.php" target="_blank" rel="noopener">Address Resolution Protocol Tutorial, How ARP work, ARP Message Format</a></li>
+<li><a href="http://www.tcpipguide.com/free/t_TCPIPAddressResolutionProtocolARP.htm" target="_blank" rel="noopener">The TCP/IP Guide: Address Resolution Protocol (ARP)</a></li>
+<li><a href="https://wiki.wireshark.org/AddressResolutionProtocol" target="_blank" rel="noopener">wireshark wiki: Address Resolution Protocol (ARP)</a></li>
+<li><a href="https://wiki.wireshark.org/Gratuitous_ARP" target="_blank" rel="noopener">wireshark wiki: Gratuitous ARP</a></li>
+<li><a href="https://serverfault.com/questions/409865/why-arp-request-is-unicast" target="_blank" rel="noopener">ServerFault question: Why ARP request is unicast?</a></li>
+<li><a href="http://linux-ip.net/html/ether-arp.html" target="_blank" rel="noopener">Guide to IP Layer Network Administration with Linux: Address Resolution Protocol (ARP)</a></li>
+</ul>
+
+                </div>
+            </section>
+        </article>
+    </div>
+    
+<nav class="pagination">
+    
+    
+    <a class="prev-post" title="使用 docker 对容器资源进行限制" href="/2017/08/04/docker-resources-limit/">
+        ← 使用 docker 对容器资源进行限制
+    </a>
+    
+    <span class="prev-next-post">•</span>
+    
+    <a class="next-post" title="【翻译】理解 TCP/IP 网络栈" href="/2017/07/27/understand-tcp-ip-network-stack/">
+        【翻译】理解 TCP/IP 网络栈 →
+    </a>
+    
+    
+</nav>
+    
+</main>
+
+<div class="t-g-control">
+    <div class="gotop">
+        <svg class="icon" width="32px" height="32px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M793.024 710.272a32 32 0 1 0 45.952-44.544l-310.304-320a32 32 0 0 0-46.4 0.48l-297.696 320a32 32 0 0 0 46.848 43.584l274.752-295.328 286.848 295.808z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="toc-control">
+        <svg class="icon toc-icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M779.776 480h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M779.776 672h-387.2a32 32 0 0 0 0 64h387.2a32 32 0 0 0 0-64M256 288a32 32 0 1 0 0 64 32 32 0 0 0 0-64M392.576 352h387.2a32 32 0 0 0 0-64h-387.2a32 32 0 0 0 0 64M256 480a32 32 0 1 0 0 64 32 32 0 0 0 0-64M256 672a32 32 0 1 0 0 64 32 32 0 0 0 0-64" fill="#8a8a8a" /></svg>
+        <svg class="icon toc-close" style="display: none;" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z" fill="#8a8a8a" /><path d="M557.05545 513.376159l138.367639-136.864185c12.576374-12.416396 12.672705-32.671738 0.25631-45.248112s-32.704421-12.672705-45.248112-0.25631l-138.560301 137.024163-136.447897-136.864185c-12.512727-12.512727-32.735385-12.576374-45.248112-0.063647-12.512727 12.480043-12.54369 32.735385-0.063647 45.248112l136.255235 136.671523-137.376804 135.904314c-12.576374 12.447359-12.672705 32.671738-0.25631 45.248112 6.271845 6.335493 14.496116 9.504099 22.751351 9.504099 8.12794 0 16.25588-3.103239 22.496761-9.247789l137.567746-136.064292 138.687596 139.136568c6.240882 6.271845 14.432469 9.407768 22.65674 9.407768 8.191587 0 16.352211-3.135923 22.591372-9.34412 12.512727-12.480043 12.54369-32.704421 0.063647-45.248112L557.05545 513.376159z" fill="#8a8a8a" /></svg>
+    </div>
+    <div class="gobottom">
+        <svg class="icon" width="32px" height="32.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M231.424 346.208a32 32 0 0 0-46.848 43.584l297.696 320a32 32 0 0 0 46.4 0.48l310.304-320a32 32 0 1 0-45.952-44.544l-286.848 295.808-274.752-295.36z" fill="#8a8a8a" /></svg>
+    </div>
+</div>
+<div class="toc-main" style="right: -100%">
+    <div class="post-toc">
+        <span>TOC</span>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ARP-协议简介"><span class="toc-text">ARP 协议简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux-ARP-缓存"><span class="toc-text">Linux ARP 缓存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ARP-协议解析"><span class="toc-text">ARP 协议解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ARP-工作过程"><span class="toc-text">ARP 工作过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ARP-请求报文"><span class="toc-text">ARP 请求报文</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ARP-应答报文"><span class="toc-text">ARP 应答报文</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ARP-cache-validation-报文"><span class="toc-text">ARP cache validation 报文</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如果目的-IP-对应的机器不存在？"><span class="toc-text">如果目的 IP 对应的机器不存在？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gratuitous-ARP"><span class="toc-text">Gratuitous ARP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ARP-的缺陷"><span class="toc-text">ARP 的缺陷</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+    </div>
+</div>
+
+
+
+        
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+            
+            
+
+<article class="read-next-card"  style="background-image: url(https://i.loli.net/2018/10/01/5bb1caefb8ab2.jpg)"  >
+  <header class="read-next-card-header">
+    <small class="read-next-card-header-sitetitle">&mdash; Cizixs Write Here &mdash;</small>
+    <h3 class="read-next-card-header-title">Recent Posts</h3>
+  </header>
+  <div class="read-next-divider">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/>
+    </svg>
+  </div>
+  <div class="read-next-card-content">
+    <ul>
+      
+      
+      
+      <li>
+        <a href="/2018/08/26/what-is-istio/">什么是 istio</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/08/25/knative-serverless-platform/">serverless 平台 knative 简介</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/06/25/kubernetes-resource-management/">kubernetes 资源管理概述</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/24/use-prometheus-and-grafana-to-monitor-linux-machine/">使用 promethues 和 grafana 监控自己的 linux 机器</a>
+      </li>
+      
+      
+      
+      <li>
+        <a href="/2018/01/13/linux-udp-packet-drop-debug/">linux 系统 UDP 丢包问题分析思路</a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <footer class="read-next-card-footer">
+    <a href="/archives">  MORE  → </a>
+  </footer>
+</article>
+
+
+            
+            
+            
+        </div>
+    </div>
+</aside>
+
+<footer class="site-footer outer">
+	<div class="site-footer-content inner">
+		<section class="copyright">
+			<a href="/" title="Cizixs Write Here">Cizixs Write Here</a>
+			&copy; 2018
+		</section>
+		<nav class="site-footer-nav">
+			
+            <a href="https://hexo.io" title="Hexo" target="_blank" rel="noopener">Hexo</a>
+            <a href="https://github.com/xzhih/hexo-theme-casper" title="Casper" target="_blank" rel="noopener">Casper</a>
+        </nav>
+    </div>
+</footer>
+
+
+
+
+
+
+<div class="floating-header" >
+	<div class="floating-header-logo">
+        <a href="/" title="Cizixs Write Here">
+			
+                <img src="http://cizixs.u.qiniudn.com/favicon-256.png" alt="Cizixs Write Here icon" />
+			
+            <span>Cizixs Write Here</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">ARP 协议解析</div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+<script>
+   $(document).ready(function () {
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+    function update() {
+        var rect = title.getBoundingClientRect();
+        var trigger = rect.top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+            // show/hide floating header
+            if (lastScrollY >= trigger + triggerOffset) {
+                header.classList.add('floating-active');
+            } else {
+                header.classList.remove('floating-active');
+            }
+            progressBar.setAttribute('max', progressMax);
+            progressBar.setAttribute('value', lastScrollY);
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', onScroll, {passive: true});
+        update();
+
+        // TOC
+        var width = $('.toc-main').width();
+        $('.toc-control').click(function () {
+            if ($('.t-g-control').css('width')=="50px") {
+                if ($('.t-g-control').css('right')=="0px") {
+                    $('.t-g-control').animate({right: width}, "slow");
+                    $('.toc-main').animate({right: 0}, "slow");
+                    toc_icon()
+                } else {
+                    $('.t-g-control').animate({right: 0}, "slow");
+                    $('.toc-main').animate({right: -width}, "slow");
+                    toc_icon()
+                }
+            } else {
+                if ($('.toc-main').css('right')=="0px") {
+                    $('.toc-main').slideToggle("fast", toc_icon());
+                } else {
+                    $('.toc-main').css('right', '0px');
+                    toc_icon()
+                }
+            }
+        })
+
+        function toc_icon() {
+            if ($('.toc-icon').css('display')=="none") {
+                $('.toc-close').hide();
+                $('.toc-icon').show();
+            } else {
+                $('.toc-icon').hide();
+                $('.toc-close').show();
+            }
+        }
+
+        $('.gotop').click(function(){
+            $('html,body').animate({scrollTop:$('.post-full-header').offset().top}, 800);
+        });
+        $('.gobottom').click(function () {
+            $('html,body').animate({scrollTop:$('.pagination').offset().top}, 800);
+        });
+
+        // highlight
+        // https://highlightjs.org
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+        $('td.code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        console.log("this theme is from https://github.com/xzhih/hexo-theme-casper")
+    });
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/lightgallery/1.3.9/css/lightgallery.min.css">
+
+
+
+<script src="https://cdn.staticfile.org/lightgallery/1.3.9/js/lightgallery.min.js"></script>
+
+
+<script>
+	$(function () {
+		var postImg = $('#lightgallery').find('img');
+		postImg.addClass('post-img');
+		postImg.each(function () {
+			var imgSrc = $(this).attr('src');
+			$(this).attr('data-src', imgSrc);
+		});
+		$('#lightgallery').lightGallery({selector: '.post-img'});
+	});
+</script>
+
+
+
+
+    </div>
+</body>
+</html>
