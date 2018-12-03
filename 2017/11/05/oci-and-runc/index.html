@@ -177,7 +177,7 @@
 <blockquote>
 <p>An open governance structure for the express purpose of creating open industry standards around container formats and runtime.<br>– Open Containers Official Site</p>
 </blockquote>
-<p>OCI 由 docker、coreos 以及其他容器相关公司创建于 2015 年，目前主要有两个标准文档：<a href="https://github.com/opencontainers/runtime-spec" target="_blank" rel="noopener">容器运行时标准</a> （runtime spec）和 <a href="https://github.com/opencontainers/runtime-spec" target="_blank" rel="noopener">容器镜像标准</a>（image spec）。</p>
+<p>OCI 由 docker、coreos 以及其他容器相关公司创建于 2015 年，目前主要有两个标准文档：<a href="https://github.com/opencontainers/runtime-spec" target="_blank" rel="noopener">容器运行时标准</a> （runtime spec）和 <a href="https://github.com/opencontainers/image-spec" target="_blank" rel="noopener">容器镜像标准</a>（image spec）。</p>
 <p>这两个协议通过 OCI runtime filesytem bundle 的标准格式连接在一起，OCI 镜像可以通过工具转换成 bundle，然后 OCI 容器引擎能够识别这个 bundle 来运行容器。</p>
 <p><img src="https://ws4.sinaimg.cn/large/006tNc79gy1fl7l7qihpmj30vi0lj756.jpg" alt=""></p>
 <p>下面，我们来介绍这两个 OCI 标准。因为标准本身细节很多，而且还在不断维护和更新，如果不是容器的实现者，没有必须对每个细节都掌握。所以我以介绍概要为主，给大家有个主观的认知。</p>
