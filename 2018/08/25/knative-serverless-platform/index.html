@@ -194,7 +194,7 @@ hello, world from Awesome FaaS App<span class="token operator">!</span>
 </ul>
 <p>和标准化的 FaaS 不同（只运行特定标准的 Function 代码），knative 期望能够运行所有的 workload : traditional application、function、container。</p>
 <p>knative 建立在 kubernetes 和 istio 平台之上，使用 kubernetes 提供的容器管理能力（deployment、replicaset、和 pods等），以及 istio 提供的网络管理功能（ingress、LB、dynamic route等）。</p>
-<p><img src="https://i.loli.net/2018/08/25/5b811d40e22bb.png" alt="knative with istio and kubernetes"></p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNc79ly1g1qxs8g0vej30qt09smxr.jpg" alt="knative with istio and kubernetes"></p>
 <h2 id="knative-核心概念和原理"><a href="#knative-核心概念和原理" class="headerlink" title="knative 核心概念和原理"></a>knative 核心概念和原理</h2><p>为了实现 serverless 应用的管理，knative 把整个系统分成了三个部分：</p>
 <ul>
 <li>Build：构建系统，把用户定义的函数和应用 build 成容器镜像</li>
@@ -255,7 +255,7 @@ hello, world from Awesome FaaS App<span class="token operator">!</span>
 </ul>
 <p>knative serving 功能是基于 kubernetes 和 istio 开发的，它使用 kubernetes 来管理容器（deployment、pod），istio 来管理网络路由（VirtualService、DestinationRule）。</p>
 <p>因为 kubernetes 和 istio 本身的概念非常多，理解和管理起来比较困难，knative 在此之上提供了更高一层的抽象（这些对应是基于 kubernetes 的 CRD 实现的）。这些抽象出来的概念对应的关系如下图：</p>
-<p><img src="https://i.loli.net/2018/08/25/5b81211da0309.png" alt="knative serving terminology"></p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1g1qxu9218oj31ck0qmwgu.jpg" alt="knative serving terminology"></p>
 <ul>
 <li>Configuration：应用的最新配置，也就是应用目前期望的状态，对应了 kubernetes 的容器管理（deployment）。每次应用升级都会更新 configuration，而 knative 也会保留历史版本的记录（图中的 revision），结合流量管理，knative 可以让多个不同的版本共同提供服务，方便蓝绿发布和滚动升级</li>
 <li>Route：应用的路由规则，也就是进来的流量如何访问应用，对应了 istio 的流量管理（VirtualService）</li>

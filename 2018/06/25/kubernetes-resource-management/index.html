@@ -188,7 +188,7 @@
 <li><code>--system-reserved=[cpu=100mi][,][memory=100Mi][,][ephemeral-storage=1Gi]</code>：预留给系统的 CPU、memory 和存储资源</li>
 </ul>
 <p>这两块预留之后的资源才是 pod 真正能使用的，不过考虑到 eviction 机制（下面的章节会提到），kubelet 会保证节点上的资源使用率不会真正到 100%，因此 pod 的实际可使用资源会稍微再少一点。主机上的资源逻辑分配图如下所示：</p>
-<p><img src="https://i.loli.net/2018/06/25/5b3106f947190.png" alt="kubernetes reserved resource"></p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1g1qxoxsulyj31b10qo76a.jpg" alt="kubernetes reserved resource"></p>
 <p><strong>NOTE：</strong>需要注意的是，allocatable 不是指当前机器上可以分配的资源，而是指能分配给 pod 使用的资源总量，一旦 kubelet 启动这个值是不会变化的。</p>
 <p>allocatable 的值可以在 node 对象的 <code>status</code> 字段中读取，比如下面这样：</p>
 <pre class=" language-yaml"><code class="language-yaml"><span class="token key atrule">status</span><span class="token punctuation">:</span>
@@ -274,11 +274,11 @@
 <li><strong>Best Effort</strong>：优先级最低，集群不知道 pod 的资源请求情况，调度不考虑资源，可以运行到任意节点上（从资源角度来说），可以是一些临时性的不重要应用。pod 可以使用节点上任何可用资源，但在资源不足时也会被优先杀死</li>
 </ul>
 <p>Pod 的 requests 和 limits 是如何对应到这三个 QoS 等级上的，可以用下面一张表格概括：</p>
-<p><img src="https://i.loli.net/2018/06/25/5b307f4bc7d42.png" alt="pod QuS mapping"></p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNc79ly1g1qxpm62noj30p40d0tak.jpg" alt="pod QuS mapping"></p>
 <p>看到这里，你也许看出来一个问题了：<strong>如果不配置 requests 和 limits，pod 的 QoS 竟然是最低的</strong>。没错，所以推荐大家理解 QoS 的概念，并且按照需求<strong>一定要给 pod 配置 requests 和 limits 参数</strong>，不仅可以让调度更准确，也能让系统更加稳定。</p>
 <p><strong>NOTE</strong>：按照现在的方法根据 pod 请求的资源进行配置不够灵活和直观，更理想的情况是用户可以直接配置 pod 的 QoS，而不用关心具体的资源申请和上限值。但 kubernetes 目前还没有这方面的打算。</p>
 <p>Pod 的 QoS 还决定了容器的 OOM（out-of-memory）值，它们对应的关系如下：</p>
-<p><img src="https://i.loli.net/2018/06/25/5b307a5b3557c.png" alt="pod QoS oom score"></p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79ly1g1qxqj256ej30pa04374p.jpg" alt="pod QoS oom score"></p>
 <p>可以看到，QoS 越高的 pod oom 值越低，也就越不容易被系统杀死。对于 Bustable pod，它的值是根据 request 和节点内存总量共同决定的:</p>
 <pre class=" language-go"><code class="language-go">oomScoreAdjust <span class="token operator">:=</span> <span class="token number">1000</span> <span class="token operator">-</span> <span class="token punctuation">(</span><span class="token number">1000</span><span class="token operator">*</span>memoryRequest<span class="token punctuation">)</span><span class="token operator">/</span>memoryCapacity
 </code></pre>
@@ -302,7 +302,7 @@
 <p>Pod 的驱逐是在 kubelet 中实现的，因为 kubelet 能动态地感知到节点上资源使用率实时的变化情况。其核心的逻辑是：kubelet 实时监控节点上各种资源的使用情况，一旦发现某个不可压缩资源出现要耗尽的情况，就会主动终止节点上的 pod，让节点能够正常运行。被终止的 pod 所有容器会停止，状态会被设置为 failed。</p>
 <h3 id="驱逐触发条件"><a href="#驱逐触发条件" class="headerlink" title="驱逐触发条件"></a>驱逐触发条件</h3><p>那么哪些资源不足会导致 kubelet 执行驱逐程序呢？目前主要有三种情况：实际内存不足、节点文件系统的可用空间（文件系统剩余大小和 inode 数量）不足、以及镜像文件系统的可用空间（包括文件系统剩余大小和 inode 数量）不足。</p>
 <p>下面这图是具体的触发条件：</p>
-<p><img src="https://i.loli.net/2018/06/24/5b2f1a966a703.png" alt="eviction conddition"></p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79ly1g1qxrm6zfcj310m06ajst.jpg" alt="eviction condition"></p>
 <p>有了数据的来源，另外一个问题是触发的时机，也就是到什么程度需要触发驱逐程序？kubernetes 运行用户自己配置，并且支持两种模式：按照百分比和按照绝对数量。比如对于一个 32G 内存的节点当可用内存少于 10% 时启动驱逐程序，可以配置 <code>memory.available&lt;10%</code>或者 <code>memory.available&lt;3.2Gi</code>。</p>
 <p><strong>NOTE</strong>：默认情况下，kubelet 的驱逐规则是 <code>memory.available&lt;100Mi</code>，对于生产环境这个配置是不可接受的，所以一定要根据实际情况进行修改。</p>
 <h3 id="软驱逐（soft-eviction）和硬驱逐（hard-eviction）"><a href="#软驱逐（soft-eviction）和硬驱逐（hard-eviction）" class="headerlink" title="软驱逐（soft eviction）和硬驱逐（hard eviction）"></a>软驱逐（soft eviction）和硬驱逐（hard eviction）</h3><p>因为驱逐 pod 是具有毁坏性的行为，因此必须要谨慎。有时候内存使用率增高只是暂时性的，有可能 20s 内就能恢复，这时候启动驱逐程序意义不大，而且可能会导致应用的不稳定，我们要考虑到这种情况应该如何处理；另外需要注意的是，如果内存使用率过高，比如高于 95%（或者 90%，取决于主机内存大小和应用对稳定性的要求），那么我们不应该再多做评估和考虑，而是赶紧启动驱逐程序，因为这种情况再花费时间去判断可能会导致内存继续增长，系统完全崩溃。</p>
