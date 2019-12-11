@@ -622,9 +622,9 @@
     
       <category term="linux" scheme="http://cizixs.com/tags/linux/"/>
     
-      <category term="socket" scheme="http://cizixs.com/tags/socket/"/>
-    
       <category term="docker" scheme="http://cizixs.com/tags/docker/"/>
+    
+      <category term="socket" scheme="http://cizixs.com/tags/socket/"/>
     
       <category term="container" scheme="http://cizixs.com/tags/container/"/>
     
