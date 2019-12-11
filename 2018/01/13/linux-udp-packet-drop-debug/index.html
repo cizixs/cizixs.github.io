@@ -178,7 +178,7 @@
 <li>内核从 ring buffer 中读取报文进行处理，执行 IP 和 TCP/UDP 层的逻辑，最后把报文放到应用程序的 socket buffer 中</li>
 <li>应用程序从 socket buffer 中读取报文进行处理</li>
 </ol>
-<p><img src="https://ws4.sinaimg.cn/large/006tKfTcgy1fnf8b0c64xj31hc0u0goa.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tKfTcgy1fnf8b0c64xj31hc0u0goa.jpg" alt=""></p>
 <p>在接收 UDP 报文的过程中，图中任何一个过程都可能会主动或者被动地把报文丢弃，因此丢包可能发生在网卡和驱动，也可能发生在系统和应用。</p>
 <p>之所以没有分析发送数据流程，一是因为发送流程和接收类似，只是方向相反；另外发送流程报文丢失的概率比接收小，只有在应用程序发送的报文速率大于内核和网卡处理速率时才会发生。</p>
 <p>本篇文章假定机器只有一个名字为 <code>eth0</code> 的 interface，如果有多个 interface 或者 interface 的名字不是 eth0，请按照实际情况进行分析。</p>

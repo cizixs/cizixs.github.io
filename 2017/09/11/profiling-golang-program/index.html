@@ -249,7 +249,7 @@ Showing top 10 nodes out of 180 (cum &gt;= 10ms)
 </code></pre><p>每一行表示一个函数的信息。前两列表示函数在 CPU 上运行的时间以及百分比；第三列是当前所有函数累加使用 CPU 的比例；第四列和第五列代表这个函数以及子函数运行所占用的时间和比例（也被称为<code>累加值 cumulative</code>），应该大于等于前两列的值；最后一列就是函数的名字。如果应用程序有性能问题，上面这些信息应该能告诉我们时间都花费在哪些函数的执行上了。</p>
 <p>pprof 不仅能打印出最耗时的地方(<code>top</code>)，还能列出函数代码以及对应的取样数据(<code>list</code>)、汇编代码以及对应的取样数据(<code>disasm</code>)，而且能以各种样式进行输出，比如 svg、gv、callgrind、png、gif等等。</p>
 <p>其中一个非常便利的是 <code>web</code> 命令，在交互模式下输入 <code>web</code>，就能自动生成一个 <code>svg</code> 文件，并跳转到浏览器打开，生成了一个函数调用图：</p>
-<p><img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fjfq8wjqunj31fa0q3afd.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tKfTcgy1fjfq8wjqunj31fa0q3afd.jpg" alt=""></p>
 <p>这个调用图包含了更多的信息，而且可视化的图像能让我们更清楚地理解整个应用程序的全貌。图中每个方框对应一个函数，方框越大代表执行的时间越久（包括它调用的子函数执行时间，但并不是正比的关系）；方框之间的箭头代表着调用关系，箭头上的数字代表被调用函数的执行时间。</p>
 <p>因为原图比较大，这里只截取了其中一部分，但是能明显看到 <code>encoding/json.(*decodeState).object</code> 是这里耗时比较多的地方，而且能看到它调用了哪些函数，分别函数多少。这些更详细的信息对于定位和调优性能是非常有帮助的！</p>
 <p>要想更细致分析，就要精确到代码级别了，看看每行代码的耗时，直接定位到出现性能问题的那行代码。<code>pprof</code> 也能做到，<code>list</code> 命令后面跟着一个正则表达式，就能查看匹配函数的代码以及每行代码的耗时：</p>
@@ -302,7 +302,7 @@ Showing top 10 nodes out of 146 (cum &gt;= 512.31kB)
 </ul>
 <p>pprof 已经支持动态的 web 浏览方式：<a href="https://github.com/google/pprof/commit/f83a3d89c18c445178f794d525bf3013ef7b3330" target="_blank" rel="noopener">https://github.com/google/pprof/commit/f83a3d89c18c445178f794d525bf3013ef7b3330</a></p>
 <h2 id="go-torch-和火焰图"><a href="#go-torch-和火焰图" class="headerlink" title="go-torch 和火焰图"></a>go-torch 和火焰图</h2><p>火焰图（Flame Graph）是 Bredan Gregg 创建的一种性能分析图表，因为它的样子近似 🔥而得名。上面的 profiling 结果也转换成火焰图，如果对火焰图比较了解可以手动来操作，不过这里我们要介绍一个工具：<a href="https://github.com/uber/go-torch" target="_blank" rel="noopener">go-torch</a>。这是 uber 开源的一个工具，可以直接读取 golang profiling 数据，并生成一个火焰图的 svg 文件。</p>
-<p><img src="https://ws3.sinaimg.cn/large/006tKfTcgy1fjc5nh6x52j30xc0litck.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tKfTcgy1fjc5nh6x52j30xc0litck.jpg" alt=""></p>
 <p>火焰图 svg 文件可以通过浏览器打开，它对于调用图的最优点是它是动态的：可以通过点击每个方块来 zoom in 分析它上面的内容。</p>
 <p>火焰图的调用顺序从下到上，每个方块代表一个函数，它上面一层表示这个函数会调用哪些函数，方块的大小代表了占用 CPU 使用的长短。火焰图的配色并没有特殊的意义，默认的红、黄配色是为了更像火焰而已。</p>
 <p>go-torch 工具的使用非常简单，没有任何参数的话，它会尝试从 <code>http://localhost:8080/debug/pprof/profile</code> 获取 profiling 数据。它有三个常用的参数可以调整：</p>

@@ -233,7 +233,7 @@ Calico node started successfully
 </ul>
 <p>从命令的输出可以看到，calicoctl 在运行容器之前还做了很多初始化的工作，比如加载需要的模块、配置系统参数、删除已经运行的 calico 容器（如果存在的话）；然后还会打印出来要运行的容器命令，所以理论上也可以手动执行这个命令；最后是运行使用的参数说明。</p>
 <h3 id="7-创建网络并测试连通性"><a href="#7-创建网络并测试连通性" class="headerlink" title="7. 创建网络并测试连通性"></a>7. 创建网络并测试连通性</h3><p>在每个节点运行都不部署 calico 容器之后，calico 网络集群就搭建好了。接下来我们会创建两个网络，并测试 calico 跨主机网络的连通性，最终的网络示意图如下：</p>
-<p><img src="https://ws1.sinaimg.cn/large/006tNc79gy1fkgfg04nwbj31hc0u0qb0.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fkgfg04nwbj31hc0u0qb0.jpg" alt=""></p>
 <p>图中只展示了两个节点，每个节点有两个容器，其中蓝色容器在同一个网络，红色容器在另外一个网络。</p>
 <p>先创建两个网络：</p>
 <pre><code># docker network create --driver calico --ipam-driver calico-ipam net1
@@ -328,7 +328,7 @@ blackhole 192.168.196.128/26  proto bird
 192.168.196.129 dev cali69b2b8c106c  scope link 
 </code></pre><p>同样的，这个报文会匹配最后一个路由规则，这个规则匹配的是一个 IP 地址，而不是网段，也就是说主机上每个容器都会有一个对应的路由表项。报文发送到 <code>cali69b2b8c106c</code> 这个 veth pair，然后从另一端发送给容器，容器接收到报文之后，发送目的地址是自己，就做出 ping 应答，应答报文的返回路径和之前类似。</p>
 <p>总体的报文路径就是按照下图中的数字顺序，回来的报文按照原路返回：</p>
-<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fkgfhzbl9kj31hc0u047e.jpg" alt="calico-packet-flow"></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fkgfhzbl9kj31hc0u047e.jpg" alt="calico-packet-flow"></p>
 <h2 id="组件和架构"><a href="#组件和架构" class="headerlink" title="组件和架构"></a>组件和架构</h2><p>看完 calico 的报文流程，大致也能分析出 calico 做的事情：</p>
 <ul>
 <li>分配和管理 IP</li>

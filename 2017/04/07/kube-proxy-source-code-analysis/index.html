@@ -171,7 +171,7 @@
             <section class="post-full-content">
                 <div id="lightgallery" class="markdown-body">
                     <h2 id="kube-proxy-功能简介"><a href="#kube-proxy-功能简介" class="headerlink" title="kube-proxy 功能简介"></a>kube-proxy 功能简介</h2><p>我们在之前的文章中<a href="http://cizixs.com/2017/03/30/kubernetes-introduction-service-and-kube-proxy">介绍过 kube-proxy 和 service</a>的工作原理，以及它们的使用方法和功能。我们再来总结一下，<code>kube-proxy</code> 运行在 kubernetes 集群中每个 worker 节点上，负责实现 service 这个概念提供的功能。<code>kube-proxy</code> 会把访问 service VIP 的请求转发到运行的 pods 上，实现负载均衡。</p>
-<p><img src="https://ww3.sinaimg.cn/large/006tNc79gy1fee5voyscmj31hm0p0gnm.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fee5voyscmj31hm0p0gnm.jpg" alt=""></p>
 <p>当用户创建 service 的时候，endpointController 会根据 service 的 selector 找到对应的 pod，然后生成 endpoints 对象保存到 etcd 中。kube-proxy 的主要工作就是监听 etcd（通过 apiserver 的接口，而不是直接读取 etcd），来实时更新节点上的 iptables。</p>
 <p>service 有关的信息保存在 etcd 的 <code>/registry/services</code> 目录，比如在我的集群中，这个目录的内容是这样的：</p>
 <pre class=" language-bash"><code class="language-bash">~<span class="token punctuation">]</span>$ etcdctl <span class="token function">ls</span> --recursive  /registry/services
@@ -399,7 +399,7 @@
 </code></pre>
 <p>另外，在 <code>ServiceStore</code> 的最后，还会往 <code>s.updates</code> 写入一个数据，告诉监听在 channel 另一端说有数据更新，你可以调用处理函数来同步 iptables 了。</p>
 <p>整个 <code>serviceConfig</code> 的逻辑是这样的：</p>
-<p><img src="https://ww4.sinaimg.cn/large/006tNc79gy1fee66e8rbbj30wy0io40h.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fee66e8rbbj30wy0io40h.jpg" alt=""></p>
 <p>它对外暴露了一个 channel，任何写到这个 channel 中的数据，都会被 <code>mux</code> 自动保存到内部的 <code>serviceStore</code> 中，并往 <code>updates channel</code> 发一个通过，监听在 <code>updates channel</code> 另一端的 <code>bcaster</code> 接到通知，就调用处理函数 <code>proxier.OnServiceUpdate()</code> 去处理。</p>
 <p>不难猜测，在 <code>NewSourceAPI</code> 函数的内部一定会有把读取的数据写到 <code>serviceConfig.Channel(&quot;api&quot;)</code> 的逻辑。</p>
 <p><strong>NOTE:</strong> endpointsConfig 和 serviceConfig 的实现原理完全一样，只不过监听的对象是 etcd 中的 endpoints，而不是 services。</p>
@@ -434,7 +434,7 @@
 <span class="token punctuation">}</span>
 </code></pre>
 <p><code>Reflector</code> 会从 <code>ListWatcher</code> 中读取要监听资源的变化，写到 <code>store</code> 对象中去。这部分的代码在 <code>pkg/client/cache/</code> ，不是本文的重点。简单说一下它的大致过程：它内部进入循环，调用 <code>servicesLW.wathc()</code> 方法，根据得到的数据更新 <code>serviceStore</code> 的值，这个 serviceStore 每次更新都会出发一个 <code>pushFunc</code> 把当前的数据写到 channel <code>ServiceUpdate</code> ，从而完成了和上面部分的对接！</p>
-<p><img src="https://ww4.sinaimg.cn/large/006tNc79gy1fee6z9jczrj30sg0ig75i.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fee6z9jczrj30sg0ig75i.jpg" alt=""></p>
 <h3 id="OnServiceUpdate：最终干活的人"><a href="#OnServiceUpdate：最终干活的人" class="headerlink" title="OnServiceUpdate：最终干活的人"></a>OnServiceUpdate：最终干活的人</h3><p>前面说了数据是怎么从 api Server 被 kube-rpoxy 拿到，并一层层地传递的。最终拿到了 service 和 endpoints 的数据，最终还是要落到谁来处理这些数据。前面我们也提过，不管是 <code>iptables</code> 模式，还是 <code>userspace</code> 模式，最终的处理函数都是 <code>OnServiceUpdate()</code>，我们这里还是看一下 <code>iptables/proxier.go:OnServiceUpdate</code>：</p>
 <pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token punctuation">(</span>proxier <span class="token operator">*</span>Proxier<span class="token punctuation">)</span> <span class="token function">OnServiceUpdate</span><span class="token punctuation">(</span>allServices <span class="token punctuation">[</span><span class="token punctuation">]</span>api<span class="token punctuation">.</span>Service<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     proxier<span class="token punctuation">.</span>mu<span class="token punctuation">.</span><span class="token function">Lock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
@@ -502,7 +502,7 @@
 <p>这段代码的核心是遍历作为参数传进来的 <code>api.Service</code> 数组，根据里面的信息构建 <code>proxier.serviceMap</code>（service 有改动，或者新建、删除），然后调用 <code>proxier.syncProxyRules()</code> 去同步 iptables 规则列表。</p>
 <p>通过这个部分的分析，我们明白了 <code>kube-proxy</code> 是如何保证 <code>apiserver</code> 中数据一旦变化，就立即更新节点的 iptables 规则的。</p>
 <p>这个过程的流程图如下：</p>
-<p><img src="https://ww3.sinaimg.cn/large/006tNc79gy1fee5sbtsraj31fy0oggnx.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fee5sbtsraj31fy0oggnx.jpg" alt=""></p>
 <h2 id="服务的运行"><a href="#服务的运行" class="headerlink" title="服务的运行"></a>服务的运行</h2><p> <code>ProxyServer</code> 初始化结束之后，还会调用 <code>s.Run()</code>，我们来看一下里面的内容：</p>
 <pre><code>func (s *ProxyServer) Run() error {
 

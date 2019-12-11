@@ -173,7 +173,7 @@
                     <h2 id="分布式系统和一致性"><a href="#分布式系统和一致性" class="headerlink" title="分布式系统和一致性"></a>分布式系统和一致性</h2><p>分布式系统有一个很重要的问题要解决，当一台机器出现问题时，我们希望整个集群还是能够正常运行的，以达到高可用的要求。因为系统的数据是不断变化的，所以要保证集群的数据是同步的，不然会出现数据混论或者丢失的情况。这就是<strong>一致性问题。</strong></p>
 <p>换个说法，一致性就是让多台机器对一组给定的操作最终得到的状态一样，也就是所有机器执行命令的顺序是一样的，对客户端来说，它们表现得就要像一个机器一样。</p>
 <p>分布式一致性问题可以抽象成下面这张图(分布式状态机 Replicated State Machine)：</p>
-<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fm3p3e0lnnj30sh09zwhg.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fm3p3e0lnnj30sh09zwhg.jpg" alt=""></p>
 <p>最终的目的是所有节点上保存的状态机器（文件内容）是一样的，这是通过各个节点上一致性模块之间的通信完成的，它们保证按顺序添加日志，然后把日志执行修改状态机的内容。如果机器初始状态相同，而且日志中记录顺序是一样的，那么最终的状态一定也是相同的。</p>
 <p>一致性算法需要满足以下条件才能在实际系统中工作：</p>
 <ul>
@@ -202,10 +202,10 @@
 <li>follower：负责处理 leader 和 candidate 请求的节点。如果客户端把请求发送给 follower 节点，它需要把请求转发给 leader，由 leader 统一负责管理</li>
 <li>candidate：leader 的候选人，只是在选举过程中短暂出现的状态。如果通过选举，则会变成 leader；如果选举失败，还是会回到 follower 状态</li>
 </ul>
-<p><img src="https://ws1.sinaimg.cn/large/006tNc79gy1fm40vgcvazj30y20j6tap.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fm40vgcvazj30y20j6tap.jpg" alt=""></p>
 <p>raft 算法还有一个任期（Term）的概念，任期是依次递增的编号，每次选举都是一个新的任期。<strong>在一个任期内最多只能有一个 leader</strong>，也就是说一个任期可以有一个 leader，表示正常工作；也可以没有 leader，表明选举失败。某个节点选举成功后，就成为当前任期的 leader，负责日志复制工作。</p>
 <p>任期的主要目的是保证所有节点逻辑时间上的一致，而不会出现过期的请求导致逻辑混乱的情况。</p>
-<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fm40vu4bbij30ya0e9q3f.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fm40vu4bbij30ya0e9q3f.jpg" alt=""></p>
 <p>每个节点都会保存一个当前任期的值，当节点通信时会交互当前任期的值，如果节点发现其他节点的当前任期比自己的大，就更新自己当前任期的值；如果 leader 节点发现有比自己大的任期值，则知道自己的任期过期了，集群中有更新的 leader 节点，它立即变成 follower 状态；如果节点接收到历史任期的请求，则直接无视（这很可能是因为网络延迟或者报文重复导致的）。</p>
 <p>当节点刚启动的时候，默认是在 follower 状态。如果它能定时收到 leader 的心跳或者日志复制的请求，则会一直处于该状态；如果在设定的超时时间（election timeout）内没有收到 leader 的消息，则认为当前集群没有 leader，或者 leader 以及失效，立即会发起重新投票。</p>
 <p>投票开始，节点会增加自己的当前任期值，转换成 candidate 状态，并向其他节点发送请求投票的消息（表示自己想成为下一个任期的 leader）。下面的状态分为三种情况：</p>
@@ -229,7 +229,7 @@
 <p>leader 节点会记录已经提交（commited）的最大日志 index，然后后续的心跳和日志复制请求会带上这个值，这样从节点就能知道哪些记录已经提交了，自己也会让状态机开始执行日志中的记录。从而达到所有状态机数据的一致性！</p>
 <p>这样的日志机制保证了如果不同节点的日志文件某个记录的 index 和任期都相同，那么它们的内容也一定相同，而且之前的日志记录也一定是一样的。</p>
 <p>当主节点发送日志复制的请求时，它会带上前一个日志记录的 index 和 term，如果从节点发现自己的日志中不存在这个记录，则会拒绝这个请求。</p>
-<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fm40wfjblhj30ym0i5dif.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fm40wfjblhj30ym0i5dif.jpg" alt=""></p>
 <p>正常情况下，每次日志复制都能正常完成，而且节点都能保证日志记录都是完全一致的。但如果 leader 节点崩溃掉，可能会出现日志不一致的情况（奔溃的主节点还没有完全把自己日志文件中的记录复制到其他节点，因此有些节点的日志比另外一些节点内容更多）。</p>
 <p>对于日志内容不一致的请求，raft 采取用主节点日志内容覆盖 follower 节点日志的做法，先找到从节点日志和自己日志记录第一个不一致的地方，然后一直覆盖到最后。</p>
 <p>整个过程是这样的：当某个节点当选 leader 之后，会发送日志复制请求到从节点，并带着 nextIndex（主节点要发送的下一个日志记录的 index），如果从节点出现日志记录不一致的情况，会拒绝该请求，那么主节点知道发生了不一致，递减 nextIndex，然后重新发送请求，直到日志一致的地方，一切回复正常，然后继续发送日志复制请求，就会把从节点的日志覆盖为主节点的日志内容。</p>

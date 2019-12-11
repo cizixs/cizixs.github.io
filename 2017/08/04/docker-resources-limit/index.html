@@ -212,7 +212,7 @@ stress: dbug: [1] --&gt; hogcpu worker 2 [9] forked
 stress: dbug: [1] using backoff sleep of 3000us
 stress: dbug: [1] --&gt; hogcpu worker 1 [10] forked
 </code></pre><p>在另外一个 terminal 使用 <code>htop</code> 查看资源的使用情况：</p>
-<p><img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fi6z1alsu4j30yz073myh.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tKfTcgy1fi6z1alsu4j30yz073myh.jpg" alt=""></p>
 <p>从上图中可以看到，CPU 四个核资源都达到了 100%。四个 stress 进程 CPU 使用率没有达到 100% 是因为系统中还有其他机器在运行。</p>
 <p>为了比较，我另外启动一个 share 为 512 的容器：</p>
 <pre><code>➜  stress docker run --rm -it -c 512 stress --cpu 4 
@@ -226,7 +226,7 @@ stress: dbug: [1] --&gt; hogcpu worker 2 [8] forked
 stress: dbug: [1] using backoff sleep of 3000us
 stress: dbug: [1] --&gt; hogcpu worker 1 [9] forked
 </code></pre><p>因为默认情况下，容器的 CPU share 为 1024，所以这两个容器的 CPU 使用率应该大致为 2：1，下面是启动第二个容器之后的监控截图：</p>
-<p><img src="https://ws4.sinaimg.cn/large/006tKfTcgy1fi6z6elptfj310309mmz9.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tKfTcgy1fi6z6elptfj310309mmz9.jpg" alt=""></p>
 <p>两个容器分别启动了四个 <code>stress</code> 进程，第一个容器 <code>stress</code> 进程 CPU 使用率都在 54% 左右，第二个容器 <code>stress</code> 进程 CPU 使用率在 25% 左右，比例关系大致为 2：1，符合之前的预期。</p>
 <h3 id="限制容器能使用的-CPU-核数"><a href="#限制容器能使用的-CPU-核数" class="headerlink" title="限制容器能使用的 CPU 核数"></a>限制容器能使用的 CPU 核数</h3><p>上面讲述的 <code>-c --cpu-shares</code> 参数只能限制容器使用 CPU 的比例，或者说优先级，无法确定地限制容器使用 CPU 的具体核数；从 1.13 版本之后，docker 提供了 <code>--cpus</code> 参数可以限定容器能使用的 CPU 核数。这个功能可以让我们更精确地设置容器 CPU 使用量，是一种更容易理解也因此更常用的手段。</p>
 <p><code>--cpus</code> 后面跟着一个浮点数，代表容器最多使用的核数，可以精确到小数点二位，也就是说容器最小可以使用 <code>0.01</code> 核 CPU。比如，我们可以限制容器只能使用 <code>1.5</code> 核数 CPU：</p>
@@ -239,7 +239,7 @@ stress: dbug: [1] --&gt; hogcpu worker 2 [8] forked
 stress: dbug: [1] using backoff sleep of 3000us
 stress: dbug: [1] --&gt; hogcpu worker 1 [9] forked
 </code></pre><p>在容器里启动三个 stress 来跑 CPU 压力，如果不加限制，这个容器会导致 CPU 的使用率为 300% 左右（也就是说会占用三个核的计算能力）。实际的监控如下图：</p>
-<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1fi6zckqjtlj310306w0tu.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tKfTcgy1fi6zckqjtlj310306w0tu.jpg" alt=""></p>
 <p>可以看到，每个 <code>stress</code> 进程 CPU 使用率大约在 50%，总共的使用率为 150%，符合 1.5 核的设置。</p>
 <p>如果设置的 <code>--cpus</code> 值大于主机的 CPU 核数，docker 会直接报错：</p>
 <pre><code>➜  ~ docker run --rm -it --cpus 8 stress --cpu 3
@@ -254,7 +254,7 @@ stress: dbug: [1] --&gt; hogcpu worker 2 [7] forked
 stress: dbug: [1] using backoff sleep of 3000us
 stress: dbug: [1] --&gt; hogcpu worker 1 [8] forked
 </code></pre><p>这样，监控中可以看到只有前面两个核 CPU 达到了 100% 使用率。</p>
-<p><img src="https://ws4.sinaimg.cn/large/006tKfTcgy1fi6zk7gwt1j30z706cjsb.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tKfTcgy1fi6zk7gwt1j30z706cjsb.jpg" alt=""></p>
 <p><code>--cpuset-cpus</code> 参数可以和 <code>-c --cpu-shares</code> 一起使用，限制容器只能运行在某些 CPU 核上，并且配置了使用率。</p>
 <p>限制容器运行在哪些核上并不是一个很好的做法，因为它需要实现知道主机上有多少 CPU 核，而且非常不灵活。除非有特别的需求，一般并不推荐在生产中这样使用。</p>
 <h3 id="CPU-信息的-cgroup-文件"><a href="#CPU-信息的-cgroup-文件" class="headerlink" title="CPU 信息的 cgroup 文件"></a>CPU 信息的 cgroup 文件</h3><p>所有和容器 CPU share 有关的配置都在 <code>/sys/fs/cgroup/cpu/docker/&lt;docker_id&gt;/</code> 目录下面，其中 <code>cpu.shares</code> 保存了 CPU share 的值（其他文件的意义可以查看 cgroups 的官方文档）：</p>

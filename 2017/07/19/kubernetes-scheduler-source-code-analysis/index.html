@@ -183,7 +183,7 @@
 </ul>
 <p>文章的最后，我们来分析一下 kubernetes 的调度器是否能做到这几点。</p>
 <p>之前 <a href="http://cizixs.com/2017/03/10/kubernetes-intro-scheduler">kubernetes 调度简介的文章</a>，我们介绍了调度分为两个过程：<code>predicate</code> 和 <code>priority</code>。这篇文章就继续深入到源码层面来解析 kubernetes 调度的过程。</p>
-<p><img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fhcxmspuz7j31260h6my6.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tKfTcgy1fhcxmspuz7j31260h6my6.jpg" alt=""></p>
 <p>和其他组件不同，scheduler 的代码在 <code>plugin/</code> 目录下：<code>plugin/cmd/kube-scheduler/</code> 是代码的 main 函数入口，<code>plugin/pkg/scheduler/</code> 是具体调度算法。从这个目录结构也可以看出来，kube-scheduler 是作为插件接入到集群中的，它的最终形态一定是用户可以很容易地去定制化和二次开发的。</p>
 <h2 id="2-代码分析"><a href="#2-代码分析" class="headerlink" title="2. 代码分析"></a>2. 代码分析</h2><h3 id="2-1-启动流程"><a href="#2-1-启动流程" class="headerlink" title="2.1 启动流程"></a>2.1 启动流程</h3><p>虽然放到了 <code>plugin/</code> 目录下，<code>kube-scheduler</code> 的启动过程和其他组件还是一样的，它会新建一个  <code>SchedulerServer</code>，这是一个保存了 scheduler 启动所需要配置信息的结构体，然后解析命令行的参数，对结构体中的内容进行赋值，最后运行 <code>app.Run(s)</code> 把 scheduler 跑起来。</p>
 <p><code>plugin/cmd/kube-scheduler/scheduler.go</code>：</p>
@@ -389,7 +389,7 @@ run := func(_ &lt;-chan struct{}) {
     select {}
 }
 </code></pre><p>总结起来，<code>configFactory</code>、<code>config</code> 和 <code>scheduler</code> 三者的关系如下图所示：</p>
-<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fhozonecbkj30ov0gbjsn.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fhozonecbkj30ov0gbjsn.jpg" alt=""></p>
 <ul>
 <li><code>configFactory</code> 对应工厂模式的工厂模型，根据不同的配置和参数生成 <code>config</code>，当然事先会准备好 <code>config</code> 需要的各种数据</li>
 <li><code>config</code> 是调度器中最重要的组件，里面实现了调度的各个组件逻辑</li>
@@ -455,7 +455,7 @@ run := func(_ &lt;-chan struct{}) {
 </code></pre>
 <p><code>scheduler.Run</code> 就是不断调用 <code>scheduler.scheduleOne()</code> 每次调度一个 pod。</p>
 <p>对应的调度逻辑如下图所示：</p>
-<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fhozbohy5aj30nt0yp75g.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fhozbohy5aj30nt0yp75g.jpg" alt=""></p>
 <p>接下来我们逐步分解和解释。</p>
 <h4 id="2-3-1-下一个需要调度的-pod"><a href="#2-3-1-下一个需要调度的-pod" class="headerlink" title="2.3.1 下一个需要调度的 pod"></a>2.3.1 下一个需要调度的 pod</h4><p><code>NextPod</code> 函数就是 <code>configFactory.getNextPod()</code>，它从未调度的队列中返回下一个应该由当前调度器调度的 pod。</p>
 <p>它从 <code>configFactory.PodQueue</code> 中 pop 出来一个应该由当前调度器调度的 pod。当前 pod 可以通过 <code>scheduler.alpha.kubernetes.io/name</code> annotation 来设置调度器的名字，如果调度器名字发现这个名字和自己一致就认为 pod 应该由自己调度。如果对应的值为空，则默认调度器会进行调度。</p>
@@ -747,7 +747,7 @@ run := func(_ &lt;-chan struct{}) {
     return result, nil
 }
 </code></pre><p>要想获得所有节点最终的权重分值，就要先计算每个优先级函数对应该节点的分值，然后计算总和。因此不管过程如何，如果有 N 个节点，M 个优先级函数，一定会计算 M*N 个中间值，构成一个二维表格：</p>
-<p><img src="https://ws1.sinaimg.cn/large/006tNc79gy1fhpajksubhj316a0lo0uc.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fhpajksubhj316a0lo0uc.jpg" alt=""></p>
 <p>最后，会把表格中按照节点把优先级函数的权重列表相加，得到最终节点的分值。上面的代码就是这个过程，当然中间过程可以并发计算，以加快速度。</p>
 <p>目前，kubernetes scheduler 提供了很多实用的优先级函数：</p>
 <ul>

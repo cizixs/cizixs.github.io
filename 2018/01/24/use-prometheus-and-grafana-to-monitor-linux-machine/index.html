@@ -208,13 +208,13 @@ scrape_configs:
           - targets: [&#39;localhost:9090&#39;]
 </code></pre><p>这个配置文件一共分为两个部分：<code>global</code> 和 <code>scrape_configs</code>，前者是全局的配置，如果后面的任务没有对特定配置项进行覆盖，这里的选项会生效。这里有两个配置项，<code>scrape_interval</code> 表示 promethues server 抓取的周期，如果太频繁会导致 promethues 压力比较大，如果太久，可能会导致某些关键数据漏掉，推荐根据每个任务的重要性和集群规模分别进行配置。</p>
 <p><code>scrape_configs</code> 配置了每个抓取任务，因此是一个列表，这里我们只有一个任务，那就是抓取 promethues 本身的 metrics。配置里面最重要的是 <code>static_configs.targets</code>，表示要抓取任务的 HTTP 地址，默认会在 <code>/metrics</code> url 出进行抓取，比如这里就是 <code>http://localhost:9090/</code>。 这是 prometheus 本身提供的监控数据，可以在浏览器中直接查看。</p>
-<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fn9hdcuslmj30rd0l27b4.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fn9hdcuslmj30rd0l27b4.jpg" alt=""></p>
 <p>每个数据都是有一个名字和一系列称为 label 的键值对组成的，prometheus 在抓取数据的时候还会自动添加上 <code>instance</code>（节点的 host:port 标识） 和 <code>job</code>（任务名称） 两个 label 作为任务之间的区分。</p>
 <p>这些数据本身没有时间信息，当 promethues 抓取的时候会自动添加上当时的时间戳。此外这些数据在客户端会分成四种不同的类型：counter、gauge、histogram 和 summary。更多关于 promethues metrics 数据类型的说明请查阅官方文档。</p>
 <p>运行 <code>docker-compose up -d</code> 启动服务，然后在浏览器中打开 <code>http://server-ip:9090/status</code> 查看 promethues 运行的状态信息：</p>
-<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fn9h9plxmtj30rd0l2tb2.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fn9h9plxmtj30rd0l2tb2.jpg" alt=""></p>
 <p>整个 promethues 体系的工作原理如下所示：</p>
-<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fnacyud8n5j30ko0e5jso.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fnacyud8n5j30ko0e5jso.jpg" alt=""></p>
 <ul>
 <li>promethues server 位于中心，负责时序数据的收集、存储和查询</li>
 <li>左边是数据来源，promethues 统一采用拉取的模式（pull mode）从兼容的 HTTP 接口处获取数据，数据源可以分为三种<ol>
@@ -293,13 +293,13 @@ volumes:
 </code></pre><p>这里使用 docker 的 volumes 来保存 grafana 和 promethues 运行过程中产生的数据来保证持久化，而且使用 <code>GF_SECURITY_ADMIN_PASSWORD=pass</code> 环境变量设置 admin 的密码。</p>
 <p>docker-compose 运行之后，grafana 会运行在 <code>http://host-ip:3000</code> 地址，使用浏览器打开会出现登陆页面，输入用户名和刚才配置的密码进入服务。</p>
 <p>grafana 本身只是一个 dashboard，它可以从多个数据源（时序数据库）中获取数据进行展示，比如我们这里使用的 promethues。所以在正式配置界面之前，需要先添加数据源，点击 grafana 左上角按钮找到 <code>Data Sources</code> 页面或者直接输入 <code>http://host-ip:3000/datasources</code> 地址，会进入对应页面。按照下面的内容进行填写，主要是 Type 要选择 <code>prometheus</code>，URL 添加 grafana 服务能访问的 promethues 地址（因为它们都是通过 docker-compose 运行的，所以这里可以直接使用名字来标识）；Name 字段随便填写一个用来标记来源的名字即可。</p>
-<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fnhfgtpz5yj310j0s2adm.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fnhfgtpz5yj310j0s2adm.jpg" alt=""></p>
 <p>然后创建一个 dashboard，并里面添加 graph（为了简单，我用了 test dashboard 这个名字），在 graph 中添加一个 panel，我们用这个 panel 展示系统的 load 数据。编辑 panel 数据，选择 data source 为之前添加的 promethues，然后填写 query，系统 node 比较简单，一共是 <code>node_load1</code>、<code>node_load5</code> 和 <code>node_load15</code>，分别是系统最近一分钟、五分钟和十五分钟的 load 数值。输入完成后点击输入框之外，grafana 会自动更新上面的图表：</p>
-<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1fnhhktp3i4j313a0ut43t.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tKfTcgy1fnhhktp3i4j313a0ut43t.jpg" alt=""></p>
 <p>类似的，可以添加其他的 panel，展示系统方方面的监控数据，比如 CPU、memory、IO、网络等。grafana 更多配置可以参考<a href="http://docs.grafana.org/features/panels/graph/" target="_blank" rel="noopener">官方文档</a>，选择合适的图表来展示想要的结果。</p>
 <p>手动通过界面对 grafana 可以很灵活地创建出很强大的图表，但是这无疑会耗费很多时间（想想，每次搭建 grafana 都要重新做一遍），而且 node exporter 这种监控数据是通用的，如果所有人都手动创建一遍无疑是很多重复工作。为此，grafana 支持导入和导出配置，并且提供<a href="https://grafana.com/dashboards" target="_blank" rel="noopener">官方社区</a>供大家分享 dashboard 配置。</p>
 <p>每个 dashboard 都有一个编号，比如<a href="https://grafana.com/dashboards/22" target="_blank" rel="noopener">编号 22 的 dashboard</a> 就是专门为 node-exporter 设计的展示图表。在 grafana 中点击导入 dashboard，添加编号选择数据源，就能得到已经配置完整的图表：</p>
-<p><img src="https://ws3.sinaimg.cn/large/006tKfTcgy1fnii0bgqqzj313v0utdl9.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tKfTcgy1fnii0bgqqzj313v0utdl9.jpg" alt=""></p>
 <p>如果对 dashboard 有什么不满，可以直接在页面进行添加和编辑，然后可以导出 json 文件，以便重复使用。</p>
 <h2 id="配置告警"><a href="#配置告警" class="headerlink" title="配置告警"></a>配置告警</h2><p>通过 grafana 图表我们可以知道系统各种指标随着时间的变化，方便轻松判断系统某个资源是否异常。但是我们不能一直盯着 dashboard，还需要系统发生异常的时候能立即通过邮件或者其他方式通知我们，这就是告警的功能。</p>
 <p>promethues 提供用户可以自己配置的告警规则，在处理 metrics 数据的时候，如果发现某个规则被触发，就执行对应的告警动作，通过发邮件或者其他方式通知用户。</p>
@@ -332,7 +332,7 @@ rule_files:
 </code></pre><p>为了验证告警规则是否生效，可以把 <code>node-exporter</code> 服务停掉：</p>
 <pre><code>docker-compose stop node-exporter
 </code></pre><p>在 promethues 的告警页面(alert) 查看告警：</p>
-<p><img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fniiqnn2oij310r0ma0uw.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tKfTcgy1fniiqnn2oij310r0ma0uw.jpg" alt=""></p>
 <p>类似地，可以运行一些消耗 CPU 资源的服务来触发系统 load 过高的告警规则，比如运行下面这个 docker 容器（一直 while 循环霸占 CPU 资源可以轻松把 CPU load 提到很高）：</p>
 <pre><code>docker run --rm -it busybox sh -c &quot;while true; do :; done&quot;
 </code></pre><p>promethues 还提供了 alertmanager 可以自动化根据告警规则触发对应的动作，一般是各种方式通知用户和管理员，这里就不再介绍了。</p>

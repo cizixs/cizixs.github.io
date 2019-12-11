@@ -180,11 +180,11 @@
 </code></pre><p>我机器的网卡对应的 MAC 地址就是 <code>50:7b:9d:ca:08:f0</code>，这是一个 6 字节的数字，表示的时候每个字节用 <code>:</code> 分隔开，长度是 48 比特。</p>
 <p>有了 MAC 地址，同一个以太网络上的两台机器才能够通信。机器 A 需要知道机器 B 的 MAC 地址，才能发送以太网帧；交换机收到报文之后，根据目的 MAC 地址决定应该从哪个端口发送出去；目的机器读取报文的 MAC 地址才能知道报文是不是要发给自己的。</p>
 <p>最开始的时候，机器 A 只知道目的地址的 IP（用户用某种方式输入 IP 地址，或者通过 DNS 解析出来 IP 地址），不知道对方的 MAC 地址。这时候，机器 A 会发送 ARP 报文，去查询机器 B 的 MAC 地址，拿到 MAC 地址，就能完成通信的过程。</p>
-<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fi242uryyqj30g90e374i.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fi242uryyqj30g90e374i.jpg" alt=""></p>
 <p>ARP 协议的内容，以及怎么拿到 MAC 地址就是这篇文章接下来要讲解的。</p>
 <h2 id="Linux-ARP-缓存"><a href="#Linux-ARP-缓存" class="headerlink" title="Linux ARP 缓存"></a>Linux ARP 缓存</h2><p>如果每次主机通信都要发送 ARP 协议去查询 MAC 地址无疑是低效的，为了提供性能最常见的做法是在系统层面保存 ARP 的结果。因为 IP 地址和 MAC 地址并不会经常变化，而且主机间第一次通信之后有很大的可能性会在短时间内再次通信， 所以 ARP 缓存能够大大提高网络效率。</p>
 <p>在 Linux 系统中，可以通过 <code>ip neighbour</code>（可以简写为 <code>ip neigh</code>） 命令管理 ARP 缓存。为了说明 Linux 系统中 ARP 的工作原理，我会在自己的机器上进行试验。试验环境如下图所示：</p>
-<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fi28tjdwdmj30qh0fjmyk.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fi28tjdwdmj30qh0fjmyk.jpg" alt=""></p>
 <p>我的工作机器是 A，IP 地址是 <code>172.16.13.16</code>，我会 <code>ping</code> 另外一台和 A 在同一个以太网的机器 B（IP 地址是 <code>172.16.13.18</code>），并查看 A 上 ARP 缓存的情况。</p>
 <p>两台机器在同一个子网中（连到同一台交换机上），这个可以用路由表确认：</p>
 <pre><code>➜  ~ ip route
@@ -229,9 +229,9 @@ PING 172.16.13.18 (172.16.13.18) 56(84) bytes of data.
 <p>也就是说，ARP 本身可以转换其他硬件地址和网络地址，而且允许它们的地址长度是可变的。这导致 ARP 协议现在看来是有点冗余的，毕竟 IPv4 和 MAC 地址长度都是固定的，没有必要在协议中指定。</p>
 <p>ARP 发送出去会被封装在以太网帧里，ARP 报文中有发送端的 MAC 地址，而以太网帧的报文头部也包含了发送端的 MAC 地址，也就是说报文中有完全重复的信息。</p>
 <h2 id="ARP-工作过程"><a href="#ARP-工作过程" class="headerlink" title="ARP 工作过程"></a>ARP 工作过程</h2><p><strong>第一步</strong>：机器 A 想和同一个以太网络的机器 B 通信，A 会现在自己的 ARP 表中查找 B 的 MAC 地址，如果能找到就直接发送以太网帧；如果没有找到，就跳到第二步<br><strong>第二步</strong>：机器 A 发送 ARP 请求报文去查询机器 B 的 MAC 地址，这是个以太网广播报文，因此交换机会广播到网络中所有的机器<br><strong>第三步</strong>：各个主机接收到 ARP 请求报文，如果发现 ARP 报文中询问的 IP 地址和自己不同，则直接丢弃；机器 B 发现 ARP 报文中询问的 IP 地址是自己的主机地址，则生成一个 ARP 应答报文，把自己的 MAC 地址填到报文中，发送给机器 A，这个报文是单播报文，不会发送给其他主机；同时机器 B 也会把机器 A 的 ARP 记录缓存起来<br><strong>第四步</strong>：机器 A 接收到 B 发来的 ARP 应答，读取报文中 B 的 MAC 地址，使用这个 MAC 地址和机器 B 进行后续的通信，同时把它缓存到系统中</p>
-<p>从机器 A <code>ping</code> 机器 B 时，用 <code>wireshark</code> 抓包，过滤出其中的 ARP，显示的结果如图：<br><img src="https://ws4.sinaimg.cn/large/006tNc79gy1fi23aa7xbbj30xa03nmxo.jpg" alt="arp 协议流程"></p>
+<p>从机器 A <code>ping</code> 机器 B 时，用 <code>wireshark</code> 抓包，过滤出其中的 ARP，显示的结果如图：<br><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fi23aa7xbbj30xa03nmxo.jpg" alt="arp 协议流程"></p>
 <p>可以看到一共有两对 ARP 请求应答的过程，我们来逐个分析。</p>
-<h3 id="ARP-请求报文"><a href="#ARP-请求报文" class="headerlink" title="ARP 请求报文"></a>ARP 请求报文</h3><p>首先是机器 A 发送的 ARP 请求，详细的报文内容如下：<br><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fi23ccvypmj30ws0e6wgn.jpg" alt="ARP 请求报文"></p>
+<h3 id="ARP-请求报文"><a href="#ARP-请求报文" class="headerlink" title="ARP 请求报文"></a>ARP 请求报文</h3><p>首先是机器 A 发送的 ARP 请求，详细的报文内容如下：<br><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fi23ccvypmj30ws0e6wgn.jpg" alt="ARP 请求报文"></p>
 <p>报文列表的 <code>Info</code> 字段，对应的内容是：</p>
 <blockquote>
 <p>Who has 172.16.13.18? Tell 172.16.13.16</p>
@@ -241,7 +241,7 @@ PING 172.16.13.18 (172.16.13.18) 56(84) bytes of data.
 <p>以太网帧类型（Type）字段的值是 <code>0x0806</code>，表示该数据帧是个 ARP 请求或者应答。</p>
 <p>帧的长度是 42，其中包括 14 字节以太网帧头部，以及 28 字节 ARP 请求数据。</p>
 <p>以太网帧内部是 ARP 请求的具体内容，<code>Opcode</code> 为 1，表示这是 ARP 请求，发送端（也就是机器 A）的 IP 地址是 <code>172.16.13.16</code>，目的端（也就是机器 B）的 IP 地址是 <code>172.16.13.18</code>。发送端的 MAC 地址是填写的，而目的端 MAC 地址为空（全部为 0）。</p>
-<h3 id="ARP-应答报文"><a href="#ARP-应答报文" class="headerlink" title="ARP 应答报文"></a>ARP 应答报文</h3><p>第二个报文是 ARP 应答，详细报文内容如下图：<br><img src="https://ws1.sinaimg.cn/large/006tNc79gy1fi23cw2798j30xl0en76n.jpg" alt="ARP 应答报文"></p>
+<h3 id="ARP-应答报文"><a href="#ARP-应答报文" class="headerlink" title="ARP 应答报文"></a>ARP 应答报文</h3><p>第二个报文是 ARP 应答，详细报文内容如下图：<br><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fi23cw2798j30xl0en76n.jpg" alt="ARP 应答报文"></p>
 <p>这个报文的 <code>info</code> 字段的信息是:</p>
 <blockquote>
 <p>172.16.13.18 is at 50:7b:9d:e0:8b:a8</p>
@@ -278,7 +278,7 @@ From 172.16.13.16 icmp_seq=5 Destination Host Unreachable
 From 172.16.13.16 icmp_seq=6 Destination Host Unreachable
 ......
 </code></pre><p>此时，使用 wireshark 抓包，发现网络上的 ARP 报文如下所示：</p>
-<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1fi23dacq3qj30xi09htbb.jpg" alt="向不存在的主机发送 ping 请求"></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79gy1fi23dacq3qj30xi09htbb.jpg" alt="向不存在的主机发送 ping 请求"></p>
 <p>和 ICMP 报文类似，ARP 请求也会每秒都会发送，但是一直接收不到应答。</p>
 <h2 id="Gratuitous-ARP"><a href="#Gratuitous-ARP" class="headerlink" title="Gratuitous ARP"></a>Gratuitous ARP</h2><p>除了标准的 ARP 之外，还有一种特殊的 ARP 报文，称为 Gratuitous ARP（免费 ARP）。这个报文也是广播报文，它的特殊性在于，它的报文中发送端 IP 地址和接收端 IP 地址都被设置为发送该报文的主机 IP。为什么要有这样一个特殊的报文呢？因为它有用，比如：</p>
 <ul>

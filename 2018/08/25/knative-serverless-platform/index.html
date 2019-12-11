@@ -194,7 +194,7 @@ hello, world from Awesome FaaS App<span class="token operator">!</span>
 </ul>
 <p>和标准化的 FaaS 不同（只运行特定标准的 Function 代码），knative 期望能够运行所有的 workload : traditional application、function、container。</p>
 <p>knative 建立在 kubernetes 和 istio 平台之上，使用 kubernetes 提供的容器管理能力（deployment、replicaset、和 pods等），以及 istio 提供的网络管理功能（ingress、LB、dynamic route等）。</p>
-<p><img src="https://ws4.sinaimg.cn/large/006tNc79ly1g1qxs8g0vej30qt09smxr.jpg" alt="knative with istio and kubernetes"></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79ly1g1qxs8g0vej30qt09smxr.jpg" alt="knative with istio and kubernetes"></p>
 <h2 id="knative-核心概念和原理"><a href="#knative-核心概念和原理" class="headerlink" title="knative 核心概念和原理"></a>knative 核心概念和原理</h2><p>为了实现 serverless 应用的管理，knative 把整个系统分成了三个部分：</p>
 <ul>
 <li>Build：构建系统，把用户定义的函数和应用 build 成容器镜像</li>
@@ -255,7 +255,7 @@ hello, world from Awesome FaaS App<span class="token operator">!</span>
 </ul>
 <p>knative serving 功能是基于 kubernetes 和 istio 开发的，它使用 kubernetes 来管理容器（deployment、pod），istio 来管理网络路由（VirtualService、DestinationRule）。</p>
 <p>因为 kubernetes 和 istio 本身的概念非常多，理解和管理起来比较困难，knative 在此之上提供了更高一层的抽象（这些对应是基于 kubernetes 的 CRD 实现的）。这些抽象出来的概念对应的关系如下图：</p>
-<p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1g1qxu9218oj31ck0qmwgu.jpg" alt="knative serving terminology"></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNc79ly1g1qxu9218oj31ck0qmwgu.jpg" alt="knative serving terminology"></p>
 <ul>
 <li>Configuration：应用的最新配置，也就是应用目前期望的状态，对应了 kubernetes 的容器管理（deployment）。每次应用升级都会更新 configuration，而 knative 也会保留历史版本的记录（图中的 revision），结合流量管理，knative 可以让多个不同的版本共同提供服务，方便蓝绿发布和滚动升级</li>
 <li>Route：应用的路由规则，也就是进来的流量如何访问应用，对应了 istio 的流量管理（VirtualService）</li>
@@ -280,7 +280,7 @@ hello, world from Awesome FaaS App<span class="token operator">!</span>
 </code></pre>
 <p>看起来和 kubernetes 的 pod 定义非常类似，但是它会帮你管理 deployment、ingress、service discovery、auto scaling……从这个角度来看，可以认为 knative 提供了更高的抽象，自动帮你封装掉了 kubernetes 和 istio 的实现细节。</p>
 <p>下面这张图介绍了 knative serving 各组件之间的关系：</p>
-<p><img src="https://ws4.sinaimg.cn/large/006tNbRwgy1fum2swzqebj31j00to41f.jpg" alt="knative serving architecture"></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNbRwgy1fum2swzqebj31j00to41f.jpg" alt="knative serving architecture"></p>
 <ul>
 <li>可以看到，每个 revision 对应了一组 deployment 管理的 pod</li>
 <li>pod 会自动汇报 metrics 数据到 autoscaler，autoscaler 会根据请求量和资源使用情况修改 deployment 的 replicas 数量，从而实现自动扩缩容。serverless 一个重要的特定是它会 scale to 0 的，也就是当应用没有流量访问时，它会自动销毁所有的 pod</li>
@@ -298,7 +298,7 @@ hello, world from Awesome FaaS App<span class="token operator">!</span>
 <li>Subscription：把 channel 和后端的函数绑定的一起，一个 channel 可以绑定到多个knative service</li>
 </ul>
 <p>它们之间的关系流程图如下：</p>
-<p><img src="https://ws1.sinaimg.cn/large/006tNbRwgy1fum30a10ynj31jm0v2dkq.jpg" alt="knative eventing architecture"></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNbRwgy1fum30a10ynj31jm0v2dkq.jpg" alt="knative eventing architecture"></p>
 <p>Bus 是 knative 内部的事件存储层，用户可以选择自己感兴趣的实现，目前支持的方式有：Stub（在内存中实现的简单消息系统）、Kafka、Google PubSub。如果想要事件能够正常运行，必须在 knative 集群中安装其中一个 bus 实现方式。</p>
 <p>有了 bus 之后，我们就可以监听外部的事件了。目前支持的事件源有三个：github（比如 merge 事件，push 事件等），kubernetes（events），Google PubSub（消息系统），后面还会不断接入更多的事件源。</p>
 <p>如果要想监听对应的事件源，需要在 knative 中部署一个 source adaptor 的 pod，它负责从外部的系统中读取事件。</p>
