@@ -221,7 +221,7 @@ localhost - - [08/Nov/2014 09:08:05] &quot;GET / HTTP/1.1&quot; 200 12
 |-- util.py                # 帮助函数
 `-- validate.py            # wsgi 格式检查和校验
 </code></pre><p>主要的代码结构如下图所示：</p>
-<p><img src="http://ww2.sinaimg.cn/large/005yyi5Jjw1em4xm3stghj30ps0d5t9l.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/005yyi5Jjw1em4xm3stghj30ps0d5t9l.jpg" alt=""></p>
 <h3 id="simple-server-py"><a href="#simple-server-py" class="headerlink" title="simple_server.py"></a>simple_server.py</h3><p>我们先看一下 <code>make_server</code> 是怎么启动一个 wsgi 服务器的：</p>
 <pre><code>def make_server(host, port, app, server_class=WSGIServer, handler_class=WSGIRequestHandler):
     server = server_class((host, port), handler_class)
@@ -324,7 +324,7 @@ localhost - - [08/Nov/2014 09:08:05] &quot;GET / HTTP/1.1&quot; 200 12
 </ul>
 <h3 id="handler-py"><a href="#handler-py" class="headerlink" title="handler.py"></a>handler.py</h3><p>这个文件主要是 wsgi server 的处理过程，定义 start_response、调用 wsgi app 、处理 content-length 等等。</p>
 <p>可以参考<a href="https://cizixs.github.io/2014/11/08/understand-wsgi/" target="_blank" rel="noopener">这篇文章</a>里的 wsgi server 的简单实现。</p>
-<p><img src="http://ww2.sinaimg.cn/large/005yyi5Jjw1em4xzexur2j30sr0yk77n.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/005yyi5Jjw1em4xzexur2j30sr0yk77n.jpg" alt=""></p>
 <h2 id="一条-HTTP-请求的旅程"><a href="#一条-HTTP-请求的旅程" class="headerlink" title="一条 HTTP 请求的旅程"></a>一条 HTTP 请求的旅程</h2><p>服务器端启动服务，等到客户端输入 <code>curl -i http://localhost:8000/</code> 命令，摁下回车键，看到终端上的输出，整个过程中，wsgi 的服务器端发生了什么呢？</p>
 <ol>
 <li>服务器程序创建 socket，并监听在特定的端口，等待客户端的连接</li>

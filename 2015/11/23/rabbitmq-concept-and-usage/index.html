@@ -177,7 +177,7 @@
 <li>模块化（modulize）：生产者和消费者不需要知道双方的存在，而且可以使用不同的语言和框架，在物理上位于不同的地方。</li>
 </ul>
 <p>消息机制当然也有不便之处，比如分布式的架构使得测试和调试变得复杂；因为消费者无法保证能收到任务并完成，并且无法通知生产者（后面会详细讲解这一点），也对很多场景带来麻烦。</p>
-<h2 id="rabbitmq-概念和架构"><a href="#rabbitmq-概念和架构" class="headerlink" title="rabbitmq 概念和架构"></a>rabbitmq 概念和架构</h2><p><img src="http://ww1.sinaimg.cn/large/728b3d6djw1exeozui9f8j20sg0lcdk6.jpg" alt=""></p>
+<h2 id="rabbitmq-概念和架构"><a href="#rabbitmq-概念和架构" class="headerlink" title="rabbitmq 概念和架构"></a>rabbitmq 概念和架构</h2><p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/728b3d6djw1exeozui9f8j20sg0lcdk6.jpg" alt=""></p>
 <p>在生产者-消费者模型中，rabbitmq 充当着 broker 的角色。在 rabbitmq 的内部，还有以下的概念：</p>
 <ul>
 <li><p><strong>Exchanges</strong>：生产者把消息发送到某个 exchange，exchange 的主要工具就是根据一定的规则把消息分发到不同的 queues</p>

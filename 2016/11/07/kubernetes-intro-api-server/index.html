@@ -178,7 +178,7 @@
 <li>集群安全控制：API Server 提供的验证和授权保证了整个集群的安全</li>
 </ul>
 <p>在这篇教程中，我们的系统架构将变成下面这个样子：</p>
-<p><img src="http://ww4.sinaimg.cn/large/006tNbRwgw1f9isyaffosj31hc0u00ul.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tNbRwgw1f9isyaffosj31hc0u00ul.jpg" alt=""></p>
 <p>我们把要配置的 pod 通过 kubectl 发送给 API Server，里面已经手动指定了要运行的节点。API Server 解析并保存对应的资源，对应的 kubelet 定时拉取数据时候发现 pod 是分配给自己的，会下载对应的配置并执行去生成 pod。</p>
 <h2 id="参数介绍"><a href="#参数介绍" class="headerlink" title="参数介绍"></a>参数介绍</h2><p>API Server 主要是和 etcd 打交道，并且对外提供 HTTP 服务，以及进行安全控制，因此它的命令行提供的参数也主要和这几个方面有关。下面是一些比较重要的参数以及说明（不同版本参数可能会有不同）：</p>
 <table>

@@ -178,7 +178,7 @@
 <li>classmethod 和 staticmethod 的概念</li>
 <li>web 编程的基础</li>
 </ul>
-<h3 id="HTTP-基础"><a href="#HTTP-基础" class="headerlink" title="HTTP 基础"></a>HTTP 基础</h3><p><img src="http://ww4.sinaimg.cn/large/005yyi5Jjw1em3fj419m7j30i40g8gm5.jpg" alt="http"></p>
+<h3 id="HTTP-基础"><a href="#HTTP-基础" class="headerlink" title="HTTP 基础"></a>HTTP 基础</h3><p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/005yyi5Jjw1em3fj419m7j30i40g8gm5.jpg" alt="http"></p>
 <p>对于 web 应用程序来说，最基本的概念就是客户端发送请求（request），收到服务器端的响应（response）。</p>
 <p>下面是简单的 HTTP 请求：</p>
 <pre><code> GET /Index.html HTTP/1.1\r\n
@@ -196,7 +196,7 @@
  Last-Modified: Mon, 24 Jun 2002 20:27:23 GMT\r\n
  Content-Length: 26812\r\n
 </code></pre><p>实际生产中，python 程序是放在服务器的 http server（比如 apache， nginx 等）上的。现在的问题是 <strong>服务器程序怎么把接受到的请求传递给 python 呢，怎么在网络的数据流和 python 的结构体之间转换呢？</strong>这就是 wsgi 做的事情：一套关于程序端和服务器端的规范，或者说统一的接口。</p>
-<p><img src="http://ww2.sinaimg.cn/large/005yyi5Jjw1em3l4rsqdbj30ue0g80tz.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/005yyi5Jjw1em3l4rsqdbj30ue0g80tz.jpg" alt=""></p>
 <h2 id="WSGI"><a href="#WSGI" class="headerlink" title="WSGI"></a>WSGI</h2><p>我们先看一下面向 http 的 python 程序需要关心哪些内容：</p>
 <ul>
 <li>请求<ul>
@@ -323,7 +323,7 @@ def run_with_cgi(application):    # application 是程序端的可调用对象
         if hasattr(result, &#39;close&#39;):
             result.close()
 </code></pre><h3 id="中间层-middleware"><a href="#中间层-middleware" class="headerlink" title="中间层 middleware"></a>中间层 middleware</h3><p>有些程序可能处于服务器端和程序端两者之间：对于服务器程序，它就是应用程序；而对于应用程序，它就是服务器程序。这就是中间层 middleware。middleware 对服务器程序和应用是透明的，它像一个代理/管道一样，把接收到的请求进行一些处理，然后往后传递，一直传递到客户端程序，最后把程序的客户端处理的结果再返回。如下图所示：</p>
-<p><img src="http://ww4.sinaimg.cn/large/005yyi5Jjw1em2p14p5z9j30rs0cqwg1.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/005yyi5Jjw1em2p14p5z9j30rs0cqwg1.jpg" alt=""></p>
 <p>middleware 做了两件事情：</p>
 <ol>
 <li>被服务器程序（有可能是其他 middleware）调用，返回结果回去</li>

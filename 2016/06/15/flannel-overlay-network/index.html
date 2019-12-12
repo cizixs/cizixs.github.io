@@ -288,7 +288,7 @@ default via 10.0.2.2 dev eth0  metric 1
 <h2 id="报文分析"><a href="#报文分析" class="headerlink" title="报文分析"></a>报文分析</h2><p>最后，我们来抓包看看网络的报文。我们使用了 <a href="https://hub.docker.com/r/corfr/tcpdump/" target="_blank" rel="noopener">容器化的 tcpdump</a> 工具在主机上抓包：</p>
 <pre><code>docker run --net=host -v $PWD:/data corfr/tcpdump -i any -w /data/flannel0.pcap
 </code></pre><p>然后在 wireshark 中看一下封装的报文：</p>
-<p><img src="http://ww2.sinaimg.cn/large/728b3d6dgw1f4nvqeigjqj21ix0wh19x.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/728b3d6dgw1f4nvqeigjqj21ix0wh19x.jpg" alt=""></p>
 <p>这里使用了 wireshark 的 <code>decode as</code> 功能把被封装的报文显示出来。可以看到主机间是在 UDP 8285 端口通信的，报文中包含了容器间真正的网络报文，比如这里的 ping 包（ICMP 协议报文）。</p>
 <h2 id="需要注意的事项"><a href="#需要注意的事项" class="headerlink" title="需要注意的事项"></a>需要注意的事项</h2><ul>
 <li>flannel 默认采用 UDP 封装报文，在高并发情况下会有丢包问题</li>

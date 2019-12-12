@@ -254,7 +254,7 @@ PING 10.0.1.2 (10.0.1.2) 56(84) bytes of data.
 3 packets transmitted, 3 received, 0% packet loss, time 2004ms
 rtt min/avg/max/mdev = 0.039/0.072/0.139/0.047 ms
 </code></pre><p>完成这些，我们创建的网络拓扑结构如下所示：</p>
-<p><img src="http://wx4.sinaimg.cn/large/728b3d6dgy1fcl8ox6rsyj213o0f8ab7.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/728b3d6dgy1fcl8ox6rsyj213o0f8ab7.jpg" alt=""></p>
 <h2 id="使用-bridge-连接不同的-namespace"><a href="#使用-bridge-连接不同的-namespace" class="headerlink" title="使用 bridge 连接不同的 namespace"></a>使用 bridge 连接不同的 namespace</h2><p>虽然 veth pair 可以实现两个 network namespace 之间的通信，但是当多个 namespace 需要通信的时候，就无能为力了。<br>讲到多个网络设备通信，我们首先想到的交换机和路由器。因为这里要考虑的只是同个网络，所以只用到交换机的功能。linux 当然也提供了虚拟交换机的功能，我们还是用 <code>ip</code> 命令来完成所有的操作。</p>
 <p><strong>NOTE</strong>：和 bridge 有关的操作也可以使用命令 <code>brctl</code>，这个命令来自 <code>bridge-utils</code> 这个包，读者可以根据自己的发行版进行安装，使用方法请查阅 man 页面或者相关文档。</p>
 <p>首先我们来创建需要的 bridge，简单起见名字就叫做 <code>br0</code>。</p>
@@ -289,7 +289,7 @@ PING 10.0.1.3 <span class="token punctuation">(</span>10.0.1.3<span class="token
 3 packets transmitted, 3 received, 0% packet loss, <span class="token function">time</span> 2008ms
 </code></pre>
 <p>下图是这部分网络的拓扑结构，如果对 docker 网络熟悉的话，其实这和 docker 默认的 bridge 网络模型非常相似。当然要实现每个 namespace 对外网的访问还需要额外的配置（设置默认网关，开启 ip_forward，为网络添加 NAT 规则等）。</p>
-<p><img src="http://wx4.sinaimg.cn/large/728b3d6dgy1fcl8khvmjfj21hc0u0770.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/728b3d6dgy1fcl8khvmjfj21hc0u0770.jpg" alt=""></p>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
 <li><a href="https://blog.kghost.info/2013/03/01/linux-network-emulator/" target="_blank" rel="noopener">网络虚拟化技术（一）: Linux网络虚拟化</a></li>
 <li><a href="http://blog.scottlowe.org/2013/09/04/introducing-linux-network-namespaces/" target="_blank" rel="noopener">Introducing Linux Network Namespaces</a></li>

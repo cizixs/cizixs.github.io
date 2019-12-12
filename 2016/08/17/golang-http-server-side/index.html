@@ -191,7 +191,7 @@
 <span class="token punctuation">}</span>
 </code></pre>
 <p>运行 <code>go run hello_server.go</code>，我们的服务器就会监听在本地的 <code>12345</code> 端口，对所有的请求都会返回 <code>hello, world!</code>：</p>
-<p><img src="http://ww4.sinaimg.cn/large/006tKfTcgw1f6uoaz8reuj30ne0hrq56.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tKfTcgw1f6uoaz8reuj30ne0hrq56.jpg" alt=""></p>
 <p>正如上面程序展示的那样，我们只要实现的一个 Handler，它的<a href="https://golang.org/pkg/net/http/#Handler" target="_blank" rel="noopener">接口原型</a>是（也就是说只要实现了 <code>ServeHTTP</code> 方法的对象都可以作为 Handler）：</p>
 <pre class=" language-go"><code class="language-go"><span class="token keyword">type</span> Handler <span class="token keyword">interface</span> <span class="token punctuation">{</span>
     <span class="token function">ServeHTTP</span><span class="token punctuation">(</span>ResponseWriter<span class="token punctuation">,</span> <span class="token operator">*</span>Request<span class="token punctuation">)</span>
@@ -262,7 +262,7 @@
 </code></pre>
 <p>强大吧！只要一行逻辑代码就能实现一个简单的静态文件服务器。从这里可以看出一件事：<code>http.ListenAndServe</code> 第二个参数就是一个 Handler 函数（请记住这一点，后面有些内容依赖于这个）。</p>
 <p>运行这个程序，在浏览器中打开 <code>http://127.0.0.1:12345</code>，可以看到所有的文件，点击对应的文件还能看到它的内容。</p>
-<p><img src="http://ww3.sinaimg.cn/large/006tKfTcgw1f6uujkzgc9j30mc0e8gm5.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tKfTcgw1f6uujkzgc9j30mc0e8gm5.jpg" alt=""></p>
 <p>其他两个 Handler，这里就不再举例子了，读者可以自行参考文档。</p>
 <h2 id="4-路由"><a href="#4-路由" class="headerlink" title="4. 路由"></a>4. 路由</h2><p>虽然上面的代码已经工作，并且能实现很多功能，但是实际开发中，HTTP 接口会有许多的 URL 和对应的 Handler。这里就要讲 <code>net/http</code> 的另外一个重要的概念：<code>ServeMux</code>。<code>Mux</code> 是 <code>multiplexor</code> 的缩写，就是多路传输的意思（请求传过来，根据某种判断，分流到后端多个不同的地方）。<code>ServeMux</code> 可以注册多了 URL 和 handler 的对应关系，并自动把请求转发到对应的 handler 进行处理。我们还是来看例子吧：</p>
 <pre class=" language-go"><code class="language-go"><span class="token keyword">package</span> main
@@ -289,7 +289,7 @@
 <span class="token punctuation">}</span>
 </code></pre>
 <p>这个服务器的功能也很简单：如果在请求的 URL 是 <code>/hello</code>，就返回 <code>hello, world!</code>；否则就返回 URL 的路径，路径是从请求对象 <code>http.Requests</code> 中提取的。</p>
-<p><img src="http://ww3.sinaimg.cn/large/006tKfTcgw1f6vdun05zpj30ne0hrgoe.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006tKfTcgw1f6vdun05zpj30ne0hrgoe.jpg" alt=""></p>
 <p>这段代码和之前的代码有两点区别：</p>
 <ol>
 <li>通过 <code>NewServeMux</code> 生成了 <code>ServerMux</code> 结构，URL 和 handler 是通过它注册的</li>

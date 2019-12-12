@@ -173,7 +173,7 @@
                     <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><a href="http://cizixs.com/2016/07/12/kubernetes-intro">kubernetes</a> 是一个分布式的集群管理系统，在每个节点（node）上都要运行一个 worker 对容器进行生命周期的管理，这个 worker 程序就是 <code>kubelet</code>。</p>
 <p>简单地说，<code>kubelet</code> 的主要功能就是定时从某个地方获取节点上 pod/container 的期望状态（运行什么容器、运行的副本数量、网络或者存储如何配置等等），并调用对应的容器平台接口达到这个状态。</p>
 <p>集群状态下，kubelet 会从 master 上读取信息，但其实 kubelet 还可以从其他地方获取节点的 pod 信息。目前 kubelet 支持三种数据源：</p>
-<p><img src="http://ww2.sinaimg.cn/large/006y8lVagw1f8vkhdub9zj31hc0u0djl.jpg" alt="kubelet architecture"></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006y8lVagw1f8vkhdub9zj31hc0u0djl.jpg" alt="kubelet architecture"></p>
 <ol>
 <li>本地文件</li>
 <li>通过 url 从网络上某个地址来获取信息</li>
@@ -181,7 +181,7 @@
 </ol>
 <p>从管理的对象来说，kubelet 目前支持 <a href="https://www.docker.com/" target="_blank" rel="noopener">docker</a> 和 <a href="https://coreos.com/rkt/" target="_blank" rel="noopener">rkt</a>，默认情况下使用的 docker。</p>
 <h2 id="kubelet-主要功能"><a href="#kubelet-主要功能" class="headerlink" title="kubelet 主要功能"></a>kubelet 主要功能</h2><h3 id="pod-管理"><a href="#pod-管理" class="headerlink" title="pod 管理"></a>pod 管理</h3><p> 在 kubernetes 的设计中，最基本的管理单位是 pod，而不是 container。pod 是 kubernetes 在容器上的一层封装，由一组运行在同一主机的一个或者多个容器组成。如果把容器比喻成传统机器上的一个进程（它可以执行任务，对外提供某种功能），那么 pod 可以类比为传统的主机：它包含了多个容器，为它们提供共享的一些资源。</p>
-<p><img src="http://ww4.sinaimg.cn/large/006y8lVagw1f93i3nzo9aj30yg0lptc6.jpg" alt=""></p>
+<p><img src="https://cizixs-blog.oss-cn-beijing.aliyuncs.com/006y8lVagw1f93i3nzo9aj30yg0lptc6.jpg" alt=""></p>
 <p>之所以费功夫提供这一层封装，主要是因为容器推荐的用法是里面只运行一个进程，而一般情况下某个应用都由多个组件构成的。</p>
 <p>pod 中所有的容器最大的特性也是最大的好处就是共享了很多资源，比如网络空间。pod 下所有容器共享网络和端口空间，也就是它们之间可以通过 <code>localhost</code> 访问和通信，对外的通信方式也是一样的，省去了很多容器通信的麻烦。</p>
 <p>除了网络之外，定义在 pod 里的 volume 也可以 mount 到多个容器里，以实现共享的目的。</p>
